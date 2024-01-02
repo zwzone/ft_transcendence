@@ -7,7 +7,6 @@ export default class TournamentPage extends HTMLElement {
     const component = template.content.cloneNode(true);
     this.appendChild(component);
   }
-  lksdf;
 }
 
 customElements.define("tournament-page", TournamentPage);
