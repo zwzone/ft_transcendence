@@ -30,6 +30,44 @@
 
   <!--------------------------- PAGES --------------------------->
 
+  <!-- GAME PAGE -->
+  <template id="game-template">
+    <my-navbar></my-navbar>
+  </template>
+
+  <!-- HOME PAGE -->
+  <template id="home-template">
+    <my-navbar></my-navbar>
+    <main class="container-sm my-5">
+      <section class="d-flex flex-column gap-2" id="playing">
+        <div class="row justify-content-center gap-2">
+          <my-card color="success" headText="PLAY PONG ONLINE"></my-card>
+          <my-card color="success" headText="PLAY PONG OFFLINE"></my-card>
+          <my-card color="primary" headText="CREATE TOURNAMENT"></my-card>
+          <my-card color="primary" headText="TETRIS"></my-card>
+        </div>
+      </section>
+    </main>
+  </template>
+
+  <!-- LOGIN PAGE -->
+  <template id="login-template">
+    <div class="container-fluid" style="height: 100vh;">
+      <div class="row" style="height: 100%;">
+        <div class=" d-flex flex-column justify-content-around align-items-center col-sm-4 bg-secondary py-2">
+          <div class="d-flex flex-column justify-content-center align-items-center">
+            <img src="public/pong.png" alt="logo">
+            <h1 class="text-light display-1 text-center">PING PONG</h1>
+          </div>
+          <a class="btn btn-light btn-lg rounded-5" href="/home">42 LOGIN</a>
+        </div>
+        <div class="col-sm-8 p-0" style="height: 100%;">
+          <img class="img-fluid" src="public/Pong-TA-B1C1YX.webp" alt="pong image">
+        </div>
+      </div>
+    </div>
+  </template>
+
   <!-- NOTFOUNT PAGE -->
   <template id="notfound-template">
     <div
@@ -39,4 +77,54 @@
     </div>
   </template>
 
+  <!-- PROFILE PAGE -->
+  <template id="profile-template">
+    <my-navbar></my-navbar>
+  </template>
+
+  <!-- SETTING PAGE -->
+  <template id="setting-template">
+    <my-navbar></my-navbar>
+  </template>
+
+  <!-- TOURNAMENT PAGE -->
+  <template id="tournament-template">
+    <my-navbar></my-navbar>
+  </template>
+
+  <!--------------------------- COMPONENTS --------------------------->
+
+  <!-- NAVBAR -->
+  <template id="my-navbar">
+    <nav class="navbar navbar-expand-sm bg-body-secondary">
+      <div class="container-fluid">
+        <a class="navbar-brand btn btn-outline-light" href="/home">PING PONG</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+          aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a class="nav-link" href="/tournament">Tournament</a>
+            <a class="nav-link" href="/profile">Profile</a>
+            <a class="nav-link" href="/setting">Setting</a>
+            <a class="nav-link" href="/login">Logout</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </template>
+
+  <!-- CARD -->
+  <template id="my-card">
+    <div class="card-header">
+      <h1 class="text-center mb-0">PONG ONLINE</h1>
+    </div>
+    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+      <a href="/game" class="btn border-light">PLAY</a>
+    </div>
+  </template>
+
 </body>
+
+</html>
