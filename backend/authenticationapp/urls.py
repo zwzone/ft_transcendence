@@ -1,8 +1,8 @@
 from django.urls import path
 
-from authenticationapp.views import IntraAuthAPIView ,IntraRedirectAPIView
+from authenticationapp.views import intra_auth_api, intra_redirect_api
 
 urlpatterns = [
-    path('auth/', IntraAuthAPIView.as_view(), name='authAPI'),
-    path('redirect/', IntraRedirectAPIView.as_view(), name='redirectAPI'),
+    path('auth/', intra_auth_api, name='authAPI'),
+    path('redirect/', intra_redirect_api, name='redirectAPI'),
 ]
