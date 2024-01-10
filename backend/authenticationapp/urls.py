@@ -1,8 +1,8 @@
 from django.urls import path
 
-from authenticationapp.views import intra_auth_api, intra_redirect_api
+from authenticationapp.views import intra_auth, callback_auth
 
 urlpatterns = [
-    path('auth/', intra_auth_api, name='authAPI'),
-    path('redirect/', intra_redirect_api, name='redirectAPI'),
+    path('intra/', intra_auth, name='intraAPI'),
+    path('callback/', callback_auth, name='callbackAPI'),
 ]

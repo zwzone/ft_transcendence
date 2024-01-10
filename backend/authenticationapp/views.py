@@ -12,8 +12,8 @@ from .models import Player
 @api_view(['GET'])
 @authentication_classes([])
 @permission_classes([])
-def intra_redirect_api(request):
-    redirect_uri = urlencode({"redirect_uri": request.build_absolute_uri(reverse("authAPI"))})
+def intra_auth(request):
+    redirect_uri = urlencode({"redirect_uri": request.build_absolute_uri(reverse("callbackAPI"))})
     authorization_url = f"https://api.intra.42.fr/oauth/authorize?client_id={getenv('CLIENT_ID')}&{redirect_uri}&response_type=code"
     return redirect(authorization_url)
 
@@ -21,7 +21,7 @@ def intra_redirect_api(request):
 @api_view(['GET'])
 @authentication_classes([])
 @permission_classes([])
-def intra_auth_api(request):
+def callback_auth(request):
     code = request.GET.get("code")
     error_message = request.GET.get("error")
     if error_message is not None:
@@ -35,24 +35,13 @@ def intra_auth_api(request):
         "client_id": getenv("CLIENT_ID"),
         "client_secret": getenv("CLIENT_SECRET"),
         "code": code,
-        "redirect_uri": request.build_absolute_uri(reverse("authAPI")),
+        "redirect_uri": request.build_absolute_uri(reverse("callbackAPI")),
     }
     auth_response = requests.post("https://api.intra.42.fr/oauth/token", data=data)
     if "error_description" in auth_response.json():
         return Response({"statusCode": status.HTTP_401_UNAUTHORIZED, "detail": auth_response.get("error_description")},
                         status=status.HTTP_200_OK)
-    access_token = auth_response.json()["access_token"]
-    user_response = requests.get("https://api.intra.42.fr/v2/me", headers={"Authorization": f"Bearer {access_token}"})
-    if not user_response or user_response.status_code != 200:
-        return Response({"statusCode": status.HTTP_403_FORBIDDEN,
-                         "detail": "No access token in the token response"})
-    username = user_response.json()["login"]
-    display_name = user_response.json()["displayname"]
-    email = user_response.json()["email"]
-    try:
-        user = get_user_model().objects.get(username=username)
-        return Response({"statusCode": 200}, status=status.HTTP_200_OK)
-    except Player.DoesNotExist:
-        user = Player.objects.create_user(username=username, display_name=display_name, email=email)
-        login(request, user)
-        return Response({"statusCode": 200}, status=status.HTTP_200_OK)
+    response = redirect("http://localhost/home")
+    response.set_cookie("access_token", auth_response.json()["access_token"])
+    response.set_cookie("refresh_token", auth_response.json()["refresh_token"])
+    return response
