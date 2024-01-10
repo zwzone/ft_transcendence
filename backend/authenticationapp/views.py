@@ -6,6 +6,7 @@ from django.utils.http import urlencode
 from rest_framework import status
 from rest_framework.decorators import authentication_classes, permission_classes, api_view
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
 from .models import Player
 
 
