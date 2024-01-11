@@ -5,5 +5,5 @@ from rest_framework.response import Response
 @api_view(['GET'])
 @authentication_classes([])
 @permission_classes([])
-def player(request):
+def player_api(request):
     return Response("This is the player")
