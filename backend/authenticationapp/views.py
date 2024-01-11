@@ -14,7 +14,7 @@ from .models import Player
 @authentication_classes([])
 @permission_classes([])
 def intra_auth(request):
-    redirect_uri = urlencode({"redirect_uri": request.build_absolute_uri(reverse("callbackAPI"))})
+    redirect_uri = urlencode({"redirect_uri": request.build_absolute_uri(reverse("callbackView"))})
     authorization_url = f"https://api.intra.42.fr/oauth/authorize?client_id={getenv('CLIENT_ID')}&{redirect_uri}&response_type=code"
     return redirect(authorization_url)
 
@@ -36,7 +36,7 @@ def callback_auth(request):
         "client_id": getenv("CLIENT_ID"),
         "client_secret": getenv("CLIENT_SECRET"),
         "code": code,
-        "redirect_uri": request.build_absolute_uri(reverse("callbackAPI")),
+        "redirect_uri": request.build_absolute_uri(reverse("callbackView")),
     }
     auth_response = requests.post("https://api.intra.42.fr/oauth/token", data=data)
     if "error_description" in auth_response.json():
