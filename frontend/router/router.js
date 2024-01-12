@@ -14,7 +14,7 @@ const router = {
       router.go(event.state.route);
     });
     // check if the player is logged in
-/*     const xfetch = new XMLHttpRequest();
+    const xfetch = new XMLHttpRequest();
     xfetch.open("GET", "http://localhost:8000/auth/islogged");
     xfetch.withCredentials = true;
     xfetch.responseType = "json";
@@ -22,12 +22,12 @@ const router = {
     if (xfetch.statusCode == 401 || xfetch.statusCode == 403) {
       location.pathname = "/login";
     } else if (xfetch.statusCode == 200) {
-    } */
+      if (location.pathname == "/login") location.pathname = "/home";
+    }
     router.go(location.pathname, "replace");
   },
 
   go: (route, state = "") => {
-    console.log(`Going to ${route}`);
     if (state == "add") history.pushState({ route }, "", route);
     if (state == "replace") history.replaceState({ route }, "", route);
     let pageElement;
