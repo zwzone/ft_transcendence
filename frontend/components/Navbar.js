@@ -3,11 +3,11 @@ import Router from "../router/router.js";
 export default class Navbar extends HTMLElement {
   constructor() {
     super();
+  }
+  connectedCallback() {
     const template = document.getElementById("my-navbar");
     const component = template.content.cloneNode(true);
     this.appendChild(component);
-  }
-  connectedCallback() {
     const handleLink = (event) => {
       event.preventDefault();
       const url = event.target.getAttribute("href");

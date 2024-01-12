@@ -38,13 +38,19 @@
   <!-- HOME PAGE -->
   <template id="home-template">
     <my-navbar></my-navbar>
-    <main class="container-sm my-5">
+    <main class="container-fluid my-5">
       <section class="d-flex flex-column gap-2" id="playing">
         <div class="row justify-content-center gap-2">
           <my-card color="success" headText="PLAY PONG ONLINE"></my-card>
           <my-card color="success" headText="PLAY PONG OFFLINE"></my-card>
-          <my-card color="primary" headText="CREATE TOURNAMENT"></my-card>
-          <my-card color="primary" headText="TETRIS"></my-card>
+        </div>
+        <div class="row justify-content-center gap-2">
+          <my-card color="primary" headText="CREATE A TOURNAMENT"></my-card>
+          <my-card color="primary" headText="ENTER A TOURNAMENT"></my-card>
+        </div>
+        <div class="row justify-content-center gap-2">
+          <my-card color="warning" headText="PLAY TICTACTOE ONLINE"></my-card>
+          <my-card color="warning" headText="PLAY TICTACTOE OFFLINE"></my-card>
         </div>
       </section>
     </main>
@@ -54,10 +60,19 @@
   <template id="login-template">
     <div class="container-fluid" style="height: 100vh;">
       <div class="row" style="height: 100%;">
-        <div class=" d-flex flex-column justify-content-center align-items-center col-sm-4 bg-secondary py-2">
-          <img src="public/pong_logo.png" alt="logo">
-          <h1 class="text-light display-1 text-center">PING PONG</h1>
-          <a class="btn btn-light btn-lg rounded-5 mt-5" href="/home">42 LOGIN</a>
+        <div class=" d-flex flex-column justify-content-center align-items-center col-sm-4 bg-secondary py-2 gap-5">
+          <div class="d-flex flex-column justify-content-center align-items-center">
+            <img src="public/pong_logo.png" alt="logo">
+            <h1 class="text-light display-1 text-center">PING PONG</h1>
+          </div>
+          <div class="d-flex flex-column justify-content-center align-items-center gap-3">
+            <div class="border border-5 border-success-subtle rounded-5">
+              <a class="btn btn-success btn-lg rounded-5" href="http://localhost:8000/auth/intra">42 LOGIN</a>
+            </div>
+            <div class="border border-5 border-primary-subtle rounded-5">
+              <a class="btn btn-primary btn-lg rounded-5" href="http://localhost:8000/auth/google">GOOGLE LOGIN</a>
+            </div>
+          </div>
         </div>
         <div class="d-flex col-sm-8 p-0 justify-content-center align-items-center" style="background-color: gray;">
           <img class="d-block img-fluid " src="public/pong.jpg" alt="pong image">
@@ -78,11 +93,50 @@
   <!-- PROFILE PAGE -->
   <template id="profile-template">
     <my-navbar></my-navbar>
+    <main class="container-fluid d-flex flex-column gap-5 my-5">
+      <div class="row bg-body">
+        <div class="col">profile informations</div>
+        <div class="col">HERE YOU GO</div>
+      </div>
+      <div class="row bg-body">
+        <div class="col">match history</div>
+        <div class="col">HERE YOU GO</div>
+      </div>
+    </main>
   </template>
 
   <!-- SETTING PAGE -->
   <template id="setting-template">
     <my-navbar></my-navbar>
+    <main class="container-fluid d-flex flex-column gap-5 my-5">
+      <div class="row">
+        <div class="col-sm-3 d-flex justify-content-start align-items-start mb-1">
+          <button class="btn btn-lg btn-warning rounded-5 px-3 py-2">Change Avatar</button>
+        </div>
+        <div class="col-sm-9 d-flex justify-content-start align-items-start mt-1">
+          <div class="border border-5" style="width: 100px; height: 100px;"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 d-flex justify-content-start align-items-start mb-1">
+          <button class="btn btn-lg btn-warning rounded-5 px-3 py-2">Change Full Name</button>
+        </div>
+        <div class="col-sm-9 d-flex justify-content-start align-items-start mt-1">
+          <input type="text" class="input-group" style="width: 150px;"/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <button class="btn btn-lg btn-primary rounded-5">Enable Two-factor authentication (2FA)</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <button class="btn btn-lg btn-danger rounded-5">Delete Account</button>
+          <button class="btn btn-lg btn-outline-danger rounded-5">ARE YOU SURE ABOUT THAT !</button>
+        </div>
+      </div>
+    </main>
   </template>
 
   <!-- TOURNAMENT PAGE -->
@@ -116,7 +170,7 @@
   <!-- CARD -->
   <template id="my-card">
     <div class="card-header">
-      <h1 class="text-center mb-0">PONG ONLINE</h1>
+      <h1 class="text-center"></h1>
     </div>
     <div class="card-body d-flex flex-column justify-content-center align-items-center">
       <a href="/game" class="btn border-light">PLAY</a>
