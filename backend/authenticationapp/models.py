@@ -7,7 +7,5 @@ class Player(AbstractUser):
     username = models.CharField(max_length=20, blank=False, null=False, unique=True)
     tournament_name = models.CharField(max_length=20, blank=False, null=True)
 
-    REQUIRED_FIELDS = ['display_name', 'tournament_name']  # Add any additional required fields
-
     def __str__(self):
         return self.email
