@@ -1,11 +1,13 @@
 export default class Card extends HTMLElement {
   constructor() {
     super();
+  }
+
+  connectedCallback() {
     const template = document.getElementById("my-card");
     const component = template.content.cloneNode(true);
+    console.log(component.children);
     this.appendChild(component);
-  }
-  connectedCallback() {
     this.style.width = "fit-content";
     this.style.paddingInline = "0";
     const color = this.getAttribute("color");
