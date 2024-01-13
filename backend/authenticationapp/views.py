@@ -1,9 +1,12 @@
 import requests
 from os import getenv
+from django.contrib.auth import login
 from django.shortcuts import redirect, reverse
 from django.utils.http import urlencode
 from rest_framework.decorators import authentication_classes, permission_classes, api_view
 from rest_framework.response import Response
+from .service import GoogleAccessTokens
+from .models import Player
 # from rest_framework_simplejwt.tokens import RefreshToken
 
 
@@ -68,12 +71,14 @@ def google_auth(request):
 @authentication_classes([])
 @permission_classes([])
 def google_callback_auth(request):
+    if request.user.is_authenticated:
+        return redirect("index")
     code = request.GET.get("code")
     error = request.GET.get("error")
     if error is not None:
-        return Response({"statusCode": 200, "error": error})
+        return Response({"statusCode": 401, "error": error})
     if code is None:
-        return Response({"statusCode": 200, "error": "User Not Autorized"})
+        return Response({"statusCode": 401, "error": "User Not Autorized"})
     data = {
         "code": code,
         "client_id": getenv("GOOGLE_CLIENT_ID"),
@@ -83,6 +88,23 @@ def google_callback_auth(request):
     }
     auth_response = requests.post("https://oauth2.googleapis.com/token", data=data)
     if not auth_response.ok :
-        return Response({"statusCode": 200, "error": "Failed to obtain access token from Google."})
-    # TODO: JWT
-    return Response({"statusCode": 200, "JWT": ""})
+        return Response({"statusCode": 401, "error": "Failed to obtain access token from Google."})
+    tokens = auth_response.json()
+    google_tokens = GoogleAccessTokens(id_token=tokens["id_token"], access_token=tokens["access_token"])
+    if tokens["access_token"] is None:
+        return Response({"statusCode": 401, "error": "AccessToken is invalid"})
+    id_token_decoded = google_tokens.decode_id_token()
+    player_email = id_token_decoded["email"]
+    username = id_token_decoded["name"]
+    player, created = Player.objects.get_or_create(email=player_email, username=username)
+    if created:
+        print(player_email)
+    if player is None:
+        return Response({"statusCode": 401, "error": "can't create player"})
+    login(request, player)
+
+    result = {
+        "id_token_decoded": id_token_decoded,
+        "player_email": player_email,
+    }
+    return Response(result)

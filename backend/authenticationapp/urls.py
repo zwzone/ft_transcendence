@@ -1,6 +1,6 @@
 from django.urls import path
-
 from authenticationapp.views import intra_auth, intra_callback_auth, google_auth, google_callback_auth
+
 
 urlpatterns = [
     path('intra/', intra_auth, name='intraView'),
