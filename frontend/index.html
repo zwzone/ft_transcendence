@@ -41,16 +41,10 @@
     <main class="container-fluid my-5">
       <section class="d-flex flex-column gap-2" id="playing">
         <div class="row justify-content-center gap-2">
-          <my-card color="success" headText="PLAY PONG ONLINE"></my-card>
-          <my-card color="success" headText="PLAY PONG OFFLINE"></my-card>
+          <play-card color="success" headText="PLAY PONG"></my-card>
         </div>
         <div class="row justify-content-center gap-2">
-          <my-card color="primary" headText="CREATE A TOURNAMENT"></my-card>
-          <my-card color="primary" headText="ENTER A TOURNAMENT"></my-card>
-        </div>
-        <div class="row justify-content-center gap-2">
-          <my-card color="warning" headText="PLAY TICTACTOE ONLINE"></my-card>
-          <my-card color="warning" headText="PLAY TICTACTOE OFFLINE"></my-card>
+          <play-card color="primary" headText="TIC TAC TOE"></my-card>
         </div>
       </section>
     </main>
@@ -134,16 +128,6 @@
             <friend-card></friend-card>
             <friend-card></friend-card>
             <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
           </div>
         </div>
       </div>
@@ -213,12 +197,14 @@
   </template>
 
   <!-- CARD -->
-  <template id="my-card">
-    <div class="card-header">
-      <h1 class="text-center"></h1>
-    </div>
-    <div class="card-body d-flex flex-column justify-content-center align-items-center">
-      <a href="/game" class="btn border-light">PLAY</a>
+  <template id="play-card">
+    <h1 class="text-center"></h1>
+    <div class="d-flex flex-column justify-content-center align-items-center">
+      <button class="btn">Play Online 1v1</button>
+      <button class="btn">Play Online 1v1v1v1</button>
+      <button class="btn">Play Online 2v2</button>
+      <button class="btn">Play With AI</button>
+      <button class="btn">Play CO-OP</button>
     </div>
   </template>
 

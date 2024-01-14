@@ -1,4 +1,4 @@
-export default class Match extends HTMLElement {
+export default class MatchCard extends HTMLElement {
   constructor() {
     super();
   }
@@ -10,4 +10,4 @@ export default class Match extends HTMLElement {
   }
 }
 
-customElements.define("match-card", Match);
+customElements.define("match-card", MatchCard);

@@ -3,9 +3,9 @@ import router from "./router/router.js";
 
 // Components
 import Navbar from "./components/Navbar.js";
-import Card from "./components/Card.js";
-import Friend from "./components/Friend.js";
-import Match from "./components/Match.js";
+import PlayCard from "./components/PlayCard.js";
+import FriendCard from "./components/FriendCard.js";
+import MatchCard from "./components/MatchCard.js";
 
 // Pages
 import GamePage from "./pages/GamePage.js";

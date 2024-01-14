@@ -1,4 +1,4 @@
-export default class Friend extends HTMLElement {
+export default class FriendCard extends HTMLElement {
   constructor() {
     super();
   }
@@ -10,4 +10,4 @@ export default class Friend extends HTMLElement {
   }
 }
 
-customElements.define("friend-card", Friend);
+customElements.define("friend-card", FriendCard);
