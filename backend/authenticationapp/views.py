@@ -7,8 +7,6 @@ from rest_framework.response import Response
 from .service import GoogleAccessTokens, generate_jwt
 from .models import Player
 
-# from rest_framework_simplejwt.tokens import RefreshToken
-
 
 @api_view(['GET'])
 @authentication_classes([])
