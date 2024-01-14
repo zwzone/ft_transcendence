@@ -186,26 +186,28 @@
 
   <!-- NAVBAR -->
   <template id="my-navbar">
-    <nav class="navbar navbar-expand-sm bg-body-secondary">
-      <div class="container-fluid">
-        <a class="navbar-brand btn btn-outline-light" href="/home">PING PONG</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-          aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-          <div class="navbar-nav">
-            <a class="nav-link" href="/tournament">Tournament</a>
-            <a class="nav-link" href="/profile">Profile</a>
-            <a class="nav-link" href="/setting">Setting</a>
-            <a class="nav-link" href="/login">Logout</a>
-          </div>
-        </div>
-      </div>
+    <a class="logo btn rounded-5" href="/home">FT_TRANSCENDENCE</a>
+    <div class="hamburger">
+      <div class="line"></div>
+      <div class="line"></div>
+      <div class="line"></div>
+    </div>
+    <nav class="nav-bar">
+      <ul class="d-flex p-0 m-0 gap-1">
+        <li>
+          <a class="link btn" href="/tournament">Tournament</a>
+        </li>
+        <li>
+          <a class="link btn" href="/profile">Profile</a>
+        </li>
+        <li>
+          <a class="link btn" href="/setting">Setting</a>
+        </li>
+      </ul>
     </nav>
   </template>
 
-  <!-- CARD -->
+  <!-- PLAY CARD -->
   <template id="play-card">
     <h1 class="text-center"></h1>
     <div class="d-flex flex-column justify-content-center align-items-center">
@@ -217,7 +219,7 @@
     </div>
   </template>
 
-  <!-- FRIEND -->
+  <!-- FRIEND CARD -->
   <template id="friend-card">
     <div class="d-flex flex-column justify-content-center align-items-center border border-1 border-black p-1">
       <div class="border border-1 border-primary-subtle" style="width: 50px; height: 50px;"></div>
@@ -225,7 +227,7 @@
     </div>
   </template>
 
-  <!-- MATCH -->
+  <!-- MATCH CARD -->
   <template id="match-card">
     <div class="d-flex justify-content-center align-items-center border border-1 border-black gap-3 py-2 px-3" >
       <h6 class="text-center">Wina</h6>

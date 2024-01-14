@@ -8,16 +8,17 @@ export default class Navbar extends HTMLElement {
     const template = document.getElementById("my-navbar");
     const component = template.content.cloneNode(true);
     this.appendChild(component);
+
     const handleLink = (event) => {
       event.preventDefault();
       const url = event.target.getAttribute("href");
       Router.go(url, "add");
     };
 
-    const brand = this.querySelector("a.navbar-brand");
-    brand.addEventListener("click", handleLink);
+    const logo = this.querySelector(".logo");
+    logo.addEventListener("click", handleLink);
 
-    const links = this.querySelectorAll("a.nav-link");
+    const links = this.querySelectorAll(".link.btn");
     links.forEach((link) => {
       link.addEventListener("click", handleLink);
     });
