@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "drf_yasg",
-    "authenticationapp.apps.AuthenticationappConfig",
+    "authenticationapp",
+    "apiapp",
 ]
 
 MIDDLEWARE = [
@@ -131,7 +132,7 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-AUTH_USER_MODEL = "authenticationapp.Player"
+AUTH_USER_MODEL = "apiapp.Player"
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True

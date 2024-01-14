@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.exceptions import InvalidToken
 from .serializers import UserSerializer
-from authenticationapp.models import Player
+from .models import Player
 
 
 @api_view(['GET'])
