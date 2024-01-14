@@ -6,7 +6,6 @@ export default class PlayCard extends HTMLElement {
   connectedCallback() {
     const template = document.getElementById("play-card");
     const component = template.content.cloneNode(true);
-    console.log(component.children);
     this.appendChild(component);
     const color = this.getAttribute("color");
     const game = this.getAttribute("headText");
