@@ -1,0 +1,8 @@
+#canvas-pong {
+    width: 80%;
+    height: 50%;
+    background: url("../public/background.jpg");
+    background-position: center;
+    background-size: cover;
+    border-radius: 8px;
+}
