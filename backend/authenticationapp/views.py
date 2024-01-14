@@ -4,7 +4,8 @@ from django.shortcuts import redirect, reverse
 from django.utils.http import urlencode
 from rest_framework.decorators import authentication_classes, permission_classes, api_view
 from rest_framework.response import Response
-# from rest_framework_simplejwt.tokens import RefreshToken
+from .service import GoogleAccessTokens, generate_jwt
+from apiapp.models import Player
 
 
 @api_view(['GET'])
@@ -20,6 +21,8 @@ def intra_auth(request):
 @authentication_classes([])
 @permission_classes([])
 def intra_callback_auth(request):
+    if request.user.is_authenticated:
+        return redirect("http://localhost/home")
     code = request.GET.get("code")
     error_message = request.GET.get("error")
     if error_message is not None:
@@ -38,8 +41,22 @@ def intra_callback_auth(request):
     auth_response = requests.post("https://api.intra.42.fr/oauth/token", data=data)
     if not auth_response.ok:
         return Response({"statusCode": 401, "detail": auth_response.get("error_description")})
-    # TODO: JWT
-    return Response({"statusCode": 200, "JWT": ""})
+    access_token = auth_response.json()["access_token"]
+    user_response = requests.get(
+        "https://api.intra.42.fr/v2/me",
+        headers={"Authorization": f"Bearer {access_token}"},
+    )
+    if not user_response.ok:
+        return Response({"statusCode": 401, "detail": "No access token in the token response"})
+    email = user_response.json()["email"]
+    username = user_response.json()["displayname"]
+    player, created = Player.objects.get_or_create(email=email, username=username)
+    if player is None:
+        return Response({"statusCode": 401, "error": "can't create or get player"})
+    jwt_token = generate_jwt(player)
+    response = redirect("http://localhost/home")
+    response.set_cookie("jwt_token", value=jwt_token, httponly=True)
+    return response
 
 @api_view(["GET"])
 @authentication_classes([])
@@ -64,16 +81,19 @@ def google_auth(request):
     google_authorization_url = f"{GOOGLE_AUTH_URL}?{query_params}"
     return redirect(google_authorization_url)
 
+# TODO: This should be tested with Postman because of the first if condition
 @api_view(["GET"])
 @authentication_classes([])
 @permission_classes([])
 def google_callback_auth(request):
+    if request.user.is_authenticated:
+        return redirect("http://localhost/home")
     code = request.GET.get("code")
     error = request.GET.get("error")
     if error is not None:
-        return Response({"statusCode": 200, "error": error})
+        return Response({"statusCode": 401, "error": error})
     if code is None:
-        return Response({"statusCode": 200, "error": "User Not Autorized"})
+        return Response({"statusCode": 401, "error": "User Not Autorized"})
     data = {
         "code": code,
         "client_id": getenv("GOOGLE_CLIENT_ID"),
@@ -83,6 +103,27 @@ def google_callback_auth(request):
     }
     auth_response = requests.post("https://oauth2.googleapis.com/token", data=data)
     if not auth_response.ok :
-        return Response({"statusCode": 200, "error": "Failed to obtain access token from Google."})
-    # TODO: JWT
-    return Response({"statusCode": 200, "JWT": ""})
+        return Response({"statusCode": 401, "error": "Failed to obtain access token from Google."})
+    tokens = auth_response.json()
+    if tokens["access_token"] is None:
+        return Response({"statusCode": 401, "error": "AccessToken is invalid"})
+    google_tokens = GoogleAccessTokens(id_token=tokens["id_token"], access_token=tokens["access_token"])
+    id_token_decoded = google_tokens.decode_id_token()
+    email = id_token_decoded["email"]
+    username = id_token_decoded["name"]
+    player, created = Player.objects.get_or_create(email=email, username=username)
+    if player is None:
+        return Response({"statusCode": 401, "error": "can't create or get player"})
+    jwt_token = generate_jwt(player)
+    response = redirect("http://localhost/home")
+    response.set_cookie("jwt_token", value=jwt_token, httponly=True)
+    return response
+
+@api_view(["GET"])
+@authentication_classes([])
+@permission_classes([])
+def is_logged_in_auth(request):
+    access_token = request.COOKIES["access_token"]
+    refresh_token = request.COOKIES["refresh_token"]
+    if access_token is None or refresh_token is None:
+        return Response({"statusCode":401, "error": "invalid"})

@@ -6,3 +6,5 @@ db.sqlite3
 *.conf
 **/__pycache__
 *.pyc
+migrations/
+!migrations/__init__.py
