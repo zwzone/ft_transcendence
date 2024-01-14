@@ -1,11 +1,9 @@
+from django.conf import settings
 from rest_framework.decorators import authentication_classes, permission_classes, api_view
 from rest_framework.response import Response
-from django.contrib.auth.models import User
-from rest_framework_simplejwt.tokens import AccessToken
-from rest_framework_simplejwt.exceptions import InvalidToken
 from .serializers import UserSerializer
 from .models import Player
-
+import jwt
 
 @api_view(['GET'])
 @authentication_classes([])
@@ -18,18 +16,21 @@ def player_api(request):
             "message": "JWT token not found in cookies",
         })
     try:
-        decoded_token = AccessToken(token)
-        user_id = decoded_token['user_id']
-        user = Player.objects.get(id=user_id)
-        serializer = UserSerializer(user)
+        decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+        id = decoded_token['id']
+        user = Player.objects.get(id=id)
         return Response({
             "status": 200,
-            "player": serializer.data
+            "user": {
+                "id": user.id,
+                "username": user.username,
+                # Add other user attributes here
+            }
         })
-    except InvalidToken as e:
+    except Player.DoesNotExist:
         return Response({
-            "status": 401,
-            "message": str(e),
+            "status": 404,
+            "message": "User not found",
         })
 
 @api_view(['GET'])
