@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from .models import Player
+from apiapp.models import Player
 from typing import Dict
 import jwt, datetime
 

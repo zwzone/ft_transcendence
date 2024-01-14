@@ -5,7 +5,7 @@ from django.utils.http import urlencode
 from rest_framework.decorators import authentication_classes, permission_classes, api_view
 from rest_framework.response import Response
 from .service import GoogleAccessTokens, generate_jwt
-from .models import Player
+from apiapp.models import Player
 
 
 @api_view(['GET'])
