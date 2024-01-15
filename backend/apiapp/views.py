@@ -2,7 +2,7 @@ from drf_yasg.utils import swagger_auto_schema
 from django.conf import settings
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import PlayerSerializer, UsernameSerializer
+from .serializers import PlayerSerializer, UsernameSerializer, FirstNameSerializer, LastNameSerializer
 from .models import Player
 import jwt
 from jwt.exceptions import ExpiredSignatureError
@@ -101,43 +101,6 @@ class PlayerInfoView(APIView):
                 "message": str(e),
             })
 
-
-class PlayerFirstNameView(APIView):
-    authentication_classes = []
-    permission_classes = []
-
-    def get(self, request):
-        token = request.COOKIES.get('jwt_token')
-        if not token:
-            return Response({
-                "status": 401,
-                "message": "JWT token not found in cookies",
-            })
-        try:
-            decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-            id = decoded_token['id']
-            user = Player.objects.get(id=id)
-            return Response({
-                "status": 200,
-                "first_name": user.first_name
-            })
-        except Player.DoesNotExist:
-            return Response({
-                "status": 404,
-                "message": "User not found",
-            })
-        except ExpiredSignatureError:
-            return Response({
-                "status": 401,
-                "message": "JWT token has expired",
-            })
-        except Exception as e:
-            return Response({
-                "status": 500,
-                "message": str(e),
-            })
-
-
 class PlayerLastNameView(APIView):
     authentication_classes = []
     permission_classes = []
@@ -172,7 +135,47 @@ class PlayerLastNameView(APIView):
                 "status": 500,
                 "message": str(e),
             })
-
+    @swagger_auto_schema(request_body=LastNameSerializer)
+    def post(self, request):
+        token = request.COOKIES.get('jwt_token')
+        if not token:
+            return Response({
+                "status": 401,
+                "message": "JWT token not found in cookies",
+            })
+        try:
+            decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+            id = decoded_token['id']
+            user = Player.objects.get(id=id)
+            last_name = request.data.get('last_name')
+            if not last_name:
+                return Response({
+                    "status": 400,
+                    "message": "Last name not provided",
+                })
+            user.last_name = last_name
+            user.save()
+            serializer = PlayerSerializer(user)
+            return Response({
+                "status": 200,
+                "message": "Last name updated successfully",
+            })
+        except Player.DoesNotExist:
+            return Response({
+                "status": 404,
+                "message": "User not found",
+            })
+        except ExpiredSignatureError:
+            return Response({
+                "status": 401,
+                "message": "JWT token has expired",
+            })
+        except Exception as e:
+            return Response({
+                "status": 500,
+                "message": str(e),
+            })
+        
 
 class PlayerUsernameView(APIView):
     authentication_classes = []
@@ -284,6 +287,81 @@ class PlayerAvatarView(APIView):
             return Response({
                 "status": 500,
                 "message": "what" + str(e),
+            })
+        
+class PlayerFirstNameView(APIView):
+    authentication_classes = []
+    permission_classes = []
+
+    def get(self, request):
+        token = request.COOKIES.get('jwt_token')
+        if not token:
+            return Response({
+                "status": 401,
+                "message": "JWT token not found in cookies",
+            })
+        try:
+            decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+            id = decoded_token['id']
+            user = Player.objects.get(id=id)
+            return Response({
+                "status": 200,
+                "first_name": user.first_name
+            })
+        except Player.DoesNotExist:
+            return Response({
+                "status": 404,
+                "message": "User not found",
+            })
+        except ExpiredSignatureError:
+            return Response({
+                "status": 401,
+                "message": "JWT token has expired",
+            })
+        except Exception as e:
+            return Response({
+                "status": 500,
+                "message": str(e),
+            })
+    @swagger_auto_schema(request_body=FirstNameSerializer)
+    def post(self, request):
+        token = request.COOKIES.get('jwt_token')
+        if not token:
+            return Response({
+                "status": 401,
+                "message": "JWT token not found in cookies",
+            })
+        try:
+            decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+            id = decoded_token['id']
+            user = Player.objects.get(id=id)
+            first_name = request.data.get('first_name')
+            if not first_name:
+                return Response({
+                    "status": 400,
+                    "message": "First name not provided",
+                })
+            user.first_name = first_name
+            user.save()
+            serializer = PlayerSerializer(user)
+            return Response({
+                "status": 200,
+                "message": "First name updated successfully",
+            })
+        except Player.DoesNotExist:
+            return Response({
+                "status": 404,
+                "message": "User not found",
+            })
+        except ExpiredSignatureError:
+            return Response({
+                "status": 401,
+                "message": "JWT token has expired",
+            })
+        except Exception as e:
+            return Response({
+                "status": 500,
+                "message": str(e),
             })
 
 # this is commented out because it is not used right now
