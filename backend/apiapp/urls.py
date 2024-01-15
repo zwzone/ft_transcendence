@@ -1,11 +1,13 @@
 from django.urls import path
+from apiapp.views import PlayerUsernameView, PlayerLastNameView, \
+    PlayerFirstNameView , PlayerInfoView , PlayerAvatarView    
 
-from apiapp.views import player_api, get_user_by_username, update_username, get_avatar, update_avatar
 
 urlpatterns = [
-    path('player/', player_api, name='playerView'),
-    path('player/<str:username>/', get_user_by_username, name='getPlayerByUsername'),
-    path('player/UpdateUsername', update_username, name='postUsername'),
-    path('player/avatar', get_avatar, name='getAvatar'),
-    path('player/avatar/Update', update_avatar, name='postAvatar'),
+    path('player/', PlayerInfoView.as_view(), name='playerView'),
+    path('player/username', PlayerUsernameView.as_view(), name='playerUsernameView'),
+    path('player/first_name', PlayerFirstNameView.as_view, name='playerFirstNameView'),
+    path('player/last_name', PlayerLastNameView.as_view(), name='playerLastNameView'),
+    path('player/avatar', PlayerAvatarView.as_view(), name='playerAvatarView'),
+    # path('player/avatar/update', update_avatar, name='postAvatar'),
 ]

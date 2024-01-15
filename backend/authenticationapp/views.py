@@ -49,13 +49,11 @@ def intra_callback_auth(request):
     if not user_response.ok:
         return Response({"statusCode": 401, "detail": "No access token in the token response"})
     email = user_response.json()["email"]
-    full_name = user_response.json()["displayname"]
     first_name = user_response.json()["first_name"]
     last_name = user_response.json()["last_name"]
     username = user_response.json()["login"]
-
-    Avatar = user_response.json()["image"]["link"]
-    player, created = Player.objects.get_or_create(email=email, username=username, full_name=full_name, first_name=first_name, last_name=last_name, Avatar=Avatar)
+    avatar = user_response.json()["image"]["link"]
+    player, created = Player.objects.get_or_create(email=email, username=username, first_name=first_name, last_name=last_name, avatar=avatar)
     if player is None:
         return Response({"statusCode": 401, "error": "can't create or get player"})
     jwt_token = generate_jwt(player)
