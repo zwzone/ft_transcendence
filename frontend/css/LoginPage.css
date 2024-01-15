@@ -1,0 +1,28 @@
+login-page {
+  display: flex;
+}
+
+login-page .sidebar {
+  background: linear-gradient(var(--color-light-green), var(--color-yellow));
+}
+
+login-page .sidebar h1 {
+  color: var(--color-blue);
+}
+
+@media only screen and (max-width: 576px) {
+  login-page {
+    flex-direction: column;
+  }
+
+  login-page .sidebar {
+    padding-block: 2rem !important;
+    width: 100% !important;
+    min-height: auto !important;
+  }
+
+  login-page .wallpaper {
+    width: 100% !important;
+    min-height: auto !important;
+  }
+}

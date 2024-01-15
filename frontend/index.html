@@ -61,35 +61,26 @@
 
   <!-- LOGIN PAGE -->
   <template id="login-template">
-    <div class="container-fluid" style="height: 100vh;">
-      <div class="row" style="height: 100%;">
-        <div class=" d-flex flex-column justify-content-center align-items-center col-sm-4 bg-secondary py-2 gap-5">
-          <div class="d-flex flex-column justify-content-center align-items-center">
-            <img src="public/pong_logo.png" alt="logo">
-            <h1 class="text-light display-1 text-center">PING PONG</h1>
-          </div>
-          <div class="d-flex flex-column justify-content-center align-items-center gap-3">
-            <div class="border border-5 border-success-subtle rounded-5">
-              <a class="btn btn-success btn-lg rounded-5" href="http://localhost:8000/auth/intra">42 LOGIN</a>
-            </div>
-            <div class="border border-5 border-primary-subtle rounded-5">
-              <a class="btn btn-primary btn-lg rounded-5" href="http://localhost:8000/auth/google">GOOGLE LOGIN</a>
-            </div>
-          </div>
-        </div>
-        <div class="d-flex col-sm-8 p-0 justify-content-center align-items-center" style="background-color: gray;">
-          <img class="d-block img-fluid " src="public/pong.jpg" alt="pong image">
-        </div>
+    <div class="sidebar d-flex flex-column justify-content-center align-items-center py-2 gap-5 min-vh-100 h-100 w-25">
+      <div class="d-flex flex-column justify-content-center align-items-center">
+        <img class="w-75" src="public/pong.svg" alt="logo">
+        <h1 class="display-1 text-center fw-bold m-0">PING PONG</h1>
       </div>
+      <div class="d-flex flex-column justify-content-center align-items-center gap-3">
+        <login-button color="success" link="http://localhost:8000/intra" text="Intra 42"></login-button>
+        <login-button color="primary" link="http://localhost:8000/google" text="Google"></login-button>
+      </div>
+    </div>
+    <div class="wallpaper d-flex p-0 justify-content-center align-items-center min-vh-100 h-100 w-75 bg-black">
+      <img class="d-block img-fluid" src="public/pong.jpg" alt="pong image">
     </div>
   </template>
 
   <!-- NOTFOUNT PAGE -->
   <template id="notfound-template">
-    <div
-      style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100vw; height: 100vh;">
-      <h1 style="text-align: center;">OPS, <span class="display-1">404</span></h1>
-      <h2 style="text-align: center;">ROUTE NOT FOUND !</h2>
+    <div class="d-flex flex-column justify-content-center align-items-center w-100 h-100">
+      <h1 class="fw-bold text-center text-danger">OPS, <span class="fw-bold display-1">404</span></h1>
+      <h2 class="fw-bold text-center text-danger">ROUTE NOT FOUND !</h2>
     </div>
   </template>
 
