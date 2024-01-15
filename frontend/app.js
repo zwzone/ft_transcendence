@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar.js";
 import PlayCard from "./components/PlayCard.js";
 import FriendCard from "./components/FriendCard.js";
 import MatchCard from "./components/MatchCard.js";
+import LoginButton from "./components/LoginButton.js";
 
 // Pages
 import GamePage from "./pages/GamePage.js";
