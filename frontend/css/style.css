@@ -1,0 +1,32 @@
+@import "./LoginPage.css";
+@import "./navbar.css";
+
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+:root {
+  --color-green-100: #4F6F52;
+  --color-green-200: #739072;
+  --color-green-300: #86A789;
+  --color-green-400: #D2E3C8;
+
+  --color-yellow-100: #FFAD84;
+  --color-yellow-200: #FFC47E;
+  --color-yellow-300: #FFE382;
+  --color-yellow-400: #FFF78A;
+
+  --color-blue: #80BCBD;
+  --color-green: #AAD9BB;
+  --color-light-green: #D5F0C1;
+  --color-yellow: #F9F7C9;
+}
+
+#root {
+  background: linear-gradient(var(--color-green-100), var(--color-yellow-400));
+  min-height: 100vh;
+}
