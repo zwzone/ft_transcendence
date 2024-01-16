@@ -13,9 +13,10 @@
 
   <!-- Bootstrap -->
   <link rel="stylesheet" href="bootstrap-5.3.2-dist/css/bootstrap.min.css">
-  <script defer src="bootstrap-5.3.2-dist/js/bootstrap.bundle.min.js"></script>
+  <script defer src="bootstrap-5.3.2-dist/js/bootstrap.min.js"></script>
 
   <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/pong.css">
 
   <!-- Vanilla JS -->
@@ -49,16 +50,10 @@
     <main class="container-fluid my-5">
       <section class="d-flex flex-column gap-2" id="playing">
         <div class="row justify-content-center gap-2">
-          <my-card color="success" headText="PLAY PONG ONLINE"></my-card>
-          <my-card color="success" headText="PLAY PONG OFFLINE"></my-card>
+          <play-card color="success" headText="PLAY PONG"></my-card>
         </div>
         <div class="row justify-content-center gap-2">
-          <my-card color="primary" headText="CREATE A TOURNAMENT"></my-card>
-          <my-card color="primary" headText="ENTER A TOURNAMENT"></my-card>
-        </div>
-        <div class="row justify-content-center gap-2">
-          <my-card color="warning" headText="PLAY TICTACTOE ONLINE"></my-card>
-          <my-card color="warning" headText="PLAY TICTACTOE OFFLINE"></my-card>
+          <play-card color="primary" headText="TIC TAC TOE"></my-card>
         </div>
       </section>
     </main>
@@ -66,35 +61,26 @@
 
   <!-- LOGIN PAGE -->
   <template id="login-template">
-    <div class="container-fluid" style="height: 100vh;">
-      <div class="row" style="height: 100%;">
-        <div class=" d-flex flex-column justify-content-center align-items-center col-sm-4 bg-secondary py-2 gap-5">
-          <div class="d-flex flex-column justify-content-center align-items-center">
-            <img src="public/pong_logo.png" alt="logo">
-            <h1 class="text-light display-1 text-center">PING PONG</h1>
-          </div>
-          <div class="d-flex flex-column justify-content-center align-items-center gap-3">
-            <div class="border border-5 border-success-subtle rounded-5">
-              <a class="btn btn-success btn-lg rounded-5" href="http://localhost:8000/auth/intra">42 LOGIN</a>
-            </div>
-            <div class="border border-5 border-primary-subtle rounded-5">
-              <a class="btn btn-primary btn-lg rounded-5" href="http://localhost:8000/auth/google">GOOGLE LOGIN</a>
-            </div>
-          </div>
-        </div>
-        <div class="d-flex col-sm-8 p-0 justify-content-center align-items-center" style="background-color: gray;">
-          <img class="d-block img-fluid " src="public/pong.jpg" alt="pong image">
-        </div>
+    <div class="sidebar d-flex flex-column justify-content-center align-items-center py-2 gap-5 min-vh-100 h-100 w-25">
+      <div class="d-flex flex-column justify-content-center align-items-center">
+        <img class="w-75" src="public/pong.svg" alt="logo">
+        <h1 class="display-1 text-center fw-bold m-0">PING PONG</h1>
       </div>
+      <div class="d-flex flex-column justify-content-center align-items-center gap-3">
+        <login-button color="success" link="http://localhost:8000/intra" text="Intra 42"></login-button>
+        <login-button color="primary" link="http://localhost:8000/google" text="Google"></login-button>
+      </div>
+    </div>
+    <div class="wallpaper d-flex p-0 justify-content-center align-items-center min-vh-100 h-100 w-75 bg-black">
+      <img class="d-block img-fluid" src="public/pong.jpg" alt="pong image">
     </div>
   </template>
 
   <!-- NOTFOUNT PAGE -->
   <template id="notfound-template">
-    <div
-      style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100vw; height: 100vh;">
-      <h1 style="text-align: center;">OPS, <span class="display-1">404</span></h1>
-      <h2 style="text-align: center;">ROUTE NOT FOUND !</h2>
+    <div class="d-flex flex-column justify-content-center align-items-center w-100 h-100">
+      <h1 class="fw-bold text-center text-danger">OPS, <span class="fw-bold display-1">404</span></h1>
+      <h2 class="fw-bold text-center text-danger">ROUTE NOT FOUND !</h2>
     </div>
   </template>
 
@@ -102,13 +88,48 @@
   <template id="profile-template">
     <my-navbar></my-navbar>
     <main class="container-fluid d-flex flex-column gap-5 my-5">
-      <div class="row bg-body">
-        <div class="col">profile informations</div>
-        <div class="col">HERE YOU GO</div>
+      <div class="d-flex justify-content-center align-items-center flex-wrap gap-2 p-3 bg-dark-subtle">
+        <div class="d-flex flex-column justify-content-center align-items-center bg-light-subtle p-2">
+          <div class="border border-5 border-primary" style="width: 150px; height: 150px;"></div>
+          <h1 class="text-center m-0" id="full-name">Zakaria Wina</h1>
+        </div>
+        <div class="d-flex flex-column bg-light-subtle flex-grow-1" style="max-width: 500px;">
+          <div class="d-flex justify-content-center align-items-center">
+            <h2 class="m-0 p-3">Wins :</h2>
+            <h2 class="m-0 p-3">10</h2>
+          </div>
+          <div class="d-flex justify-content-center align-items-center">
+            <h2 class="m-0 p-3">Losses :</h2>
+            <h2 class="m-0 p-3">10</h2>
+          </div>
+        </div>
       </div>
-      <div class="row bg-body">
-        <div class="col">match history</div>
-        <div class="col">HERE YOU GO</div>
+      <div class="d-flex justify-content-around align-items-center flex-wrap gap-2 p-3 bg-dark-subtle">
+        <div class="d-flex flex-column justify-content-center align-items-stretch gap-2 p-3 bg-light-subtle flex-grow-1" style="max-width: 1000px;">
+          <h2 class="text-center">Match History</h2>
+          <div id="match-cards" class="d-flex flex-column justify-content-center">
+            <match-card></match-card>
+            <match-card></match-card>
+            <match-card></match-card>
+            <match-card></match-card>
+            <match-card></match-card>
+          </div>
+        </div>
+        <div class="d-flex flex-column justify-content-center align-items-stretch gap-2 p-3 bg-light-subtle flex-grow-1" style="max-width: 1000px;">
+          <h2 class="text-center">My Friends</h2>
+          <div id="friend-cards" class="d-flex flex-wrap justify-content-center align-items-center gap-1">
+            <friend-card></friend-card>
+            <friend-card></friend-card>
+            <friend-card></friend-card>
+            <friend-card></friend-card>
+            <friend-card></friend-card>
+            <friend-card></friend-card>
+            <friend-card></friend-card>
+            <friend-card></friend-card>
+            <friend-card></friend-card>
+            <friend-card></friend-card>
+          </div>
+        </div>
       </div>
     </main>
   </template>
@@ -154,34 +175,65 @@
 
   <!--------------------------- COMPONENTS --------------------------->
 
+  <!-- LOGIN BUTTON -->
+  <template id="login-button">
+    <a class="btn btn-lg border border-5 rounded-5 fw-bold text-light"></a>
+  </template>
+
   <!-- NAVBAR -->
   <template id="my-navbar">
-    <nav class="navbar navbar-expand-sm bg-body-secondary">
-      <div class="container-fluid">
-        <a class="navbar-brand btn btn-outline-light" href="/home">PING PONG</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-          aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-          <div class="navbar-nav">
-            <a class="nav-link" href="/tournament">Tournament</a>
-            <a class="nav-link" href="/profile">Profile</a>
-            <a class="nav-link" href="/setting">Setting</a>
-            <a class="nav-link" href="/login">Logout</a>
-          </div>
-        </div>
-      </div>
+    <a class="logo btn rounded-5 fs-3 fw-bold" href="/home">FT_TRANSCENDENCE</a>
+    <div class="hamburger btn rounded-2 px-2 py-1">
+      <div class="line rounded-1"></div>
+      <div class="line rounded-1"></div>
+      <div class="line rounded-1"></div>
+    </div>
+    <nav class="nav-bar d-flex justify-content-center align-items-center">
+      <ul class="d-flex justify-content-center align-items-center p-0 m-0 gap-1">
+        <li>
+          <a class="link btn rounded-5 fs-5 fw-bold" href="/tournament">Tournament</a>
+        </li>
+        <li>
+          <a class="link btn rounded-5 fs-5 fw-bold" href="/profile">Profile</a>
+        </li>
+        <li>
+          <a class="link btn rounded-5 fs-5 fw-bold" href="/setting">Setting</a>
+        </li>
+        <li>
+          <a class="link logout btn rounded-5 fs-5 fw-bold" href="/login">Logout</a>
+        </li>
+      </ul>
     </nav>
   </template>
 
-  <!-- CARD -->
-  <template id="my-card">
-    <div class="card-header">
-      <h1 class="text-center"></h1>
+  <!-- PLAY CARD -->
+  <template id="play-card">
+    <h1 class="text-center"></h1>
+    <div class="d-flex flex-column justify-content-center align-items-center">
+      <button class="btn">Play Online 1v1</button>
+      <button class="btn">Play Online 1v1v1v1</button>
+      <button class="btn">Play Online 2v2</button>
+      <button class="btn">Play With AI</button>
+      <button class="btn">Play CO-OP</button>
     </div>
-    <div class="card-body d-flex flex-column justify-content-center align-items-center">
-      <a href="/game" class="btn border-light">PLAY</a>
+  </template>
+
+  <!-- FRIEND CARD -->
+  <template id="friend-card">
+    <div class="d-flex flex-column justify-content-center align-items-center border border-1 border-black p-1">
+      <div class="border border-1 border-primary-subtle" style="width: 50px; height: 50px;"></div>
+      <h6 class="text-center m-0">Zakaria Wina</h6>
+    </div>
+  </template>
+
+  <!-- MATCH CARD -->
+  <template id="match-card">
+    <div class="d-flex justify-content-center align-items-center border border-1 border-black gap-3 py-2 px-3" >
+      <h6 class="text-center">Wina</h6>
+      <h6 class="text-center">10</h6>
+      <h6 class="text-center">vs</h6>
+      <h6 class="text-center">5</h6>
+      <h6 class="text-center">Zakaria</h6>
     </div>
   </template>
 
