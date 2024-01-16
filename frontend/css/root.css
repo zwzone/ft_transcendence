@@ -20,9 +20,5 @@
 
 #root {
   min-height: 100vh;
-}
-
-#root ,
-login-page .sidebar {
   background: linear-gradient(var(--color-green-200), var(--color-blue-400));
 }

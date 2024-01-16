@@ -47,7 +47,7 @@
   <template id="home-template">
     <my-navbar></my-navbar>
     <main class="container-fluid d-flex flex-column gap-5 my-5">
-      <section class="d-flex gap-2 flex-wrap justify-content-center align-items-center w-100" id="playing">
+      <section class="d-flex gap-2 flex-wrap justify-content-center align-items-center gap-5 w-100" id="playing">
         <play-card headText="PING PONG"></play-card>
         <play-card headText="TIC TAC TOE"></play-card>
       </section>
@@ -56,7 +56,7 @@
 
   <!-- LOGIN PAGE -->
   <template id="login-template">
-    <div class="sidebar d-flex flex-column justify-content-center align-items-center py-2 gap-5 min-vh-100 h-100 w-25">
+    <div class="sidebar d-flex flex-column justify-content-center align-items-center py-2 gap-5 h-100 w-100">
       <div class="d-flex flex-column justify-content-center align-items-center">
         <img class="w-75" src="public/pong.svg" alt="logo">
         <h1 class="display-1 text-center fw-bold m-0">PING PONG</h1>
@@ -66,8 +66,17 @@
         <login-button color="primary" link="http://localhost:8000/google" text="Google"></login-button>
       </div>
     </div>
-    <div class="wallpaper d-flex p-0 justify-content-center align-items-center min-vh-100 h-100 w-75 bg-black">
-      <img class="d-block img-fluid" src="public/pong.jpg" alt="pong image">
+    <div class="wallpaper h-100 w-100">
+      <img class="leaf" src="public/leaf1.png" alt="leaf image">
+      <img class="leaf" src="public/leaf2.png" alt="leaf image">
+      <img class="leaf" src="public/leaf3.png" alt="leaf image">
+      <img class="leaf" src="public/leaf4.png" alt="leaf image">
+      <img class="leaf" src="public/leaf5.png" alt="leaf image">
+      <img class="leaf" src="public/leaf1.png" alt="leaf image">
+      <img class="leaf" src="public/leaf2.png" alt="leaf image">
+      <img class="leaf" src="public/leaf3.png" alt="leaf image">
+      <img class="leaf" src="public/leaf4.png" alt="leaf image">
+      <img class="leaf" src="public/leaf5.png" alt="leaf image">
     </div>
   </template>
 
