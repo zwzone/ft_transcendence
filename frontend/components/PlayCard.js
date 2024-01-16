@@ -7,13 +7,19 @@ export default class PlayCard extends HTMLElement {
     const template = document.getElementById("play-card");
     const component = template.content.cloneNode(true);
     this.appendChild(component);
-    const color = this.getAttribute("color");
-    const game = this.getAttribute("headText");
-    this.classList.add(`text-bg-${color}`);
-    this.querySelectorAll(".btn").forEach((btn) => {
-      btn.classList.add(`btn-outline-${color}`);
-    });
-    this.querySelector("h1").textContent = game;
+
+    this.classList.add(
+      "d-flex",
+      "justify-content-center",
+      "align-items-center",
+      "flex-column",
+      "rounded-5",
+      "p-3",
+    );
+
+    const text = this.getAttribute("headText");
+    const head = this.querySelector("h1");
+    head.textContent = text;
   }
 }
 

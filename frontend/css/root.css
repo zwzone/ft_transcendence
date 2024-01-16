@@ -1,0 +1,24 @@
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+:root {
+  --color-green-100: #4F6F52;
+  --color-green-200: #739072;
+  --color-green-300: #86A789;
+  --color-green-400: #D2E3C8;
+
+  --color-blue-100: #C4DFDF;
+  --color-blue-200: #D2E9E9;
+  --color-blue-300: #E3F4F4;
+  --color-blue-400: #F8F6F4;
+}
+
+#root {
+  min-height: 100vh;
+  background: linear-gradient(var(--color-green-200), var(--color-blue-400));
+}
