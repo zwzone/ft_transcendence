@@ -17,7 +17,6 @@
 
   <!-- CSS -->
   <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/pong.css">
 
   <!-- Vanilla JS -->
   <script defer src="app.js" type="module"></script>
@@ -47,14 +46,10 @@
   <!-- HOME PAGE -->
   <template id="home-template">
     <my-navbar></my-navbar>
-    <main class="container-fluid my-5">
-      <section class="d-flex flex-column gap-2" id="playing">
-        <div class="row justify-content-center gap-2">
-          <play-card color="success" headText="PLAY PONG"></my-card>
-        </div>
-        <div class="row justify-content-center gap-2">
-          <play-card color="primary" headText="TIC TAC TOE"></my-card>
-        </div>
+    <main class="container-fluid d-flex flex-column gap-5 my-5">
+      <section class="d-flex gap-2 flex-wrap justify-content-center align-items-center w-100" id="playing">
+        <play-card headText="PING PONG"></play-card>
+        <play-card headText="TIC TAC TOE"></play-card>
       </section>
     </main>
   </template>
@@ -208,13 +203,13 @@
 
   <!-- PLAY CARD -->
   <template id="play-card">
-    <h1 class="text-center"></h1>
-    <div class="d-flex flex-column justify-content-center align-items-center">
-      <button class="btn">Play Online 1v1</button>
-      <button class="btn">Play Online 1v1v1v1</button>
-      <button class="btn">Play Online 2v2</button>
-      <button class="btn">Play With AI</button>
-      <button class="btn">Play CO-OP</button>
+    <h1 class="text-center fw-bold m-0 display-1"></h1>
+    <div class="d-flex flex-column justify-content-center align-items-center gap-1">
+      <button class="btn btn-lg fw-bold">Play Online 1v1</button>
+      <button class="btn btn-lg fw-bold">Play Online 1v1v1v1</button>
+      <button class="btn btn-lg fw-bold">Play Online 2v2</button>
+      <button class="btn btn-lg fw-bold">Play With AI</button>
+      <button class="btn btn-lg fw-bold">Play CO-OP</button>
     </div>
   </template>
 
