@@ -49,16 +49,24 @@ def intra_callback_auth(request):
     )
     if not user_response.ok:
         return Response({"statusCode": 401, "detail": "No access token in the token response"})
-    api_response, error = requests.post(f'{settings.BASE_URL}/app2/view_in_app2/', user_response)
-    # email = user_response.json()["email"]
-    # username = user_response.json()["displayname"]
-    # player, created = Player.objects.get_or_create(email=email, username=username)
-    # if player is None:
-    #     return Response({"statusCode": 401, "error": "can't create or get player"})
-    jwt_token = generate_jwt(api_response.json(["id"]))
-    # TODO :: hit the  creat a  new player end point in the api app
-    response = redirect(f'{settings.BASE_URL}/home/')
-    response.set_cookie("jwt_token", value=jwt_token, httponly=True)
+    user_data = user_response.json();
+    jwt_token = generate_jwt(user_data["email"])
+    data = {
+        "token": jwt_token,
+        "player": {
+            "email": user_data["email"],
+            "first_name": user_data["first_name"],
+            "last_name": user_data["last_name"],
+            "username": user_data["login"],
+            "avatar": user_data["image"]["link"],
+        }
+    }
+    player_data = requests.post(f'{settings.PLAYER_URL}/player/create', data=data)
+    if not player_data.ok:
+        return redirect("http://localhost/login")
+    jwt_token = re_encode_jwt(player_data['id'])
+    response = redirect("http://localhost/home")
+    response.set_cookie("jwt_token", value=jwt_token, httpsonly=True)
     return response
 
 
@@ -115,8 +123,7 @@ def google_callback_auth(request):
         return Response({"statusCode": 401, "error": "AccessToken is invalid"})
     id_token=tokens["id_token"]
     id_token_decoded = decode_google_id_token(id_token)
-    if error is not None:
-        return Response({"statusCode": 401, "error": "AccessToken is invalid"})
+    # TODO: check if token is valid
     # TODO: We need to make this token expired
     jwt_token = generate_jwt(id_token_decoded['email'])
     data = {
