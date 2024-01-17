@@ -8,18 +8,34 @@ export default class Navbar extends HTMLElement {
     const template = document.getElementById("my-navbar");
     const component = template.content.cloneNode(true);
     this.appendChild(component);
+    this.classList.add(
+      "d-flex",
+      "justify-content-between",
+      "align-items-center",
+      "w-100",
+      "px-5",
+      "py-2"
+    );
+
     const handleLink = (event) => {
       event.preventDefault();
       const url = event.target.getAttribute("href");
       Router.go(url, "add");
     };
 
-    const brand = this.querySelector("a.navbar-brand");
-    brand.addEventListener("click", handleLink);
+    const logo = this.querySelector(".logo");
+    const hamburger = this.querySelector(".hamburger");
+    const nav = this.querySelector("nav.nav-bar");
+    const links = nav.querySelectorAll(".link.btn");
 
-    const links = this.querySelectorAll("a.nav-link");
+    logo.addEventListener("click", handleLink);
+
     links.forEach((link) => {
       link.addEventListener("click", handleLink);
+    });
+
+    hamburger.addEventListener("click", (event) => {
+      nav.classList.toggle("active");
     });
   }
 }

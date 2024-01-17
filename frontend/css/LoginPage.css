@@ -1,0 +1,106 @@
+login-page {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  z-index: 10;
+}
+
+.sidebar h1 {
+  color: var(--color-blue-400);
+}
+
+.wallpaper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+
+.leaf {
+  position: absolute;
+  display: block;
+  top: 0;
+  opacity: 0.5;
+}
+
+.leaf:nth-child(1)
+{
+  left: 1%;
+  animation: dropping 20s linear infinite, rotating 3s linear infinite;
+  animation-delay: -1s;
+}
+.leaf:nth-child(2)
+{
+  left: 30%;
+  animation: dropping 10s linear infinite, rotating 3s linear infinite;
+  animation-delay: -5s;
+}
+.leaf:nth-child(3)
+{
+  left: 50%;
+  animation: dropping 10s linear infinite, rotating 3s linear infinite;
+  animation-delay: -8s;
+}
+.leaf:nth-child(4)
+{
+  left: 70%;
+  animation: dropping 10s linear infinite, rotating 3s linear infinite;
+  animation-delay: -10s;
+}
+.leaf:nth-child(5)
+{
+  left: 10%;
+  animation: dropping 10s linear infinite, rotating 3s linear infinite;
+  animation-delay: -3s;
+}
+.leaf:nth-child(6)
+{
+  left: 40%;
+  animation: dropping 10s linear infinite, rotating 3s linear infinite;
+  animation-delay: -4s;
+}
+.leaf:nth-child(7)
+{
+  left: 80%;
+  animation: dropping 10s linear infinite, rotating 3s linear infinite;
+  animation-delay: -9s;
+}
+.leaf:nth-child(8)
+{
+  left: 90%;
+  animation: dropping 10s linear infinite, rotating 3s linear infinite;
+  animation-delay: -12s;
+}
+.leaf:nth-child(9)
+{
+  left: 5%;
+  animation: dropping 10s linear infinite, rotating 3s linear infinite;
+  animation-delay: -4s;
+}
+.leaf:nth-child(10)
+{
+  left: 95%;
+  animation: dropping 10s linear infinite, rotating 3s linear infinite;
+  animation-delay: -2s;
+}
+
+@keyframes dropping {
+  0% {
+    top: -10%;
+  }
+  100% {
+    top: 110%;
+  }
+}
+
+@keyframes rotating {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

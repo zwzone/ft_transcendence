@@ -14,16 +14,16 @@ const router = {
       router.go(event.state.route);
     });
     // check if the player is logged in
-    const xfetch = new XMLHttpRequest();
-    xfetch.open("GET", "http://localhost:8000/auth/islogged");
-    xfetch.withCredentials = true;
-    xfetch.responseType = "json";
-    xfetch.send();
-    if (xfetch.statusCode == 401 || xfetch.statusCode == 403) {
-      location.pathname = "/login";
-    } else if (xfetch.statusCode == 200) {
-      if (location.pathname == "/login") location.pathname = "/home";
-    }
+    // const xfetch = new XMLHttpRequest();
+    // xfetch.open("GET", "http://localhost:8000/auth/islogged");
+    // xfetch.withCredentials = true;
+    // xfetch.responseType = "json";
+    // xfetch.send();
+    // if (xfetch.statusCode == 401 || xfetch.statusCode == 403) {
+    //   location.pathname = "/login";
+    // } else if (xfetch.statusCode == 200) {
+    //   if (location.pathname == "/login") location.pathname = "/home";
+    // }
     router.go(location.pathname, "replace");
   },
 

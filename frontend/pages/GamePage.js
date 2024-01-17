@@ -10,10 +10,9 @@ export default class GamePage extends HTMLElement {
     const component = template.content.cloneNode(true);
     this.appendChild(component);
     const canvas = document.getElementById("canvas-pong");
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     runGame(canvas, ctx);
   }
 }
-
 
 customElements.define("game-page", GamePage);

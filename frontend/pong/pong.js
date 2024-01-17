@@ -2,11 +2,11 @@ export function runGame(canvas, ctx) {
   canvas.width = 1920;
   canvas.height = 1080;
   const ball = new Ball([10, 10], [canvas.width / 2, canvas.height / 2], 20);
-  const paddle1 = new Paddle(15, [0, canvas.height / 2 - 100], [40, 200]);
+  const paddle1 = new Paddle(15, [60, canvas.height / 2 - 100], [40, 200]);
   const paddle2 = new Paddle(
     15,
-    [canvas.width - 40, canvas.height / 2 - 100],
-    [40, 200]
+    [canvas.width - 100, canvas.height / 2 - 100],
+    [40, 200],
   );
   gameLoop(canvas, ctx, ball, paddle1, paddle2);
 }
@@ -58,14 +58,6 @@ class Paddle {
   }
 }
 
-function drawBgImg(ctx, canvas) {
-  let bgImg = new Image();
-  bgImg.src = '../background.jpg';
-  bgImg.onload = () => {
-      ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
-  }
-}
-
 class Ball {
   constructor(speed, position, size) {
     this.speedX = speed[0];
@@ -75,7 +67,6 @@ class Ball {
     this.size = size;
   }
   render(canvas, ctx) {
-    // drawBgImg(ctx, canvas);
     ctx.beginPath();
     ctx.arc(this.positionX, this.positionY, this.size, 0, 2 * Math.PI);
     ctx.fillStyle = "white";
@@ -102,6 +93,12 @@ function BallPaddleCollision(ball, paddle) {
     dx <= ball.size + paddle.sizeX / 2 &&
     dy <= ball.size + paddle.sizeY / 2
   ) {
+    if (
+      (ball.speedX > 0 && ball.positionX >= paddle.Center()[0]) ||
+      (ball.speedX < 0 && ball.positionX <= paddle.Center()[0])
+    ) {
+      return;
+    }
     ball.speedX *= -1;
   }
 }
@@ -139,21 +136,23 @@ function reset(ball, canvas) {
   } else {
     right += 1;
   }
-  ball.speedX = 15;
-  ball.speedY = 15;
+  if (Math.floor(Math.random() * 2)) ball.speedX = 10;
+  else ball.speedX = -10;
+  if (Math.floor(Math.random() * 2)) ball.speedY = 10;
+  else ball.speedY = -10;
 }
 
 function Score(ctx, canvas, right, left) {
   ctx.fillStyle = "white";
   ctx.font = "bold 60px Arial";
-  ctx.fillText(right, (canvas.width / 2) - 100, 120);
-  ctx.fillText(left, (canvas.width / 2) + 100, 120);
+  ctx.fillText(right, canvas.width / 2 - 100, 120);
+  ctx.fillText(left, canvas.width / 2 + 100, 120);
 }
 
 function gameLoop(canvas, ctx, ball, paddle1, paddle2) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   window.requestAnimationFrame(() =>
-    gameLoop(canvas, ctx, ball, paddle1, paddle2)
+    gameLoop(canvas, ctx, ball, paddle1, paddle2),
   );
   ball.update();
   paddle1.update(true);
@@ -167,12 +166,8 @@ function gameLoop(canvas, ctx, ball, paddle1, paddle2) {
   paddle1.render(canvas, ctx);
   paddle2.render(canvas, ctx);
   Score(ctx, canvas, right, left);
-  if (ball.speedX > 0)
-    ball.speedX += 0.01;
-  else
-    ball.speedX -= 0.01;
-  if (ball.speedY > 0)
-    ball.speedY += 0.01;
-  else
-    ball.speedY -= 0.01;
+  if (ball.speedX > 0) ball.speedX += 0.01;
+  else ball.speedX -= 0.01;
+  if (ball.speedY > 0) ball.speedY += 0.01;
+  else ball.speedY -= 0.01;
 }
