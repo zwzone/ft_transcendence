@@ -4,7 +4,7 @@ from django.shortcuts import redirect, reverse
 from django.utils.http import urlencode
 from rest_framework.decorators import authentication_classes, permission_classes, api_view
 from rest_framework.response import Response
-from .service import GoogleAccessTokens, generate_jwt, re_encode_jwt
+from .service import decode_google_id_token, generate_jwt, re_encode_jwt
 from django.conf import settings
 
 
@@ -113,26 +113,26 @@ def google_callback_auth(request):
     tokens = auth_response.json()
     if tokens["access_token"] is None:
         return Response({"statusCode": 401, "error": "AccessToken is invalid"})
-    google_tokens = GoogleAccessTokens(id_token=tokens["id_token"], access_token=tokens["access_token"])
-    id_token_decoded = google_tokens.decode_id_token()
+    id_token=tokens["id_token"]
+    id_token_decoded = decode_google_id_token(id_token)
     if error is not None:
         return Response({"statusCode": 401, "error": "AccessToken is invalid"})
-    # TODO: change this to Our id  system
-    jwt_token = generate_jwt(id_token_decoded.json(['email']))
+    # TODO: We need to make this token expired
+    jwt_token = generate_jwt(id_token_decoded['email'])
     data = {
         "token": jwt_token,
         "player": {
-            "email": id_token_decoded.json(['email']),
-            "first_name": id_token_decoded.json(["given_name"]),
-            "last_name": id_token_decoded.json(["family_name"]),
-            "username": id_token_decoded.json(["name"]),
-            "avatar": id_token_decoded.json(["picture"]),
+            "email": id_token_decoded['email'],
+            "first_name": id_token_decoded['given_name'],
+            "last_name": id_token_decoded['family_name'],
+            "username": id_token_decoded['name'],
+            "avatar": id_token_decoded['picture'],
         }
     }
     player_data = requests.post(f'{settings.PLAYER_URL}/player/create', data=data)
     if not player_data.ok:
         return redirect("http://localhost/login")
-    jwt_token = re_encode_jwt(player_data.json(['id']))
+    jwt_token = re_encode_jwt(player_data['id'])
     response = redirect("http://localhost/home")
     response.set_cookie("jwt_token", value=jwt_token, httpsonly=True)
     return response

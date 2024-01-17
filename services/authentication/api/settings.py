@@ -17,7 +17,8 @@ import dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent
-SERVICES_DIR = Path(__file__).resolve().parent.parent
+AUTH_DIR = Path(__file__).resolve().parent.parent
+SERVICES_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Load .env file
 dotenv_file = SERVICES_DIR / ".env"
@@ -87,7 +88,7 @@ WSGI_APPLICATION = 'api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': AUTH_DIR / 'db.sqlite3',
     }
 }
 
@@ -132,8 +133,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-AUTH_USER_MODEL = "api.Player"
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
