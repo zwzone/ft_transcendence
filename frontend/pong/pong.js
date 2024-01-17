@@ -6,7 +6,7 @@ export function runGame(canvas, ctx) {
   const paddle2 = new Paddle(
     15,
     [canvas.width - 100, canvas.height / 2 - 100],
-    [40, 200]
+    [40, 200],
   );
   gameLoop(canvas, ctx, ball, paddle1, paddle2);
 }
@@ -152,7 +152,7 @@ function Score(ctx, canvas, right, left) {
 function gameLoop(canvas, ctx, ball, paddle1, paddle2) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   window.requestAnimationFrame(() =>
-    gameLoop(canvas, ctx, ball, paddle1, paddle2)
+    gameLoop(canvas, ctx, ball, paddle1, paddle2),
   );
   ball.update();
   paddle1.update(true);

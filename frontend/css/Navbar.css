@@ -1,53 +1,53 @@
 my-navbar {
   position: relative;
   height: fit-content;
+  background-color: var(--color-green-100);
 }
 
 .logo ,
 li .link {
-  color: var(--color-blue);
-  background-color: var(--color-light-green);
+  color: var(--color-green-100);
+  background-color: var(--color-green-300);
 }
 
 li .link.logout {
   color: var(--bs-light);
-  background-color: tomato;
+  background-color: orangered;
 }
 
 .logo:hover ,
 li .link:hover {
-  color: var(--color-blue);
-  background-color: var(--color-yellow);
+  color: var(--color-green-100);
+  background-color: var(--color-green-400);
 }
 
 li .link.logout:hover {
   color: var(--bs-light);
-  background-color: orangered;
+  background-color: red;
 }
 
 .logo:active ,
 li .link:active {
-  color: var(--color-yellow);
-  background-color: var(--color-blue);
-  border-color: var(--color-yellow);
+  color: var(--color-blue-400);
+  background-color: var(--color-blue-100);
+  border-color: var(--color-blue-400);
 }
 
 .hamburger {
   display: none;
   cursor: pointer;
-  background-color: var(--color-light-green);
+  background-color: var(--color-green-300);
 }
 
 .hamburger .line {
   width: 30px;
   height: 4px;
-  background-color: var(--color-blue);
+  background-color: var(--color-green-100);
   margin-block: 6px;
-  transition: background-color .15s;
 }
   
 .hamburger:hover {
-  background-color: var(--color-yellow);
+  background-color: var(--color-green-400);
 }
 
 .hamburger:active .line {
@@ -65,20 +65,19 @@ li .link:active {
     top: 100%;
     left: 0;
     width: 100vw;
-    background-color: var(--color-blue);
+    background-color: var(--color-green-200);
     overflow: hidden;
-  }
-
-  .nav-bar.active {
-    height: fit-content;
-    padding-block: 1rem;
-    opacity: 0.9;
   }
 
   .nav-bar ul {
     flex-direction: column;
     text-align: center;
     opacity: 0;
+  }
+
+  .nav-bar.active {
+    height: fit-content;
+    padding-block: 1rem;
   }
 
   .nav-bar.active ul {
@@ -95,12 +94,9 @@ li .link:active {
     font-size: 1rem !important;
   }
 
-.hamburger .line {
-  width: 15px;
-  height: 2px;
-  background-color: var(--color-blue);
-  margin-block: 3px;
-  transition: background-color .15s;
-}
-
+  .hamburger .line {
+    width: 15px;
+    height: 2px;
+    margin-block: 3px;
+  }
 }
