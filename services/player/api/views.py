@@ -6,10 +6,8 @@ from .serializers import PlayerSerializer, UsernameSerializer, FirstNameSerializ
 from .models import Player
 import jwt
 from jwt.exceptions import ExpiredSignatureError
-import os
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
-import json
 
 
 class PlayerInfoView(APIView):
@@ -59,7 +57,7 @@ class PlayerInfoView(APIView):
                 "message": "JWT token not found",
             })
         try:
-            decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+            decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])      
             if 'email' in decoded_token:
                 email = decoded_token['email']
                 player = request.data.get('player')
@@ -70,14 +68,15 @@ class PlayerInfoView(APIView):
             player, created = Player.objects.get_or_create(email=email, username=username, first_name=first_name, last_name=last_name, avatar=avatar)
             if created:
                 return Response({
-                    "status": 200,
+                    "status": 201,
                     "message": "User created successfully",
                     "id": player.id
                 })
-            else:
+            else :
                 return Response({
-                    "status": 400,
-                    "message": "Invalid token",
+                    "status": 200,
+                    "message": "User already exists",
+                    "id": player.id
                 })
         except Exception as e:
             return Response({
@@ -119,6 +118,7 @@ class PlayerLastNameView(APIView):
                 "status": 500,
                 "message": str(e),
             })
+
     @swagger_auto_schema(request_body=LastNameSerializer)
     def post(self, request):
         token = request.COOKIES.get('jwt_token')
@@ -160,7 +160,6 @@ class PlayerLastNameView(APIView):
                 "message": str(e),
             })
         
-
 class PlayerUsernameView(APIView):
     authentication_classes = []
     permission_classes = []
@@ -236,7 +235,6 @@ class PlayerUsernameView(APIView):
                 "status": 500,
                 "message": str(e),
             })
-
 
 class PlayerAvatarView(APIView):
     authentication_classes = []
