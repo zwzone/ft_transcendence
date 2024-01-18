@@ -138,3 +138,9 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
 PLAYER_URL = 'http://localhost:8001'
+
+MIDDLEWARE = [
+    # Other middleware...
+    'authentication.middleware.JWTRevocationMiddleware',
+    # Other middleware...
+]
