@@ -6,6 +6,10 @@ from .serializers import PlayerSerializer, UsernameSerializer, FirstNameSerializ
 from .models import Player
 import jwt
 from jwt.exceptions import ExpiredSignatureError
+import os
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
+import json
 
 
 class PlayerInfoView(APIView):
@@ -48,53 +52,33 @@ class PlayerInfoView(APIView):
     def post(self, request):
         authentication_classes = []
         permission_classes = []
-        token = request.COOKIES.get('jwt_token')
+        token = request.data.get('token')
         if not token:
             return Response({
                 "status": 401,
-                "message": "JWT token not found in cookies",
+                "message": "JWT token not found",
             })
         try:
             decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-            id = decoded_token['id']
-            user = Player.objects.get(id=id)
-            first_name = request.data.get('first_name')
-            last_name = request.data.get('last_name')
-            tournament_name = request.data.get('tournament_name')
-            if not first_name:
+            if 'email' in decoded_token:
+                email = decoded_token['email']
+                player = request.data.get('player')
+                username = player['username']
+                first_name = player['first_name']
+                last_name = player['last_name']
+                avatar = player['avatar']
+            player, created = Player.objects.get_or_create(email=email, username=username, first_name=first_name, last_name=last_name, avatar=avatar)
+            if created:
+                return Response({
+                    "status": 200,
+                    "message": "User created successfully",
+                    "id": player.id
+                })
+            else:
                 return Response({
                     "status": 400,
-                    "message": "First name not provided",
+                    "message": "Invalid token",
                 })
-            if not last_name:
-                return Response({
-                    "status": 400,
-                    "message": "Last name not provided",
-                })
-            if not tournament_name:
-                return Response({
-                    "status": 400,
-                    "message": "Tournament name not provided",
-                })
-            user.first_name = first_name
-            user.last_name = last_name
-            user.tournament_name = tournament_name
-            user.save()
-            serializer = PlayerSerializer(user)
-            return Response({
-                "status": 200,
-                "message": "User info updated successfully",
-            })
-        except Player.DoesNotExist:
-            return Response({
-                "status": 404,
-                "message": "User not found",
-            })
-        except ExpiredSignatureError:
-            return Response({
-                "status": 401,
-                "message": "JWT token has expired",
-            })
         except Exception as e:
             return Response({
                 "status": 500,
@@ -287,6 +271,48 @@ class PlayerAvatarView(APIView):
             return Response({
                 "status": 500,
                 "message": "what" + str(e),
+            })
+    def post(self, request):
+        token = request.COOKIES.get('jwt_token')
+        if not token:
+            return Response({
+                "status": 401,
+                "message": "JWT token not found in cookies",
+            })
+
+        try:
+            decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+            id = decoded_token['id']
+            user = Player.objects.get(id=id)
+
+            avatar_file = request.FILES.get('avatar')
+
+            if avatar_file:
+                file_name = default_storage.save(avatar_file.name, avatar_file)
+                file_url = default_storage.url(file_name)
+                user.Avatar = file_url
+                user.save()
+
+                return Response({
+                    "status": 200,
+                    "message": "Avatar uploaded successfully",
+                    "avatar_url": file_url
+                })
+            else:
+                return Response({
+                    "status": 400,
+                    "message": "Avatar file not provided",
+                })
+
+        except Player.DoesNotExist:
+            return Response({
+                "status": 404,
+                "message": "User not found",
+            })
+        except Exception as e:
+            return Response({
+                "status": 500,
+                "message": "Error: " + str(e),
             })
         
 class PlayerFirstNameView(APIView):
