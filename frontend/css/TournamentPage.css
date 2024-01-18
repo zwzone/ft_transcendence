@@ -1,0 +1,19 @@
+tournament-page main {
+  max-width: 1080px;
+}
+
+tournament-player-card div,
+tournament-player-card h3 {
+  background-color: var(--color-green-300);
+  color: var(--color-blue-300);
+}
+
+tournament-player-card div img {
+  width: 50px;
+  height: 50px;
+}
+
+tournament-player-card div h6 {
+  background-color: var(--color-green-200);
+  color: var(--color-blue-200);
+}

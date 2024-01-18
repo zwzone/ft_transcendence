@@ -4,7 +4,7 @@ my-navbar {
   background-color: var(--color-green-100);
 }
 
-.logo ,
+.logo,
 li .link {
   color: var(--color-green-100);
   background-color: var(--color-green-300);
@@ -15,7 +15,7 @@ li .link.logout {
   background-color: orangered;
 }
 
-.logo:hover ,
+.logo:hover,
 li .link:hover {
   color: var(--color-green-100);
   background-color: var(--color-green-400);
@@ -26,7 +26,7 @@ li .link.logout:hover {
   background-color: red;
 }
 
-.logo:active ,
+.logo:active,
 li .link:active {
   color: var(--color-blue-400);
   background-color: var(--color-blue-100);
