@@ -137,4 +137,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
-PLAYER_URL = 'http://localhost:8000'
+PLAYER_URL = 'http://localhost:8001'

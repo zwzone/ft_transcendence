@@ -6,6 +6,7 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.response import Response
 from .service import decode_google_id_token, generate_jwt, re_encode_jwt
 from django.conf import settings
+import jwt
 
 
 @api_view(['GET'])
@@ -61,14 +62,14 @@ def intra_callback_auth(request):
             "avatar": user_data["image"]["link"],
         }
     }
-    player_data = requests.post(f'{settings.PLAYER_URL}/player/create', data=data)
+    player_data = requests.post(f'{settings.PLAYER_URL}/player/', json=data)
+    player_id = player_data.json()['id']
     if not player_data.ok:
         return redirect("http://localhost/login")
-    jwt_token = re_encode_jwt(player_data['id'])
+    jwt_token = re_encode_jwt(jwt_token, player_id)
     response = redirect("http://localhost/home")
-    response.set_cookie("jwt_token", value=jwt_token, httpsonly=True)
+    response.set_cookie("jwt_token", value=jwt_token, httponly=True)
     return response
-
 
 @api_view(["GET"])
 @authentication_classes([])
@@ -99,9 +100,6 @@ def google_auth(request):
 @authentication_classes([])
 @permission_classes([])
 def google_callback_auth(request):
-    # TODO: should be understood
-    if request.user.is_authenticated:
-        return redirect("http://localhost/home")
     code = request.GET.get("code")
     error = request.GET.get("error")
     if error is not None:
@@ -123,8 +121,6 @@ def google_callback_auth(request):
         return Response({"statusCode": 401, "error": "AccessToken is invalid"})
     id_token=tokens["id_token"]
     id_token_decoded = decode_google_id_token(id_token)
-    # TODO: check if token is valid
-    # TODO: We need to make this token expired
     jwt_token = generate_jwt(id_token_decoded['email'])
     data = {
         "token": jwt_token,
@@ -136,12 +132,13 @@ def google_callback_auth(request):
             "avatar": id_token_decoded['picture'],
         }
     }
-    player_data = requests.post(f'{settings.PLAYER_URL}/player/create', data=data)
+    player_data = requests.post(f'{settings.PLAYER_URL}/player/', json=data)
+    player_id = player_data.json()['id']
     if not player_data.ok:
         return redirect("http://localhost/login")
-    jwt_token = re_encode_jwt(player_data['id'])
+    jwt_token = re_encode_jwt(jwt_token, player_id)
     response = redirect("http://localhost/home")
-    response.set_cookie("jwt_token", value=jwt_token, httpsonly=True)
+    response.set_cookie("jwt_token", value=jwt_token, httponly=True)
     return response
 
 
@@ -149,7 +146,14 @@ def google_callback_auth(request):
 @authentication_classes([])
 @permission_classes([])
 def is_logged_in_auth(request):
-    access_token = request.COOKIES["access_token"]
+    jwt_token = request.COOKIES["access_token"]
     refresh_token = request.COOKIES["refresh_token"]
-    if access_token is None or refresh_token is None:
+    if jwt_token is None or refresh_token is None:
         return Response({"statusCode": 401, "error": "invalid"})
+    try:
+        payload = jwt.decode(jwt_token, settings.SECRET_KEY, algorithms=['HS256'])
+        return payload
+    except jwt.ExpiredSignatureError:
+        raise Exception('Token has expired')
+    except jwt.InvalidTokenError:
+        raise Exception('Invalid token')
