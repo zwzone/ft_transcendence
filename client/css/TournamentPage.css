@@ -17,3 +17,7 @@ tournament-player-card div h6 {
   background-color: var(--color-green-200);
   color: var(--color-blue-200);
 }
+
+tournament-match-card {
+  background-color: var(--color-green-100);
+}

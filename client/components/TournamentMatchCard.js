@@ -13,6 +13,8 @@ export default class TournamentMatchCard extends HTMLElement {
       "justify-content-center",
       "align-items-center",
       "flex-wrap",
+      "rounded-4",
+      "p-2",
     );
   }
 }
