@@ -5,7 +5,6 @@ services:
             build: Dockerfile.dev
         image: frontend:develop
         container_name: frontend-develop
-        # environment: .env
         ports:
             - 81:81
         volumes:
@@ -20,7 +19,7 @@ services:
             build: Dockerfile.dev
         image: authentication:develop
         container_name: authentication-develop
-        # environment: .env
+        environment: ./services/.env
         volumes:
             - ./services/authentication/:microservice/authentication/:ro
         networks:
@@ -33,7 +32,7 @@ services:
             build: Dockerfile.dev
         image: player:develop
         container_name:  player-develop
-        # environment: .env    
+        environment: ./services/.env
         volumes:
             - ./services/player/:microservice/player/:ro 
         networks:

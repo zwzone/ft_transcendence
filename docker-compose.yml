@@ -5,7 +5,6 @@ services:
             build: Dockerfile
         image: frontend:deploy
         container_name: frontend-deploy
-        # environment: .env
         ports:
             - 81:81
         volumes:
@@ -20,7 +19,7 @@ services:
             build: Dockerfile
         image: authentication:deploy
         container_name: authentication-deploy
-        # environment: .env
+        environment: ./services/.env
         volumes:
             - ./services/authentication/:microservice/authentication/:ro
         networks:
@@ -33,7 +32,7 @@ services:
             build: Dockerfile
         image: player:deploy
         container_name:  player-deploy
-        # environment: .env    
+        environment: ./services/.env 
         volumes:
             - ./services/player/:microservice/player/:ro 
         networks:
