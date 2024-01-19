@@ -17,6 +17,8 @@ services:
             dockerfile: Dockerfile
         image: authentication:deploy
         container_name: authentication-deploy
+        ports:
+            - 8000:8000
         env_file:
             - ./services/.env
         networks:
@@ -29,6 +31,8 @@ services:
             dockerfile: Dockerfile
         image: player:deploy
         container_name:  player-deploy
+        ports:
+            - 8001:8001
         env_file: ./services/.env 
         networks:
             - ft_transcendence
