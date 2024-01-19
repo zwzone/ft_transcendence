@@ -102,12 +102,12 @@
   <template id="profile-template">
     <my-navbar></my-navbar>
     <main class="container-fluid d-flex flex-column gap-5 my-5">
-      <div class="d-flex justify-content-center align-items-center flex-wrap gap-2 p-3 bg-dark-subtle">
-        <div class="d-flex flex-column justify-content-center align-items-center bg-light-subtle p-2">
+      <div class="player-data d-flex justify-content-center align-items-center flex-wrap gap-2 p-3">
+        <div class="data-section d-flex flex-column justify-content-center align-items-center gap-2 p-2">
           <div class="border border-5 border-primary" style="width: 150px; height: 150px;"></div>
           <h1 class="text-center m-0" id="full-name">Zakaria Wina</h1>
         </div>
-        <div class="d-flex flex-column bg-light-subtle flex-grow-1" style="max-width: 500px;">
+        <div class="data-section d-flex flex-column gap-2 p-2">
           <div class="d-flex justify-content-center align-items-center">
             <h2 class="m-0 p-3">Wins :</h2>
             <h2 class="m-0 p-3">10</h2>
@@ -118,10 +118,10 @@
           </div>
         </div>
       </div>
-      <div class="d-flex justify-content-around align-items-center flex-wrap gap-2 p-3 bg-dark-subtle">
-        <div class="d-flex flex-column justify-content-center align-items-stretch gap-2 p-3 bg-light-subtle flex-grow-1" style="max-width: 1000px;">
-          <h2 class="text-center">Match History</h2>
-          <div id="match-cards" class="d-flex flex-column justify-content-center">
+      <div class="d-flex justify-content-center align-items-center flex-wrap gap-2 p-3">
+        <div class="match-history d-flex flex-column justify-content-center align-items-center gap-2 p-3">
+          <h2 class="text-center m-0">Match History</h2>
+          <div class="match-cards d-flex flex-column justify-content-center gap-1">
             <match-card></match-card>
             <match-card></match-card>
             <match-card></match-card>
@@ -129,9 +129,9 @@
             <match-card></match-card>
           </div>
         </div>
-        <div class="d-flex flex-column justify-content-center align-items-stretch gap-2 p-3 bg-light-subtle flex-grow-1" style="max-width: 1000px;">
-          <h2 class="text-center">My Friends</h2>
-          <div id="friend-cards" class="d-flex flex-wrap justify-content-center align-items-center gap-1">
+        <div class="friend-list d-flex flex-column align-self-stretch justify-content-center gap-2 p-3 flex-grow">
+          <h2 class="text-center m-0">My Friends</h2>
+          <div class="friend-cards d-grid gap-1">
             <friend-card></friend-card>
             <friend-card></friend-card>
             <friend-card></friend-card>
@@ -258,11 +258,11 @@
   <!-- MATCH CARD -->
   <template id="match-card">
     <div class="d-flex justify-content-center align-items-center border border-1 border-black gap-3 py-2 px-3" >
-      <h6 class="text-center">Wina</h6>
-      <h6 class="text-center">10</h6>
-      <h6 class="text-center">vs</h6>
-      <h6 class="text-center">5</h6>
-      <h6 class="text-center">Zakaria</h6>
+      <h6 class="text-center m-0">Wina</h6>
+      <h6 class="text-center m-0">10</h6>
+      <h6 class="text-center m-0">vs</h6>
+      <h6 class="text-center m-0">5</h6>
+      <h6 class="text-center m-0">Zakaria</h6>
     </div>
   </template>
 

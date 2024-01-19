@@ -16,6 +16,14 @@
   --color-blue-200: #D2E9E9;
   --color-blue-300: #E3F4F4;
   --color-blue-400: #F8F6F4;
+
+  --color-primary-100: #739072;
+  --color-primary-200: #C5D8A4;
+  --color-primary-300: #F4FCD9;
+
+  --color-secondary-100: #E8C07D;
+  --color-secondary-200: #BB9981;
+  --color-secondary-300: #534340;
 }
 
 #root {

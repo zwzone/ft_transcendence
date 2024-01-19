@@ -1,0 +1,20 @@
+profile-page main {
+  /* max-width: 1080px; */
+}
+
+profile-page .player-data {
+  background-color: var(--color-blue-100);
+  max-width: 1080px;
+}
+
+profile-page .player-data > div {
+  background-color: var(--color-blue-200);
+}
+
+profile-page .player-data > div > div {
+  background-color: var(--color-blue-300);
+}
+
+profile-page .friend-cards {
+  grid-template-columns: repeat(3, min-content);
+}
