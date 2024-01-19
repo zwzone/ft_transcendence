@@ -18,6 +18,7 @@ def intra_auth(request):
     authorization_url = f"https://api.intra.42.fr/oauth/authorize?client_id={getenv('INTRA_CLIENT_ID')}&{redirect_uri}&response_type=code"
     return redirect(authorization_url)
 
+
 @api_view(['GET'])
 @authentication_classes([])
 @permission_classes([])
@@ -62,12 +63,12 @@ def intra_callback_auth(request):
     player_data = requests.post(f'{settings.PLAYER_URL}/player/', json=data)
     if not player_data.ok:
         return redirect("http://localhost/login")
-    print(player_data.json())
     player_id = player_data.json()['id']
     jwt_token = re_encode_jwt(player_id)
     response = redirect("http://localhost/home")
     response.set_cookie("jwt_token", value=jwt_token, httponly=True)
     return response
+
 
 @api_view(["GET"])
 @authentication_classes([])
@@ -91,6 +92,7 @@ def google_auth(request):
     GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/auth"
     google_authorization_url = f"{GOOGLE_AUTH_URL}?{query_params}"
     return redirect(google_authorization_url)
+
 
 @api_view(["GET"])
 @authentication_classes([])
@@ -138,8 +140,6 @@ def google_callback_auth(request):
     return response
 
 @api_view(["GET"])
-@authentication_classes([])
-@permission_classes([])
 def is_logged_in_auth(request):
     jwt_token = request.COOKIES.get("jwt_token")
     if jwt_token is None:
@@ -159,8 +159,8 @@ def logout_user(request):
     jwt_token = request.COOKIES.get("jwt_token")
     if jwt_token is not None:
         cache.set(jwt_token, True, timeout=None)
-        response = Response()
+        response = redirect("http://localhost/login")
         response.delete_cookie('jwt_token')
-        return redirect("http://localhost/login")
+        return response
     else:
         return Response({"statusCode": 400, "detail": "No valid access token found"})

@@ -11,7 +11,6 @@ class JWTRevocationMiddleware:
         if jwt_token:
             if self.is_jwt_revoked(jwt_token):
                 return redirect("http://localhost/login")
-                    # JsonResponse({'statusCode': 403 ,'detail': 'JWT revoked. Please log in again.', 'redirect': '/login'}, status=200))
         response = self.get_response(request)
         return response
 
@@ -21,9 +20,8 @@ class JWTRevocationMiddleware:
         # If not found in the header, check if it's in the cookies
         if not jwt_header and 'jwt_token' in request.COOKIES:
             jwt_token = request.COOKIES['jwt_token']
-        else:
-            return
-        return jwt_token
+            return jwt_token
+        return
 
     def is_jwt_revoked(self, jwt_token):
         return self.is_token_in_blacklist(jwt_token)
