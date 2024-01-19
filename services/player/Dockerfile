@@ -11,6 +11,4 @@ RUN         pip install -r /microservice/player/requirements.txt
 
 WORKDIR     /microservice/player/
 
-RUN         [ "python", "manage.py", "migrate" ]
-
-CMD         [ "python", "manage.py", "runserver", "0.0.0.0:8001" ]
+CMD         [ "bash", "./tools/microservice-run.sh" ]

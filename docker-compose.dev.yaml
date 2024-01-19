@@ -19,10 +19,12 @@ services:
             dockerfile: Dockerfile.dev
         image: authentication:develop
         container_name: authentication-develop
+        ports:
+            - 8000:8000
         env_file:
             - ./services/.env
         volumes:
-            - ./services/authentication/:microservice/authentication/:ro
+            - ./services/authentication/:/microservice/authentication/:rw
         networks:
             - ft_transcendence
         restart: on-failure
@@ -33,9 +35,12 @@ services:
             dockerfile: Dockerfile.dev
         image: player:develop
         container_name:  player-develop
-        environment: ./services/.env
+        ports:
+            - 8001:8001
+        env_file:
+            - ./services/.env
         volumes:
-            - ./services/player/:microservice/player/:ro 
+            - ./services/player/:/microservice/player/:rw
         networks:
             - ft_transcendence
         restart: on-failure
