@@ -2,7 +2,7 @@ services:
     frontend:
         build:
             context: ./frontend/
-            build: Dockerfile.dev
+            dockerfile: Dockerfile.dev
         image: frontend:develop
         container_name: frontend-develop
         ports:
