@@ -3,7 +3,6 @@
 venv/
 .env
 db.sqlite3
-*.conf
 **/__pycache__
 *.pyc
 migrations/
