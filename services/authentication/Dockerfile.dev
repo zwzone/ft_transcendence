@@ -1,0 +1,13 @@
+FROM        debian:bullseye
+
+RUN         apt update -y && \
+            apt upgrade -y && \
+            apt install python3.11.7 -y
+
+RUN         mkdir -p /microservice/authentication/
+
+RUN         pip install /microservice/authentication/requirements.txt
+
+WORKDIR     /microservice/authentication/
+
+CMD         [ "python", "manage.py", "runserver" ]
