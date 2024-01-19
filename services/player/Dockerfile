@@ -1,4 +1,4 @@
-FROM        debian:bullseye
+FROM        python:3.11.7-bullseye
 
 RUN         apt update -y && \
             apt upgrade -y && \
@@ -8,7 +8,7 @@ RUN         mkdir -p /microservice/player/
 
 COPY        . /microservice/player/
 
-RUN         pip install /microservice/player/requirements.txt
+RUN         pip -r install /microservice/player/requirements.txt
 
 WORKDIR     /microservice/player/
 
