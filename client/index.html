@@ -101,26 +101,26 @@
   <!-- PROFILE PAGE -->
   <template id="profile-template">
     <my-navbar></my-navbar>
-    <main class="container-fluid d-flex flex-column gap-5 my-5">
-      <div class="player-data d-flex justify-content-center align-items-center flex-wrap gap-2 p-3">
-        <div class="data-section d-flex flex-column justify-content-center align-items-center gap-2 p-2">
-          <div class="border border-5 border-primary" style="width: 150px; height: 150px;"></div>
-          <h1 class="text-center m-0" id="full-name">Zakaria Wina</h1>
+    <main class="container-fluid d-flex flex-column justify-content-center gap-5 my-5">
+      <div class="player-data d-flex justify-content-around align-items-center flex-wrap gap-2 p-3 rounded-5">
+        <div class="data-section d-flex flex-column justify-content-center align-items-center gap-2 p-2 rounded-5">
+          <div class="rounded-5" style="width: 150px; height: 150px;"></div>
+          <h1 class="text-center m-0 p-3 rounded-5" id="full-name">Zakaria Wina</h1>
         </div>
-        <div class="data-section d-flex flex-column gap-2 p-2">
-          <div class="d-flex justify-content-center align-items-center">
+        <div class="data-section d-flex flex-column gap-2 p-2 rounded-5">
+          <div class="d-flex justify-content-center align-items-center rounded-5">
             <h2 class="m-0 p-3">Wins :</h2>
             <h2 class="m-0 p-3">10</h2>
           </div>
-          <div class="d-flex justify-content-center align-items-center">
+          <div class="d-flex justify-content-center align-items-center rounded-5">
             <h2 class="m-0 p-3">Losses :</h2>
             <h2 class="m-0 p-3">10</h2>
           </div>
         </div>
       </div>
-      <div class="d-flex justify-content-center align-items-center flex-wrap gap-2 p-3">
-        <div class="match-history d-flex flex-column justify-content-center align-items-center gap-2 p-3">
-          <h2 class="text-center m-0">Match History</h2>
+      <div class="player-data-related d-flex justify-content-around align-items-center flex-wrap gap-2 p-3 rounded-5">
+        <div class="match-history d-flex flex-column justify-content-center gap-2 p-3 rounded-5 flex-grow-1">
+          <h2 class="text-center m-0 px-3 py-1 rounded-5">Match History</h2>
           <div class="match-cards d-flex flex-column justify-content-center gap-1">
             <match-card></match-card>
             <match-card></match-card>
@@ -129,9 +129,29 @@
             <match-card></match-card>
           </div>
         </div>
-        <div class="friend-list d-flex flex-column align-self-stretch justify-content-center gap-2 p-3 flex-grow">
-          <h2 class="text-center m-0">My Friends</h2>
+        <div class="friend-list d-flex flex-column justify-content-center gap-2 p-3 rounded-5 flex-grow-1">
+          <h2 class="text-center m-0 px-3 py-1 rounded-5">My Friends</h2>
           <div class="friend-cards d-grid gap-1">
+            <friend-card></friend-card>
+            <friend-card></friend-card>
+            <friend-card></friend-card>
+            <friend-card></friend-card>
+            <friend-card></friend-card>
+            <friend-card></friend-card>
+            <friend-card></friend-card>
+            <friend-card></friend-card>
+            <friend-card></friend-card>
+            <friend-card></friend-card>
+            <friend-card></friend-card>
+            <friend-card></friend-card>
+            <friend-card></friend-card>
+            <friend-card></friend-card>
+            <friend-card></friend-card>
+            <friend-card></friend-card>
+            <friend-card></friend-card>
+            <friend-card></friend-card>
+            <friend-card></friend-card>
+            <friend-card></friend-card>
             <friend-card></friend-card>
             <friend-card></friend-card>
             <friend-card></friend-card>
@@ -249,21 +269,17 @@
 
   <!-- FRIEND CARD -->
   <template id="friend-card">
-    <div class="d-flex flex-column justify-content-center align-items-center border border-1 border-black p-1">
-      <div class="border border-1 border-primary-subtle" style="width: 50px; height: 50px;"></div>
-      <h6 class="text-center m-0">Zakaria Wina</h6>
-    </div>
+    <img class="rounded-4" src="public/leaf1.png" alt="avatar">
+    <h6 class="text-center m-0">Zakaria Wina</h6>
   </template>
 
   <!-- MATCH CARD -->
   <template id="match-card">
-    <div class="d-flex justify-content-center align-items-center border border-1 border-black gap-3 py-2 px-3" >
-      <h6 class="text-center m-0">Wina</h6>
-      <h6 class="text-center m-0">10</h6>
-      <h6 class="text-center m-0">vs</h6>
-      <h6 class="text-center m-0">5</h6>
-      <h6 class="text-center m-0">Zakaria</h6>
-    </div>
+    <h6 class="text-center m-0">Wina</h6>
+    <h6 class="text-center m-0">10</h6>
+    <h6 class="text-center m-0">vs</h6>
+    <h6 class="text-center m-0">5</h6>
+    <h6 class="text-center m-0">Zakaria</h6>
   </template>
 
   <!-- TOURNAMENT MATCH CARD -->

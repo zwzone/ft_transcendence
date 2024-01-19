@@ -1,57 +1,65 @@
 my-navbar {
   position: relative;
   height: fit-content;
-  background-color: var(--color-green-100);
+}
+
+my-navbar.active {
+  background-color: var(--color-primary-200);
 }
 
 .logo,
 li .link {
-  color: var(--color-green-100);
-  background-color: var(--color-green-300);
+  color: var(--color-primary-100);
+  background-color: var(--color-primary-300);
 }
 
 li .link.logout {
-  color: var(--bs-light);
+  color: var(--color-secondary-100);
   background-color: orangered;
 }
 
 .logo:hover,
 li .link:hover {
-  color: var(--color-green-100);
-  background-color: var(--color-green-400);
+  color: var(--color-primary-100);
+  background-color: var(--color-primary-400);
 }
 
 li .link.logout:hover {
-  color: var(--bs-light);
+  color: var(--color-secondary-100);
   background-color: red;
 }
 
 .logo:active,
 li .link:active {
-  color: var(--color-blue-400);
-  background-color: var(--color-blue-100);
-  border-color: var(--color-blue-400);
+  color: var(--color-primary-100) !important;
+  background-color: var(--color-secondary-100) !important;
+  border-color: var(--color-secondary-100) !important;
+}
+
+li .link.logout:active {
+  color: red !important;
+  background-color: var(--color-secondary-100) !important;
 }
 
 .hamburger {
   display: none;
   cursor: pointer;
-  background-color: var(--color-green-300);
+  background-color: var(--color-primary-300);
 }
 
 .hamburger .line {
   width: 30px;
   height: 4px;
-  background-color: var(--color-green-100);
+  background-color: var(--color-primary-100);
   margin-block: 6px;
 }
   
 .hamburger:hover {
-  background-color: var(--color-green-400);
+  background-color: var(--color-primary-400);
 }
 
-.hamburger:active .line {
-  background-color: var(--bs-dark);
+.hamburger:active {
+  background-color: var(--color-secondary-100) !important;
 }
 
 @media only screen and (max-width: 992px) {
@@ -65,23 +73,18 @@ li .link:active {
     top: 100%;
     left: 0;
     width: 100vw;
-    background-color: var(--color-green-200);
+    background-color: var(--color-primary-200);
     overflow: hidden;
   }
 
   .nav-bar ul {
     flex-direction: column;
     text-align: center;
-    opacity: 0;
   }
 
   .nav-bar.active {
     height: fit-content;
     padding-block: 1rem;
-  }
-
-  .nav-bar.active ul {
-    opacity: 1;
   }
 }
 
