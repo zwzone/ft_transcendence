@@ -1,0 +1,46 @@
+services:
+    frontend:
+        build:
+            context: ./frontend/
+            build: Dockerfile
+        image: frontend:deploy
+        container_name: frontend-deploy
+        # environment: .env
+        ports:
+            - 81:81
+        volumes:
+            - ./frontend:/var/www/ft_transcendence/:ro
+        networks:
+            - ft_transcendence
+        restart: on-failure
+
+    authentication:
+        build:
+            context: ./services/authentication/
+            build: Dockerfile
+        image: authentication:deploy
+        container_name: authentication-deploy
+        # environment: .env
+        volumes:
+            - ./services/authentication/:microservice/authentication/:ro
+        networks:
+            - ft_transcendence
+        restart: on-failure
+
+    player:
+        build:
+            context: ./services/player/
+            build: Dockerfile
+        image: player:deploy
+        container_name:  player-deploy
+        # environment: .env    
+        volumes:
+            - ./services/player/:microservice/player/:ro 
+        networks:
+            - ft_transcendence
+        restart: on-failure
+
+networks:
+    ft_transcendence:
+        name: ft_transcendence
+        driver: bridge
