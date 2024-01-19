@@ -1,7 +1,5 @@
-from django.http import HttpResponseForbidden
 from django.core.cache import cache
-import jwt
-from services.authentication.api import settings
+from django.shortcuts import redirect
 
 
 class JWTRevocationMiddleware:
@@ -10,27 +8,26 @@ class JWTRevocationMiddleware:
 
     def __call__(self, request):
         jwt_token = self.extract_jwt_from_request(request)
-
         if jwt_token:
             if self.is_jwt_revoked(jwt_token):
-                return HttpResponseForbidden('JWT revoked. Please log in again.')
-            user_info = self.extract_user_info_from_jwt(jwt_token)
-            request.user_info = user_info
+                return redirect("http://localhost/login")
+                    # JsonResponse({'statusCode': 403 ,'detail': 'JWT revoked. Please log in again.', 'redirect': '/login'}, status=200))
         response = self.get_response(request)
         return response
 
     def extract_jwt_from_request(self, request):
+        # Check if JWT is in the Authorization header
         jwt_header = request.META.get('HTTP_AUTHORIZATION', '')
-        jwt_token = jwt_header.split(' ')[1] if 'HTTP_AUTHORIZATION' in request.META else None
+        # If not found in the header, check if it's in the cookies
+        if not jwt_header and 'jwt_token' in request.COOKIES:
+            jwt_token = request.COOKIES['jwt_token']
+        else:
+            return
         return jwt_token
 
     def is_jwt_revoked(self, jwt_token):
         return self.is_token_in_blacklist(jwt_token)
 
+    # the cache is not stored ondisk, and it's limited to the scope of the current Django process
     def is_token_in_blacklist(self, jwt_token):
         return cache.get(jwt_token) is not None
-
-    def extract_user_info_from_jwt(self, jwt_token):
-        decoded_token = jwt.decode(jwt_token, settings.SECRET_KEY, algorithms=['HS256'])
-        user_info = decoded_token.get('id', {})
-        return user_info

@@ -18,14 +18,10 @@ def intra_auth(request):
     authorization_url = f"https://api.intra.42.fr/oauth/authorize?client_id={getenv('INTRA_CLIENT_ID')}&{redirect_uri}&response_type=code"
     return redirect(authorization_url)
 
-
 @api_view(['GET'])
 @authentication_classes([])
 @permission_classes([])
 def intra_callback_auth(request):
-    # TODO: should be understood
-    if request.user.is_authenticated:
-        return redirect("http://localhost/home")
     code = request.GET.get("code")
     error_message = request.GET.get("error")
     if error_message is not None:
@@ -65,15 +61,13 @@ def intra_callback_auth(request):
     }
     player_data = requests.post(f'{settings.PLAYER_URL}/player/', json=data)
     if not player_data.ok:
-        return (
-            Response({"statusCode": 401}),
-            redirect("http://localhost/login"))
+        return redirect("http://localhost/login")
+    print(player_data.json())
     player_id = player_data.json()['id']
-    jwt_token = re_encode_jwt(jwt_token, player_id)
+    jwt_token = re_encode_jwt(player_id)
     response = redirect("http://localhost/home")
     response.set_cookie("jwt_token", value=jwt_token, httponly=True)
     return response
-
 
 @api_view(["GET"])
 @authentication_classes([])
@@ -98,8 +92,6 @@ def google_auth(request):
     google_authorization_url = f"{GOOGLE_AUTH_URL}?{query_params}"
     return redirect(google_authorization_url)
 
-
-# TODO: This should be tested with Postman because of the first if condition
 @api_view(["GET"])
 @authentication_classes([])
 @permission_classes([])
@@ -138,34 +130,37 @@ def google_callback_auth(request):
     }
     player_data = requests.post(f'{settings.PLAYER_URL}/player/', json=data)
     if not player_data.ok:
-        return (
-            Response({"statusCode": 401}),
-            redirect("http://localhost/login"))
+        return redirect("http://localhost/login")
     player_id = player_data.json()['id']
     jwt_token = re_encode_jwt(player_id)
     response = redirect("http://localhost/home")
     response.set_cookie("jwt_token", value=jwt_token, httponly=True)
     return response
 
-
 @api_view(["GET"])
 @authentication_classes([])
 @permission_classes([])
 def is_logged_in_auth(request):
-    jwt_token = request.COOKIES["access_token"]
+    jwt_token = request.COOKIES.get("jwt_token")
     if jwt_token is None:
-        return Response({"statusCode": 401, "error": "invalid"})
+        return Response({"statusCode": 404, "error": "Invalid token"})
     try:
-        payload = jwt.decode(jwt_token, settings.SECRET_KEY, algorithms=['HS256'])
-        return payload
+        jwt.decode(jwt_token, settings.SECRET_KEY, algorithms=['HS256'])
+        return Response({"statusCode": 200, "message": "Token is valid"})
     except jwt.ExpiredSignatureError:
-        raise Exception('Token has expired')
+        return Response({"statusCode": 404, "error": "Token has expired"})
     except jwt.InvalidTokenError:
-        raise Exception('Invalid token')
+        return Response({"statusCode": 404, "error": "Invalid token"})
 
 @api_view(["GET"])
 @authentication_classes([])
 @permission_classes([])
-def logout_user(jwt_token):
-    # Add the token to the blacklist with a TTL (time-to-live)
-    cache.set(jwt_token, 'revoked', timeout=3600)
+def logout_user(request):
+    jwt_token = request.COOKIES.get("jwt_token")
+    if jwt_token is not None:
+        cache.set(jwt_token, True, timeout=None)
+        response = Response()
+        response.delete_cookie('jwt_token')
+        return redirect("http://localhost/login")
+    else:
+        return Response({"statusCode": 400, "detail": "No valid access token found"})

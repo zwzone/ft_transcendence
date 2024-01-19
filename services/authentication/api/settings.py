@@ -47,11 +47,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "rest_framework",
-    "corsheaders",
+    # "corsheaders",
 ]
 
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",
+    "api.middleware.JWTRevocationMiddleware",
+    # "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -138,9 +139,3 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
 PLAYER_URL = 'http://localhost:8001'
-
-MIDDLEWARE = [
-    # Other middleware...
-    'authentication.middleware.JWTRevocationMiddleware',
-    # Other middleware...
-]

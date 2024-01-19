@@ -17,7 +17,7 @@ def decode_google_id_token(id_token: str) -> Dict[str, str]:
     decoded_token = jwt.decode(id_token, options={"verify_signature": False})
     return decoded_token
 
-def re_encode_jwt(token: str, id: int) -> str:
+def re_encode_jwt(id: int) -> str:
     payload = {
         'id': id,
         'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
