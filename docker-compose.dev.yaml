@@ -16,7 +16,7 @@ services:
     authentication:
         build:
             context: ./services/authentication/
-            build: Dockerfile.dev
+            dockerfile: Dockerfile.dev
         image: authentication:develop
         container_name: authentication-develop
         environment: ./services/.env
@@ -29,7 +29,7 @@ services:
     player:
         build:
             context: ./services/player/
-            build: Dockerfile.dev
+            dockerfile: Dockerfile.dev
         image: player:develop
         container_name:  player-develop
         environment: ./services/.env
