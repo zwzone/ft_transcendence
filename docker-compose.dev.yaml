@@ -19,7 +19,8 @@ services:
             dockerfile: Dockerfile.dev
         image: authentication:develop
         container_name: authentication-develop
-        environment: ./services/.env
+        env_file:
+            - ./services/.env
         volumes:
             - ./services/authentication/:microservice/authentication/:ro
         networks:

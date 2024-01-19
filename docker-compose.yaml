@@ -17,7 +17,8 @@ services:
             dockerfile: Dockerfile
         image: authentication:deploy
         container_name: authentication-deploy
-        environment: ./services/.env
+        env_file:
+            - ./services/.env
         networks:
             - ft_transcendence
         restart: on-failure
@@ -28,7 +29,7 @@ services:
             dockerfile: Dockerfile
         image: player:deploy
         container_name:  player-deploy
-        environment: ./services/.env 
+        env_file: ./services/.env 
         networks:
             - ft_transcendence
         restart: on-failure
