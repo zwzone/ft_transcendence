@@ -1,12 +1,11 @@
 FROM        python:3.11.7-bullseye
 
 RUN         apt update -y && \
-            apt upgrade -y && \
-            apt install python3.11.7 -y
+            apt upgrade -y
 
 RUN         mkdir -p /microservice/player/
 
-RUN         pip -r install /microservice/player/requirements.txt
+RUN         pip install -r /microservice/player/requirements.txt
 
 WORKDIR     /microservice/player/
 
