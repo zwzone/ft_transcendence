@@ -7,8 +7,6 @@ services:
         container_name: frontend-deploy
         ports:
             - 81:81
-        volumes:
-            - ./frontend:/var/www/ft_transcendence/:ro
         networks:
             - ft_transcendence
         restart: on-failure
@@ -20,8 +18,6 @@ services:
         image: authentication:deploy
         container_name: authentication-deploy
         environment: ./services/.env
-        volumes:
-            - ./services/authentication/:microservice/authentication/:ro
         networks:
             - ft_transcendence
         restart: on-failure
@@ -33,8 +29,6 @@ services:
         image: player:deploy
         container_name:  player-deploy
         environment: ./services/.env 
-        volumes:
-            - ./services/player/:microservice/player/:ro 
         networks:
             - ft_transcendence
         restart: on-failure
