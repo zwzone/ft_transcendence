@@ -20,4 +20,5 @@ tournament-player-card div h6 {
 
 tournament-match-card {
   background-color: var(--color-primary-100);
+  box-shadow: 5px 5px 10px 0px var(--color-primary-200);
 }

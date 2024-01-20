@@ -1,50 +1,49 @@
 my-navbar {
+  font-family: "Koulen", sans-serif;
+  letter-spacing: .25rem;
   position: relative;
   height: fit-content;
-}
-
-my-navbar.active {
-  background-color: var(--color-primary-200);
 }
 
 .logo,
 li .link {
   color: var(--color-primary-100);
-  background-color: var(--color-primary-300);
-}
-
-li .link.logout {
-  color: var(--color-secondary-100);
-  background-color: orangered;
+  transition: inherit;
 }
 
 .logo:hover,
 li .link:hover {
-  color: var(--color-primary-100);
-  background-color: var(--color-primary-400);
-}
-
-li .link.logout:hover {
+  background-color: var(--color-primary-100);
   color: var(--color-secondary-100);
-  background-color: red;
 }
 
 .logo:active,
 li .link:active {
-  color: var(--color-primary-100) !important;
   background-color: var(--color-secondary-100) !important;
+  color: var(--color-primary-100) !important;
   border-color: var(--color-secondary-100) !important;
 }
 
-li .link.logout:active {
-  color: red !important;
+li .logout {
+  background-color: orangered;
+  color: var(--color-secondary-100);
+}
+
+li .logout:hover {
+  background-color: red;
+  color: var(--color-secondary-100);
+}
+
+li .logout:active {
   background-color: var(--color-secondary-100) !important;
+  color: red !important;
+  border-color: var(--color-secondary-100) !important;
 }
 
 .hamburger {
   display: none;
   cursor: pointer;
-  background-color: var(--color-primary-300);
+  background-color: var(--color-secondary-100);
 }
 
 .hamburger .line {
@@ -52,44 +51,91 @@ li .link.logout:active {
   height: 4px;
   background-color: var(--color-primary-100);
   margin-block: 6px;
+  transition: inherit;
 }
-  
+
 .hamburger:hover {
-  background-color: var(--color-primary-400);
+  background-color: var(--color-primary-100);
+}
+
+.hamburger:hover .line {
+  background-color: var(--color-secondary-100);
 }
 
 .hamburger:active {
   background-color: var(--color-secondary-100) !important;
+  border-color: var(--color-secondary-100) !important;
+}
+
+.hamburger:active .line {
+  background-color: var(--color-primary-100) !important;
+}
+
+.nav-bar ul {
+  transition: inherit;
 }
 
 @media only screen and (max-width: 992px) {
+  my-navbar.active {
+    background-color: var(--color-primary-200);
+  }
+
+  my-navbar.active .logo,
+  my-navbar.active li .link {
+    background-color: var(--color-primary-200);
+    color: var(--color-secondary-100);
+  }
+
+  my-navbar.active .logo:hover,
+  my-navbar.active li .link:hover {
+    background-color: var(--color-secondary-100);
+    color: var(--color-primary-100);
+  }
+
   .hamburger {
     display: block;
   }
 
+  my-navbar.active .hamburger {
+    background-color: var(--color-primary-200);
+  }
+
+  my-navbar.active .hamburger .line {
+    background-color: var(--color-secondary-100);
+  }
+
+  my-navbar.active .hamburger:hover {
+    background-color: var(--color-secondary-100);
+  }
+
+  my-navbar.active .hamburger:hover .line {
+    background-color: var(--color-primary-200);
+  }
+
   .nav-bar {
-    height: 0;
+    display: none !important;
+    width: 100vw;
+    height: fit-content;
+    padding-block: 1rem;
     position: absolute;
     top: 100%;
     left: 0;
-    width: 100vw;
     background-color: var(--color-primary-200);
+    color: var(--color-secondary-100);
     overflow: hidden;
   }
 
   .nav-bar ul {
     flex-direction: column;
-    text-align: center;
   }
 
   .nav-bar.active {
-    height: fit-content;
-    padding-block: 1rem;
+    display: flex !important;
   }
 }
 
 @media only screen and (max-width: 576px) {
-  my-navbar.d-flex {
+  my-navbar {
     padding-inline: 1rem !important;
   }
 
