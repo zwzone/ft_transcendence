@@ -1,0 +1,10 @@
+FROM        python:3.11.7-bullseye
+
+RUN         apt update -y && \
+            apt upgrade -y 
+
+RUN         mkdir -p /microservice/authentication/
+
+WORKDIR     /microservice/authentication/
+
+CMD         [ "bash", "./tools/microservice-run.sh" ]
