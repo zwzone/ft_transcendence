@@ -1,6 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Koulen&family=Rubik+Mono+One&display=swap');
 @import "./root.css";
 @import "./Navbar.css";
 @import "./pong.css";
 @import "./LoginPage.css";
 @import "./HomePage.css";
 @import "./TournamentPage.css";
+@import "./ProfilePage.css";

@@ -14,7 +14,7 @@ export default class Navbar extends HTMLElement {
       "align-items-center",
       "w-100",
       "px-5",
-      "py-2"
+      "py-2",
     );
 
     const handleLink = (event) => {
@@ -36,6 +36,7 @@ export default class Navbar extends HTMLElement {
 
     hamburger.addEventListener("click", (event) => {
       nav.classList.toggle("active");
+      this.classList.toggle("active");
     });
   }
 }
