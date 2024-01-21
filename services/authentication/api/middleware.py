@@ -10,7 +10,7 @@ class JWTRevocationMiddleware:
         jwt_token = self.extract_jwt_from_request(request)
         if jwt_token:
             if self.is_jwt_revoked(jwt_token):
-                return redirect("http://localhost/login")
+                return redirect("https://localhost/login")
         response = self.get_response(request)
         return response
 
