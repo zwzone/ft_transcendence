@@ -60,7 +60,7 @@ def intra_callback_auth(request):
             "avatar": user_data["image"]["link"],
         }
     }
-    player_data = requests.post(f'{settings.PLAYER_URL}/player/', json=data)
+    player_data = requests.post(f'{settings.PLAYER_URL}', json=data)
     if not player_data.ok:
         return redirect("https://localhost/login")
     player_id = player_data.json()['id']
