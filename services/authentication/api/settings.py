@@ -133,6 +133,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# TODO: Change this in production
-# PLAYER_URL = 'http(s)://player:8000'
-PLAYER_URL = 'http://player:8001/'
+PLAYER_URL = 'http://player:8000'

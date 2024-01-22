@@ -60,13 +60,13 @@ def intra_callback_auth(request):
             "avatar": user_data["image"]["link"],
         }
     }
-    player_data = requests.post(f'{settings.PLAYER_URL}player/', json=data)
+    player_data = requests.post(f'{settings.PLAYER_URL}/', json=data)
     if not player_data.ok:
-        return redirect("http://localhost/login")
+        return redirect("https://localhost/login")
     player_id = player_data.json()['id']
     jwt_token = re_encode_jwt(player_id)
-    response = redirect("http://localhost/home")
-    response.set_cookie("jwt_token", value=jwt_token, httponly=True)
+    response = redirect("https://localhost/home")
+    response.set_cookie("jwt_token", value=jwt_token, httponly=True, secure=True)
     return response
 
 
@@ -130,13 +130,13 @@ def google_callback_auth(request):
             "avatar": id_token_decoded['picture'],
         }
     }
-    player_data = requests.post(f'{settings.PLAYER_URL}player/', json=data)
+    player_data = requests.post(f'{settings.PLAYER_URL}/', json=data)
     if not player_data.ok:
-        return redirect("http://localhost/login")
+        return redirect("https://localhost/login")
     player_id = player_data.json()['id']
     jwt_token = re_encode_jwt(player_id)
-    response = redirect("http://localhost/home")
-    response.set_cookie("jwt_token", value=jwt_token, httponly=True)
+    response = redirect("https://localhost/home")
+    response.set_cookie("jwt_token", value=jwt_token, httponly=True, secure=True)
     return response
 
 @api_view(["GET"])
@@ -159,7 +159,7 @@ def logout_user(request):
     jwt_token = request.COOKIES.get("jwt_token")
     if jwt_token is not None:
         cache.set(jwt_token, True, timeout=None)
-        response = redirect("http://localhost/login")
+        response = redirect("https://localhost/login")
         response.delete_cookie('jwt_token')
         return response
     else:
