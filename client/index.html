@@ -35,7 +35,6 @@
 
   <!-- GAME PAGE -->
   <template id="game-template">
-    <my-navbar></my-navbar>
     <main class="container-fluid my-5">
       <div class="d-flex justify-content-center align-items-center">
         <canvas id="canvas-pong"></canvas>
@@ -52,42 +51,20 @@
         <play-card headText="TIC TAC TOE"></play-card>
       </section>
     </main>
+    <my-footer></my-footer>
   </template>
 
   <!-- LOGIN PAGE -->
   <template id="login-template">
-    <div class="sidebar d-flex flex-column justify-content-center align-items-center py-2 gap-5 h-100 w-100">
-      <div class="d-flex flex-column justify-content-center align-items-center">
-        <img class="w-75" src="public/pong.svg" alt="logo">
-        <h1 class="display-1 text-center fw-bold m-0">PING PONG</h1>
-      </div>
-      <div class="d-flex flex-column justify-content-center align-items-center gap-3">
-        <login-button color="success" link="http://localhost:8000/intra" text="Intra 42"></login-button>
-        <login-button color="primary" link="http://localhost:8000/google" text="Google"></login-button>
-      </div>
+    <div class="d-flex flex-column justify-content-center align-items-center gap-3 pt-5">
+      <img class="w-75" src="public/pong.svg" alt="logo">
+      <h1 class="display-1 text-center fw-bold m-0">PING PONG</h1>
     </div>
-    <div class="wallpaper h-100 w-100">
-      <img class="leaf" src="public/leaf1.png" alt="leaf image">
-      <img class="leaf" src="public/leaf2.png" alt="leaf image">
-      <img class="leaf" src="public/leaf3.png" alt="leaf image">
-      <img class="leaf" src="public/leaf4.png" alt="leaf image">
-      <img class="leaf" src="public/leaf5.png" alt="leaf image">
-      <img class="leaf" src="public/leaf1.png" alt="leaf image">
-      <img class="leaf" src="public/leaf2.png" alt="leaf image">
-      <img class="leaf" src="public/leaf3.png" alt="leaf image">
-      <img class="leaf" src="public/leaf4.png" alt="leaf image">
-      <img class="leaf" src="public/leaf5.png" alt="leaf image">
-      <img class="leaf" src="public/leaf1.png" alt="leaf image">
-      <img class="leaf" src="public/leaf2.png" alt="leaf image">
-      <img class="leaf" src="public/leaf3.png" alt="leaf image">
-      <img class="leaf" src="public/leaf4.png" alt="leaf image">
-      <img class="leaf" src="public/leaf5.png" alt="leaf image">
-      <img class="leaf" src="public/leaf1.png" alt="leaf image">
-      <img class="leaf" src="public/leaf2.png" alt="leaf image">
-      <img class="leaf" src="public/leaf3.png" alt="leaf image">
-      <img class="leaf" src="public/leaf4.png" alt="leaf image">
-      <img class="leaf" src="public/leaf5.png" alt="leaf image">
+    <div class="d-flex flex-column justify-content-center align-items-center gap-3">
+      <login-button color="success" link="http://localhost:8000/intra" text="Intra 42"></login-button>
+      <login-button color="primary" link="http://localhost:8000/google" text="Google"></login-button>
     </div>
+    <my-footer></my-footer>
   </template>
 
   <!-- NOTFOUNT PAGE -->
@@ -96,6 +73,7 @@
       <h1 class="fw-bold text-center text-danger">OPS, <span class="fw-bold display-1">404</span></h1>
       <h2 class="fw-bold text-center text-danger">ROUTE NOT FOUND !</h2>
     </div>
+    <my-footer></my-footer>
   </template>
 
   <!-- PROFILE PAGE -->
@@ -166,6 +144,7 @@
         </div>
       </div>
     </main>
+    <my-footer></my-footer>
   </template>
 
   <!-- SETTING PAGE -->
@@ -198,6 +177,7 @@
         </div>
       </div>
     </main>
+    <my-footer></my-footer>
   </template>
 
   <!-- TOURNAMENT PAGE -->
@@ -218,13 +198,14 @@
         <tournament-match-card></tournament-match-card>
       </section>
     </main>
+    <my-footer></my-footer>
   </template>
 
   <!--------------------------- COMPONENTS --------------------------->
 
   <!-- LOGIN BUTTON -->
   <template id="login-button">
-    <a class="btn btn-lg border border-5 rounded-5 fw-bold text-light"></a>
+    <a class="btn btn-lg border border-5 rounded-5 fw-bold fs-1 text-light"></a>
   </template>
 
   <!-- NAVBAR -->
@@ -251,6 +232,11 @@
         </li>
       </ul>
     </nav>
+  </template>
+
+  <!-- FOOTER -->
+  <template id="my-footer">
+    <footer class="text-center p-5 fs-4">2024 / At 1337 &copy; done by | zakaria wina | <span class="display-1">taha naceur</span> | mustapha idfath | houssam haddouch | youness chaaibi</footer>
   </template>
 
   <!-- PLAY CARD -->
