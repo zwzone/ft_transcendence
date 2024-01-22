@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "rest_framework",
+    "api",
 ]
 
 MIDDLEWARE = [
@@ -132,4 +133,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-PLAYER_URL = 'http://localhost:8001'
+PLAYER_URL = 'http://player:8000'
