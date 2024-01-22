@@ -1,7 +1,7 @@
 services:
     frontend:
         build:
-            context: ./frontend/
+            context: ./client/
             dockerfile: Dockerfile
         image: frontend:deploy
         container_name: frontend-deploy
@@ -25,19 +25,19 @@ services:
             - ft_transcendence
         restart: on-failure
 
-    player:
-        build:
-            context: ./services/player/
-            dockerfile: Dockerfile
-        image: player:deploy
-        container_name:  player-deploy
-        ports:
-            - 8001:8001
-        env_file:
-            - ./services/.env 
-        networks:
-            - ft_transcendence
-        restart: on-failure
+    # player:
+    #     build:
+    #         context: ./services/player/
+    #         dockerfile: Dockerfile
+    #     image: player:deploy
+    #     container_name:  player-deploy
+    #     ports:
+    #         - 8001:8001
+    #     env_file:
+    #         - ./services/.env 
+    #     networks:
+    #         - ft_transcendence
+    #     restart: on-failure
 
 networks:
     ft_transcendence:
