@@ -1,12 +1,12 @@
 services:
-    frontend:
+    ft-transcendence:
         build:
             context: ./client/
             dockerfile: Dockerfile
-        image: frontend:deploy
-        container_name: frontend-deploy
+        image: ft-transcendence:deploy
+        container_name: ft-transcendence
         ports:
-            - 81:81
+            - 443:443
         networks:
             - ft_transcendence
         restart: on-failure
@@ -16,28 +16,24 @@ services:
             context: ./services/authentication/
             dockerfile: Dockerfile
         image: authentication:deploy
-        container_name: authentication-deploy
-        ports:
-            - 8000:8000
+        container_name: authentication
         env_file:
             - ./services/.env
         networks:
             - ft_transcendence
         restart: on-failure
 
-    # player:
-    #     build:
-    #         context: ./services/player/
-    #         dockerfile: Dockerfile
-    #     image: player:deploy
-    #     container_name:  player-deploy
-    #     ports:
-    #         - 8001:8001
-    #     env_file:
-    #         - ./services/.env 
-    #     networks:
-    #         - ft_transcendence
-    #     restart: on-failure
+    player:
+        build:
+            context: ./services/player/
+            dockerfile: Dockerfile
+        image: player:deploy
+        container_name:  player
+        env_file:
+            - ./services/.env 
+        networks:
+            - ft_transcendence
+        restart: on-failure
 
 networks:
     ft_transcendence:

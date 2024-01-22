@@ -1,14 +1,14 @@
 services:
-    frontend:
+    ft-transcendence:
         build:
-            context: ./frontend/
+            context: ./client/
             dockerfile: Dockerfile.dev
-        image: frontend:develop
-        container_name: frontend-develop
+        image: ft-transcendence:develop
+        container_name: ft-transcendence
         ports:
-            - 81:81
+            - 443:443
         volumes:
-            - ./frontend:/var/www/ft_transcendence/:ro
+            - ./client:/var/www/ft_transcendence/:ro
         networks:
             - ft_transcendence
         restart: on-failure
@@ -18,9 +18,7 @@ services:
             context: ./services/authentication/
             dockerfile: Dockerfile.dev
         image: authentication:develop
-        container_name: authentication-develop
-        ports:
-            - 8000:8000
+        container_name: authentication
         env_file:
             - ./services/.env
         volumes:
@@ -34,9 +32,7 @@ services:
             context: ./services/player/
             dockerfile: Dockerfile.dev
         image: player:develop
-        container_name:  player-develop
-        ports:
-            - 8001:8001
+        container_name:  player
         env_file:
             - ./services/.env
         volumes:

@@ -1,7 +1,8 @@
 FROM        python:3.11.7-bullseye
 
 RUN         apt update -y && \
-            apt upgrade -y 
+            apt upgrade -y && \
+			apt install curl vim nano lsof -y
 
 RUN         mkdir -p /microservice/authentication/
 

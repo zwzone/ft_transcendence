@@ -2,13 +2,19 @@ FROM		debian:bullseye
 
 RUN			apt update -y && \
 			apt upgrade -y && \
+			apt install curl vim nano lsof -y && \
 			apt install nginx -y
 
 COPY		./conf/nginx.conf /etc/nginx/sites-enabled/ft_transcendence.conf
+
+RUN			openssl req -x509 -newkey rsa:2048 -nodes \
+			-out /etc/ssl/certs/ft_transcendence.crt \
+			-keyout /etc/ssl/private/ft_transcendence.key \
+			-subj "/C=FR/ST=BG/L=Paris/O=1337/OU=1337/CN=localhost/UID=team_trans"
 
 RUN			mkdir -p /var/www/ft_transcendence/
 
 COPY		. /var/www/ft_transcendence/
 
-CMD			[ "sleep", "1000000" ]
+CMD			[ "nginx", "-g", "daemon off;" ]
 
