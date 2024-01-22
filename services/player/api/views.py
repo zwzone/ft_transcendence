@@ -1,5 +1,6 @@
 from drf_yasg.utils import swagger_auto_schema
 from django.conf import settings
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import PlayerSerializer, UsernameSerializer, FirstNameSerializer, LastNameSerializer
@@ -53,9 +54,8 @@ class PlayerInfoView(APIView):
         token = request.data.get('token')
         if not token:
             return Response({
-                "status": 401,
                 "message": "JWT token not found",
-            })
+            }, status=status.HTTP_401_UNAUTHORIZED)
         try:
             decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])      
             if 'email' in decoded_token:
@@ -68,21 +68,18 @@ class PlayerInfoView(APIView):
             player, created = Player.objects.get_or_create(email=email, username=username, first_name=first_name, last_name=last_name, avatar=avatar)
             if created:
                 return Response({
-                    "status": 201,
                     "message": "User created successfully",
                     "id": player.id
-                })
+                }, status=status.HTTP_201_CREATED)
             else :
                 return Response({
-                    "status": 200,
                     "message": "User already exists",
                     "id": player.id
-                })
+                }, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({
-                "status": 500,
                 "message": str(e),
-            })
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class PlayerLastNameView(APIView):
     authentication_classes = []
