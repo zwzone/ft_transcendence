@@ -104,7 +104,7 @@
     <main class="container-fluid d-flex flex-column justify-content-center gap-5 my-5">
       <div class="player-data d-flex justify-content-around align-items-center flex-wrap gap-2 p-3 rounded-5">
         <div class="data-section d-flex flex-column justify-content-center align-items-center gap-2 p-2 rounded-5">
-          <div class="rounded-5" style="width: 150px; height: 150px;"></div>
+          <img class="avatar border border-1 border-white rounded-4" src="public/leaf1.png" alt="avatar">
           <h1 class="text-center m-0 p-3 rounded-5" id="full-name">Zakaria Wina</h1>
         </div>
         <div class="data-section d-flex flex-column gap-2 p-2 rounded-5">
@@ -171,32 +171,30 @@
   <!-- SETTING PAGE -->
   <template id="setting-template">
     <my-navbar></my-navbar>
-    <main class="container-fluid d-flex flex-column gap-5 my-5">
-      <div class="row">
-        <div class="col-sm-3 d-flex justify-content-start align-items-start mb-1">
-          <button class="btn btn-lg btn-warning rounded-5 px-3 py-2">Change Avatar</button>
-        </div>
-        <div class="col-sm-9 d-flex justify-content-start align-items-start mt-1">
-          <div class="border border-5" style="width: 100px; height: 100px;"></div>
-        </div>
+    <main class="container-fluid d-flex flex-column justify-content-center gap-5 my-5">
+      <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-3 rounded-5">
+        <h2 class="fw-bold text-center m-0 px-4 py-2">Change avatar</h2>
+        <img class="avatar rounded-4 border border-1 border-white" src="public/leaf1.png" alt="avatar">
       </div>
-      <div class="row">
-        <div class="col-sm-3 d-flex justify-content-start align-items-start mb-1">
-          <button class="btn btn-lg btn-warning rounded-5 px-3 py-2">Change Full Name</button>
-        </div>
-        <div class="col-sm-9 d-flex justify-content-start align-items-start mt-1">
-          <input type="text" class="input-group" style="width: 150px;"/>
-        </div>
+      <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-3 rounded-5">
+        <h2 class="fw-bold text-center m-0 px-4 py-2">Change Username</h2>
+        <input class="border rounded-4 px-3 py-3 fs-5" type="text" placeholder="Zwzone">
       </div>
-      <div class="row">
-        <div class="col">
-          <button class="btn btn-lg btn-primary rounded-5">Enable Two-factor authentication (2FA)</button>
-        </div>
+      <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-3 rounded-5">
+        <h2 class="fw-bold text-center m-0 px-4 py-2">Change First Name</h2>
+        <input class="border rounded-4 px-4 py-2" type="text" placeholder="Zakaria">
       </div>
-      <div class="row">
-        <div class="col">
-          <button class="btn btn-lg btn-danger rounded-5">Delete Account</button>
-          <button class="btn btn-lg btn-outline-danger rounded-5">ARE YOU SURE ABOUT THAT !</button>
+      <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-3 rounded-5">
+        <h2 class="fw-bold text-center m-0 px-4 py-2">Change Last Name</h2>
+        <input class="border rounded-4 px-4 py-2" type="text" placeholder="Wina">
+      </div>
+      <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-3 rounded-5">
+        <h2 class="fw-bold text-center m-0 px-4 py-2">Two Factor Authentication</h2>
+        <div class="twofa p-2 rounded-5">
+          <label class="switch">
+            <input type="checkbox">
+            <span class="slider round rounded-5"></span>
+          </label>
         </div>
       </div>
     </main>
@@ -269,7 +267,7 @@
 
   <!-- FRIEND CARD -->
   <template id="friend-card">
-    <img class="rounded-4" src="public/leaf1.png" alt="avatar">
+    <img class="avatar rounded-4 border border-1 border-white" src="public/leaf1.png" alt="avatar">
     <h6 class="text-center m-0">Zakaria Wina</h6>
   </template>
 
@@ -290,11 +288,11 @@
 
   <!-- TOURNAMENT PLAYER CARD -->
   <template id="tournament-player-card">
-    <div class="d-flex flex-column justify-content-center align-items-center border border-1 border-black m-0 p-1 gap-1 rounded-4">
-      <img class="border border-1 border-black rounded-4" src="public/leaf1.png" alt="avatar">
+    <div class="d-flex flex-column justify-content-center align-items-center m-0 p-1 gap-1 rounded-4">
+      <img class="avatar border border-1 border-white rounded-4" src="public/leaf1.png" alt="avatar">
       <h6 class="text-center m-0 py-1 px-2 rounded-4 fw-bold">Zakaria Wina</h6>
     </div>
-    <h3 class="fw-bold text-center border-start border-bottom border-end border-1 border-black m-0 p-1 rounded-bottom-4">
+    <h3 class="fw-bold text-center m-0 p-1 rounded-bottom-4">
       10
     </div>
   </template>

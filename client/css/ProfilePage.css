@@ -8,12 +8,18 @@ profile-page .player-data {
   max-width: 1080px;
 }
 
-profile-page .player-data>div {
+profile-page .player-data>.data-section {
   background-color: var(--color-primary-300);
 }
 
-profile-page .player-data>div>div,
-profile-page .player-data>div>h1 {
+profile-page .player-data>.data-section>img {
+  width: 150px;
+  height: 150px;
+  background-color: var(--color-primary-300);
+}
+
+profile-page .player-data>.data-section>h1,
+profile-page .player-data>.data-section>div {
   background-color: var(--color-primary-200);
 }
 
