@@ -32,9 +32,12 @@ if path.isfile(dotenv_file):
 SECRET_KEY = getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
+    ".localhost",
+    "127.0.0.1",
+    "[::1]",
     ".player",
 ]
 
@@ -52,6 +55,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "drf_yasg",
     "api",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
@@ -138,7 +142,13 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Add Player model to AUTH_USER_MODEL
 AUTH_USER_MODEL = "api.Player"
 
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
+# Public URLs
+PUBLIC_PLAYER_URL=getenv("PUBLIC_PLAYER_URL")
+PUBLIC_AUTHENTICATION_URL=getenv("PUBLIC_AUTHENTICATION_URL")
+
+# Private URLs
+PRIVATE_PLAYER_URL=getenv("PRIVATE_PLAYER_URL")
+PRIVATE_AUTHENTICATION_URL=getenv("PRIVATE_AUTHENTICATION_URL")
