@@ -35,7 +35,6 @@
 
   <!-- GAME PAGE -->
   <template id="game-template">
-    <my-navbar></my-navbar>
     <main class="container-fluid my-5">
       <div class="d-flex justify-content-center align-items-center">
         <canvas id="canvas-pong"></canvas>
@@ -52,42 +51,20 @@
         <play-card headText="TIC TAC TOE"></play-card>
       </section>
     </main>
+    <my-footer></my-footer>
   </template>
 
   <!-- LOGIN PAGE -->
   <template id="login-template">
-    <div class="sidebar d-flex flex-column justify-content-center align-items-center py-2 gap-5 h-100 w-100">
-      <div class="d-flex flex-column justify-content-center align-items-center">
-        <img class="w-75" src="public/pong.svg" alt="logo">
-        <h1 class="display-1 text-center fw-bold m-0">PING PONG</h1>
-      </div>
-      <div class="d-flex flex-column justify-content-center align-items-center gap-3">
-        <login-button color="success" link="https://localhost/authentication/intra/" text="Intra 42"></login-button>
-        <login-button color="primary" link="https://localhost/authentication/google/" text="Google"></login-button>
-      </div>
+    <div class="d-flex flex-column justify-content-center align-items-center gap-3 pt-5">
+      <img class="w-75" src="public/pong.svg" alt="logo">
+      <h1 class="display-1 text-center fw-bold m-0">PING PONG</h1>
     </div>
-    <div class="wallpaper h-100 w-100">
-      <img class="leaf" src="public/leaf1.png" alt="leaf image">
-      <img class="leaf" src="public/leaf2.png" alt="leaf image">
-      <img class="leaf" src="public/leaf3.png" alt="leaf image">
-      <img class="leaf" src="public/leaf4.png" alt="leaf image">
-      <img class="leaf" src="public/leaf5.png" alt="leaf image">
-      <img class="leaf" src="public/leaf1.png" alt="leaf image">
-      <img class="leaf" src="public/leaf2.png" alt="leaf image">
-      <img class="leaf" src="public/leaf3.png" alt="leaf image">
-      <img class="leaf" src="public/leaf4.png" alt="leaf image">
-      <img class="leaf" src="public/leaf5.png" alt="leaf image">
-      <img class="leaf" src="public/leaf1.png" alt="leaf image">
-      <img class="leaf" src="public/leaf2.png" alt="leaf image">
-      <img class="leaf" src="public/leaf3.png" alt="leaf image">
-      <img class="leaf" src="public/leaf4.png" alt="leaf image">
-      <img class="leaf" src="public/leaf5.png" alt="leaf image">
-      <img class="leaf" src="public/leaf1.png" alt="leaf image">
-      <img class="leaf" src="public/leaf2.png" alt="leaf image">
-      <img class="leaf" src="public/leaf3.png" alt="leaf image">
-      <img class="leaf" src="public/leaf4.png" alt="leaf image">
-      <img class="leaf" src="public/leaf5.png" alt="leaf image">
+    <div class="d-flex flex-column justify-content-center align-items-center gap-3">
+      <login-button color="success" link="https://localhost/authentication/intra/" text="Intra 42"></login-button>
+      <login-button color="primary" link="https://localhost/authentication/google/" text="Google"></login-button>
     </div>
+    <my-footer></my-footer>
   </template>
 
   <!-- NOTFOUNT PAGE -->
@@ -96,6 +73,7 @@
       <h1 class="fw-bold text-center text-danger">OPS, <span class="fw-bold display-1">404</span></h1>
       <h2 class="fw-bold text-center text-danger">ROUTE NOT FOUND !</h2>
     </div>
+    <my-footer></my-footer>
   </template>
 
   <!-- PROFILE PAGE -->
@@ -104,7 +82,7 @@
     <main class="container-fluid d-flex flex-column justify-content-center gap-5 my-5">
       <div class="player-data d-flex justify-content-around align-items-center flex-wrap gap-2 p-3 rounded-5">
         <div class="data-section d-flex flex-column justify-content-center align-items-center gap-2 p-2 rounded-5">
-          <div class="rounded-5" style="width: 150px; height: 150px;"></div>
+          <img class="avatar border border-1 border-white rounded-4" src="public/leaf1.png" alt="avatar">
           <h1 class="text-center m-0 p-3 rounded-5" id="full-name">Zakaria Wina</h1>
         </div>
         <div class="data-section d-flex flex-column gap-2 p-2 rounded-5">
@@ -166,40 +144,40 @@
         </div>
       </div>
     </main>
+    <my-footer></my-footer>
   </template>
 
   <!-- SETTING PAGE -->
   <template id="setting-template">
     <my-navbar></my-navbar>
-    <main class="container-fluid d-flex flex-column gap-5 my-5">
-      <div class="row">
-        <div class="col-sm-3 d-flex justify-content-start align-items-start mb-1">
-          <button class="btn btn-lg btn-warning rounded-5 px-3 py-2">Change Avatar</button>
-        </div>
-        <div class="col-sm-9 d-flex justify-content-start align-items-start mt-1">
-          <div class="border border-5" style="width: 100px; height: 100px;"></div>
-        </div>
+    <main class="container-fluid d-flex flex-column justify-content-center gap-5 my-5">
+      <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-3 rounded-5">
+        <h2 class="fw-bold text-center m-0 px-4 py-2">Change avatar</h2>
+        <img class="avatar rounded-4 border border-1 border-white" src="public/leaf1.png" alt="avatar">
       </div>
-      <div class="row">
-        <div class="col-sm-3 d-flex justify-content-start align-items-start mb-1">
-          <button class="btn btn-lg btn-warning rounded-5 px-3 py-2">Change Full Name</button>
-        </div>
-        <div class="col-sm-9 d-flex justify-content-start align-items-start mt-1">
-          <input type="text" class="input-group" style="width: 150px;"/>
-        </div>
+      <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-3 rounded-5">
+        <h2 class="fw-bold text-center m-0 px-4 py-2">Change Username</h2>
+        <input class="border rounded-4 px-3 py-3 fs-5" type="text" placeholder="Zwzone">
       </div>
-      <div class="row">
-        <div class="col">
-          <button class="btn btn-lg btn-primary rounded-5">Enable Two-factor authentication (2FA)</button>
-        </div>
+      <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-3 rounded-5">
+        <h2 class="fw-bold text-center m-0 px-4 py-2">Change First Name</h2>
+        <input class="border rounded-4 px-4 py-2" type="text" placeholder="Zakaria">
       </div>
-      <div class="row">
-        <div class="col">
-          <button class="btn btn-lg btn-danger rounded-5">Delete Account</button>
-          <button class="btn btn-lg btn-outline-danger rounded-5">ARE YOU SURE ABOUT THAT !</button>
+      <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-3 rounded-5">
+        <h2 class="fw-bold text-center m-0 px-4 py-2">Change Last Name</h2>
+        <input class="border rounded-4 px-4 py-2" type="text" placeholder="Wina">
+      </div>
+      <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-3 rounded-5">
+        <h2 class="fw-bold text-center m-0 px-4 py-2">Two Factor Authentication</h2>
+        <div class="twofa p-2 rounded-5">
+          <label class="switch">
+            <input type="checkbox">
+            <span class="slider round rounded-5"></span>
+          </label>
         </div>
       </div>
     </main>
+    <my-footer></my-footer>
   </template>
 
   <!-- TOURNAMENT PAGE -->
@@ -220,13 +198,14 @@
         <tournament-match-card></tournament-match-card>
       </section>
     </main>
+    <my-footer></my-footer>
   </template>
 
   <!--------------------------- COMPONENTS --------------------------->
 
   <!-- LOGIN BUTTON -->
   <template id="login-button">
-    <a class="btn btn-lg border border-5 rounded-5 fw-bold text-light"></a>
+    <a class="btn btn-lg border border-5 rounded-5 fw-bold fs-1 text-light"></a>
   </template>
 
   <!-- NAVBAR -->
@@ -255,6 +234,11 @@
     </nav>
   </template>
 
+  <!-- FOOTER -->
+  <template id="my-footer">
+    <footer class="text-center p-5 fs-4">2024 / At 1337 &copy; done by | zakaria wina | <span class="display-1">taha naceur</span> | mustapha idfath | houssam haddouch | youness chaaibi</footer>
+  </template>
+
   <!-- PLAY CARD -->
   <template id="play-card">
     <h1 class="text-center fw-bold m-0 display-1"></h1>
@@ -269,7 +253,7 @@
 
   <!-- FRIEND CARD -->
   <template id="friend-card">
-    <img class="rounded-4" src="public/leaf1.png" alt="avatar">
+    <img class="avatar rounded-4 border border-1 border-white" src="public/leaf1.png" alt="avatar">
     <h6 class="text-center m-0">Zakaria Wina</h6>
   </template>
 
@@ -290,11 +274,11 @@
 
   <!-- TOURNAMENT PLAYER CARD -->
   <template id="tournament-player-card">
-    <div class="d-flex flex-column justify-content-center align-items-center border border-1 border-black m-0 p-1 gap-1 rounded-4">
-      <img class="border border-1 border-black rounded-4" src="public/leaf1.png" alt="avatar">
+    <div class="d-flex flex-column justify-content-center align-items-center m-0 p-1 gap-1 rounded-4">
+      <img class="avatar border border-1 border-white rounded-4" src="public/leaf1.png" alt="avatar">
       <h6 class="text-center m-0 py-1 px-2 rounded-4 fw-bold">Zakaria Wina</h6>
     </div>
-    <h3 class="fw-bold text-center border-start border-bottom border-end border-1 border-black m-0 p-1 rounded-bottom-4">
+    <h3 class="fw-bold text-center m-0 p-1 rounded-bottom-4">
       10
     </div>
   </template>

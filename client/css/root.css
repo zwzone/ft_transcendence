@@ -19,3 +19,11 @@
   min-height: 100vh;
   background: linear-gradient(var(--color-secondary-100) 75%, var(--color-primary-400));
 }
+
+.my-page {
+  height: min-content;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
