@@ -3,6 +3,7 @@ import router from "./router/router.js";
 
 // Components
 import Navbar from "./components/Navbar.js";
+import Footer from "./components/Footer.js";
 import PlayCard from "./components/PlayCard.js";
 import FriendCard from "./components/FriendCard.js";
 import MatchCard from "./components/MatchCard.js";

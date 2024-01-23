@@ -7,6 +7,8 @@ export default class HomePage extends HTMLElement {
     const template = document.getElementById("home-template");
     const component = template.content.cloneNode(true);
     this.appendChild(component);
+
+    this.classList.add("my-page");
   }
 }
 
