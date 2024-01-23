@@ -14,7 +14,7 @@ from django.core.cache import cache
 @authentication_classes([])
 @permission_classes([])
 def intra_auth(request):
-    redirect_uri = urlencode({"redirect_uri": request.build_absolute_uri(reverse("intracallbackView"))})
+    redirect_uri = urlencode({"redirect_uri": f"{settings.PUBLIC_AUTHENTICATION_URL}intra/callback/"})
     authorization_url = f"https://api.intra.42.fr/oauth/authorize?client_id={getenv('INTRA_CLIENT_ID')}&{redirect_uri}&response_type=code"
     return redirect(authorization_url)
 
@@ -36,7 +36,7 @@ def intra_callback_auth(request):
         "client_id": getenv("INTRA_CLIENT_ID"),
         "client_secret": getenv("INTRA_CLIENT_SECRET"),
         "code": code,
-        "redirect_uri": request.build_absolute_uri(reverse("intracallbackView")),
+        "redirect_uri": f"{settings.PUBLIC_AUTHENTICATION_URL}intra/callback/",
     }
     auth_response = requests.post("https://api.intra.42.fr/oauth/token", data=data)
     if not auth_response.ok:
@@ -60,7 +60,7 @@ def intra_callback_auth(request):
             "avatar": user_data["image"]["link"],
         }
     }
-    player_data = requests.post(f'{settings.PLAYER_URL}/', json=data)
+    player_data = requests.post(f'{settings.PRIVATE_PLAYER_URL}', json=data)
     if not player_data.ok:
         return redirect("https://localhost/login")
     player_id = player_data.json()['id']
@@ -82,7 +82,7 @@ def google_auth(request):
     params = {
         "response_type": "code",
         "client_id": getenv("GOOGLE_CLIENT_ID"),
-        "redirect_uri": request.build_absolute_uri(reverse("googlecallbackView")),
+        "redirect_uri": f'{settings.PUBLIC_AUTHENTICATION_URL}google/callback/',
         "scope": " ".join(SCOPES),
         "access_type": "offline",
         "include_granted_scopes": "true",
@@ -108,7 +108,7 @@ def google_callback_auth(request):
         "code": code,
         "client_id": getenv("GOOGLE_CLIENT_ID"),
         "client_secret": getenv("GOOGLE_CLIENT_SECRET"),
-        "redirect_uri": request.build_absolute_uri(reverse("googlecallbackView")),
+        "redirect_uri": f'{settings.PUBLIC_AUTHENTICATION_URL}google/callback/',
         "grant_type": "authorization_code",
     }
     auth_response = requests.post("https://oauth2.googleapis.com/token", data=data)
@@ -130,7 +130,7 @@ def google_callback_auth(request):
             "avatar": id_token_decoded['picture'],
         }
     }
-    player_data = requests.post(f'{settings.PLAYER_URL}/', json=data)
+    player_data = requests.post(f'{settings.PRIVATE_PLAYER_URL}', json=data)
     if not player_data.ok:
         return redirect("https://localhost/login")
     player_id = player_data.json()['id']

@@ -10,9 +10,9 @@ from .views import (
 
 urlpatterns = [
     path('intra/', intra_auth, name='intraView'),
-    path('intracallback/', intra_callback_auth, name='intracallbackView'),
+    path('intra/callback/', intra_callback_auth, name='intracallbackView'),
     path('google/', google_auth, name='googleView'),
-    path('googlecallback/', google_callback_auth, name='googlecallbackView'),
+    path('google/callback/', google_callback_auth, name='googlecallbackView'),
     path('islogedin/', is_logged_in_auth, name='islogedinView'),
     path('logout/', logout_user, name='logoutView'),
 ]
