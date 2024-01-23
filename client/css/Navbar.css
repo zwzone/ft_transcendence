@@ -135,12 +135,13 @@ li .logout:active {
 }
 
 @media only screen and (max-width: 576px) {
-  my-navbar {
-    padding-inline: 1rem !important;
+  my-navbar.d-flex {
+    padding-inline: .5rem !important;
   }
 
   my-navbar .logo {
     font-size: 1rem !important;
+    padding-inline: 0 !important;
   }
 
   .hamburger .line {
