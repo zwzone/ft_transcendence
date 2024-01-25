@@ -13,6 +13,7 @@ urlpatterns = [
     path('intra/callback/', intra_callback_auth, name='intracallbackView'),
     path('google/', google_auth, name='googleView'),
     path('google/callback/', google_callback_auth, name='googlecallbackView'),
-    path('islogedin/', is_logged_in_auth, name='islogedinView'),
+    path('isloggedin/', is_logged_in_auth, name='isloggedinView'),
     path('logout/', logout_user, name='logoutView'),
+    path('submit-2FAauth/', logout_user, name='')
 ]

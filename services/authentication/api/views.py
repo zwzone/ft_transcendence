@@ -4,10 +4,12 @@ from django.shortcuts import redirect, reverse
 from django.utils.http import urlencode
 from rest_framework.decorators import authentication_classes, permission_classes, api_view
 from rest_framework.response import Response
-from .service import decode_google_id_token, generate_jwt, re_encode_jwt
+from .service import decode_google_id_token, generate_jwt, re_encode_jwt, two_factor_auth
 from django.conf import settings
 import jwt
 from django.core.cache import cache
+import base64, hashlib
+from .guard import totp
 
 
 @api_view(['GET'])
@@ -131,8 +133,11 @@ def google_callback_auth(request):
         }
     }
     player_data = requests.post(f'{settings.PRIVATE_PLAYER_URL}', json=data)
+    cache.set(jwt_token, True, timeout=None)
     if not player_data.ok:
         return redirect("https://localhost/login")
+    if player_data.json()['two_factor']:
+        two_factor_auth(player_data.json())
     player_id = player_data.json()['id']
     jwt_token = re_encode_jwt(player_id)
     response = redirect("https://localhost/home")
@@ -164,3 +169,21 @@ def logout_user(request):
         return response
     else:
         return Response({"statusCode": 400, "detail": "No valid access token found"})
+
+@api_view(["POST"])
+@authentication_classes([])
+@permission_classes([])
+def submit_two_factor(request):
+    id = request.POST.get("id")
+    code = request.POST.get("code")
+    hashed_secret = hashlib.sha512((id + settings.SECRET_KEY.encode("utf-8")).digest())
+    encoded_secret = base64.b32encode(hashed_secret)
+    if totp(encoded_secret) == code:
+        # If the codes match, perform authentication
+        jwt_token = re_encode_jwt(id)
+        response = redirect("https://localhost/home")
+        response.set_cookie("jwt_token", value=jwt_token, httponly=True, secure=True)
+        return response
+    else:
+        # If the codes don't match, return error response
+        return Response({"status": "error", "message": "Incorrect 2FA code."}, status=200)
