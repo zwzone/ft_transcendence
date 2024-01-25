@@ -129,7 +129,7 @@ li .logout:active {
     flex-direction: column;
   }
 
-  .nav-bar.active {
+  my-navbar.active .nav-bar {
     display: flex !important;
   }
 }

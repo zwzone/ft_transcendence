@@ -1,3 +1,4 @@
+import fetching from "../utilities/fetching.js";
 import Router from "../router/router.js";
 
 export default class Navbar extends HTMLElement {
@@ -8,6 +9,7 @@ export default class Navbar extends HTMLElement {
     const template = document.getElementById("my-navbar");
     const component = template.content.cloneNode(true);
     this.appendChild(component);
+
     this.classList.add(
       "d-flex",
       "justify-content-between",
@@ -24,18 +26,21 @@ export default class Navbar extends HTMLElement {
     };
 
     const logo = this.querySelector(".logo");
+    const links = this.querySelectorAll(".link.btn");
+    const logout = this.querySelector(".logout.btn");
     const hamburger = this.querySelector(".hamburger");
-    const nav = this.querySelector("nav.nav-bar");
-    const links = nav.querySelectorAll(".link.btn");
 
     logo.addEventListener("click", handleLink);
-
     links.forEach((link) => {
       link.addEventListener("click", handleLink);
     });
+    logout.addEventListener("click", (event) => {
+      fetching("https://localhost/authentication/logout/").then((res) => {
+        handleLink(event);
+      });
+    });
 
     hamburger.addEventListener("click", (event) => {
-      nav.classList.toggle("active");
       this.classList.toggle("active");
     });
   }
