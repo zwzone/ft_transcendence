@@ -12,3 +12,13 @@ class Player(AbstractUser):
 
     def __str__(self):
         return self.email
+
+class Friendship(models.Model):
+    sender = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='sent_friend_requests')
+    receiver = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='received_friend_requests')
+    created_at = models.DateTimeField(auto_now_add=True)
+    accepted = models.BooleanField(default=False)
+    pending = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f'{self.sender.username} -> {self.receiver.username}'

@@ -4,7 +4,8 @@ from .views import (
     PlayerLastNameView,
     PlayerFirstNameView,
     PlayerInfoView,
-    PlayerAvatarView
+    PlayerAvatarView,
+    PlayerAddFriend,
 )
 
 urlpatterns = [
@@ -13,4 +14,5 @@ urlpatterns = [
     path('first_name/', PlayerFirstNameView.as_view(), name='playerFirstNameView'),
     path('last_name/', PlayerLastNameView.as_view(), name='playerLastNameView'),
     path('avatar/', PlayerAvatarView.as_view(), name='playerAvatarView'),
+    path('add_friend/', PlayerAddFriend.as_view(), name='playerAddFriendView'),
 ]
