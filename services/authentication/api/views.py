@@ -4,12 +4,11 @@ from django.shortcuts import redirect
 from django.utils.http import urlencode
 from rest_framework.decorators import authentication_classes, permission_classes, api_view
 from rest_framework.response import Response
-from .service import decode_google_id_token, generate_jwt, re_encode_jwt, two_factor_auth
+from .service import decode_google_id_token, generate_jwt, re_encode_jwt
 from django.conf import settings
 import jwt
 from django.core.cache import cache
-import base64, hashlib
-from .guard import totp
+from .guard import totp, hotp_secret
 
 
 @api_view(['GET'])
@@ -67,7 +66,7 @@ def intra_callback_auth(request):
         return redirect("https://localhost/login")
     # TODO: Fix this
     if player_data.json()['two_factor']:
-        two_factor_auth(player_data.json())
+        return Response({"statusCode": 200, "id": player_data.json()['id'], 'message': 'Enable two-factor'})
     player_id = player_data.json()['id']
     jwt_token = re_encode_jwt(player_id)
     response = redirect("https://localhost/home")
@@ -138,15 +137,15 @@ def google_callback_auth(request):
     player_data = requests.post(f'{settings.PRIVATE_PLAYER_URL}', json=data)
     if not player_data.ok:
         return redirect("https://localhost/login")
-    #TODO: Fix this
+    # TODO: Fix this
     if player_data.json()['two_factor']:
-        response = two_factor_auth(player_data.json())
-        return response.json()
+        return Response({"statusCode": 200, "id": player_data.json()['id'], 'message': 'Enable two-factor'})
     player_id = player_data.json()['id']
     jwt_token = re_encode_jwt(player_id)
     response = redirect("https://localhost/home")
     response.set_cookie("jwt_token", value=jwt_token, httponly=True, secure=True)
     return response
+
 
 @api_view(["GET"])
 def is_logged_in_auth(request):
@@ -161,6 +160,7 @@ def is_logged_in_auth(request):
     except jwt.InvalidTokenError:
         return Response({"statusCode": 401, "error": "Invalid token"})
 
+
 @api_view(["GET"])
 @authentication_classes([])
 @permission_classes([])
@@ -174,20 +174,41 @@ def logout_user(request):
     else:
         return Response({"statusCode": 400, "detail": "No valid access token found"})
 
+
 @api_view(["POST"])
 @authentication_classes([])
 @permission_classes([])
-def submit_two_factor(request):
-    id = request.POST.get("id")
+def verify_two_factor(request):
     code = request.POST.get("code")
-    hashed_secret = hashlib.sha512(id + settings.SECRET_KEY.encode("utf-8")).digest()
-    encoded_secret = base64.b32encode(hashed_secret)
-    if totp(encoded_secret) == code:
-        # If the codes match, perform authentication
+    id = request.POST.get("id")
+    secret_key = settings.SECRET_KEY
+    secret_2fa = hotp_secret(id, secret_key)
+    if totp(secret_2fa) != code:
+        return Response({"message": "Incorrect 2FA code."}, status=200)
+    if id is not None:
         jwt_token = re_encode_jwt(id)
         response = redirect("https://localhost/home")
         response.set_cookie("jwt_token", value=jwt_token, httponly=True, secure=True)
         return response
     else:
-        # If the codes don't match, return error response
-        return Response({"status": "error", "message": "Incorrect 2FA code."}, status=200)
+        jwt_token = request.COOKIES.get("jwt_token")
+        if jwt_token is None:
+            return redirect("https://localhost/login")
+        requests.post(f'{settings.PRIVATE_PLAYER_URL}2fa/', json={"2fa": True})
+        return Response({"statusCode": 200, "message":"Successful"})
+
+@api_view(["GET"])
+@authentication_classes([])
+@permission_classes([])
+def enable_two_factor(request):
+    token = request.COOKIES.get("jwt_token")
+    decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+    player_id = decoded_token['id']
+    secret_key = settings.SECRET_KEY
+    secret = hotp_secret(player_id, secret_key)
+    response_data = {
+        "status": "pending",
+        "message": "Please submit your 2FA code.",
+        "key": secret,
+    }
+    return Response(response_data)
