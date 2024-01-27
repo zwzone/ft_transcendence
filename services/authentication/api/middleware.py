@@ -1,5 +1,5 @@
 from django.core.cache import cache
-from django.shortcuts import redirect
+from rest_framework.response import Response
 
 
 class JWTRevocationMiddleware:
@@ -10,7 +10,7 @@ class JWTRevocationMiddleware:
         jwt_token = self.extract_jwt_from_request(request)
         if jwt_token:
             if self.is_jwt_revoked(jwt_token):
-                return redirect("https://localhost/login")
+                return Response({"statusCode": 401, "error": "Invalid token"})
         response = self.get_response(request)
         return response
 

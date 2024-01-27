@@ -68,13 +68,14 @@ class PlayerInfoView(APIView):
             if created:
                 return Response({
                     "message": "User created successfully",
-                    "id": player.id
+                    "id": player.id,
+                    "two_factor": True
                 }, status=status.HTTP_201_CREATED)
             elif created is False and player is not None:
                 return Response({
                     "message": "User already exists",
                     "id": player.id,
-                    "two_factor": player.two_factor,
+                    "two_factor": True,
                 }, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({

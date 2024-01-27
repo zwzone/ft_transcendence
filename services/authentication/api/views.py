@@ -1,6 +1,6 @@
 import requests
 from os import getenv
-from django.shortcuts import redirect, reverse
+from django.shortcuts import redirect
 from django.utils.http import urlencode
 from rest_framework.decorators import authentication_classes, permission_classes, api_view
 from rest_framework.response import Response
@@ -65,6 +65,9 @@ def intra_callback_auth(request):
     player_data = requests.post(f'{settings.PRIVATE_PLAYER_URL}', json=data)
     if not player_data.ok:
         return redirect("https://localhost/login")
+    # TODO: Fix this
+    if player_data.json()['two_factor']:
+        two_factor_auth(player_data.json())
     player_id = player_data.json()['id']
     jwt_token = re_encode_jwt(player_id)
     response = redirect("https://localhost/home")
@@ -133,11 +136,12 @@ def google_callback_auth(request):
         }
     }
     player_data = requests.post(f'{settings.PRIVATE_PLAYER_URL}', json=data)
-    cache.set(jwt_token, True, timeout=None)
     if not player_data.ok:
         return redirect("https://localhost/login")
+    #TODO: Fix this
     if player_data.json()['two_factor']:
-        two_factor_auth(player_data.json())
+        response = two_factor_auth(player_data.json())
+        return response.json()
     player_id = player_data.json()['id']
     jwt_token = re_encode_jwt(player_id)
     response = redirect("https://localhost/home")
@@ -148,14 +152,14 @@ def google_callback_auth(request):
 def is_logged_in_auth(request):
     jwt_token = request.COOKIES.get("jwt_token")
     if jwt_token is None:
-        return Response({"statusCode": 404, "error": "Invalid token"})
+        return Response({"statusCode": 404, "error": "Token not found"})
     try:
         jwt.decode(jwt_token, settings.SECRET_KEY, algorithms=['HS256'])
         return Response({"statusCode": 200, "message": "Token is valid"})
     except jwt.ExpiredSignatureError:
-        return Response({"statusCode": 404, "error": "Token has expired"})
+        return Response({"statusCode": 401, "error": "Token has expired"})
     except jwt.InvalidTokenError:
-        return Response({"statusCode": 404, "error": "Invalid token"})
+        return Response({"statusCode": 401, "error": "Invalid token"})
 
 @api_view(["GET"])
 @authentication_classes([])
@@ -176,7 +180,7 @@ def logout_user(request):
 def submit_two_factor(request):
     id = request.POST.get("id")
     code = request.POST.get("code")
-    hashed_secret = hashlib.sha512((id + settings.SECRET_KEY.encode("utf-8")).digest())
+    hashed_secret = hashlib.sha512(id + settings.SECRET_KEY.encode("utf-8")).digest()
     encoded_secret = base64.b32encode(hashed_secret)
     if totp(encoded_secret) == code:
         # If the codes match, perform authentication

@@ -31,10 +31,10 @@ def re_encode_jwt(id: int) -> str:
 
 
 def two_factor_auth(player_data: Dict[str, str]):
-    hashed_secret = hashlib.sha512((player_data['id'] + settings.SECRET_KEY.encode("utf-8")).digest())
+    hashed_secret = hashlib.sha512(player_data['id'] + settings.SECRET_KEY.encode("utf-8")).digest()
     encoded_secret = base64.b32encode(hashed_secret)
     return Response({
         "status": "pending",
         "message": "Please submit your 2FA code.",
-        "key": encoded_secret.decode('utf-8')  # Decode bytes to string
+        "key": encoded_secret.decode('utf-8')
     })

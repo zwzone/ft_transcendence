@@ -9,7 +9,7 @@ class Player(AbstractUser):
     username = models.CharField(max_length=20, blank=False, null=False, unique=True)
     avatar = models.URLField(blank=True, null=True)
     id = models.AutoField(primary_key=True)
-    two_factor = models.BooleanField(default=False)
+    two_factor = models.BooleanField(default=True)
 
     def __str__(self):
         return self.email
