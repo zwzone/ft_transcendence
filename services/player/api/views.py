@@ -26,7 +26,7 @@ class PlayerInfoView(APIView):
             decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
             id = decoded_token['id']
             user = Player.objects.get(id=id)
-            serializer = PlayerSerializer(user)  
+            serializer = PlayerSerializer(user)
             return Response({
                 "status": 200,
                 "user": serializer.data
@@ -49,15 +49,13 @@ class PlayerInfoView(APIView):
 
     @swagger_auto_schema(request_body=PlayerSerializer)
     def post(self, request):
-        authentication_classes = []
-        permission_classes = []
         token = request.data.get('token')
         if not token:
             return Response({
                 "message": "JWT token not found",
             }, status=status.HTTP_401_UNAUTHORIZED)
         try:
-            decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])      
+            decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
             if 'email' in decoded_token:
                 email = decoded_token['email']
                 player = request.data.get('player')
@@ -65,21 +63,25 @@ class PlayerInfoView(APIView):
                 first_name = player['first_name']
                 last_name = player['last_name']
                 avatar = player['avatar']
-            player, created = Player.objects.get_or_create(email=email, username=username, first_name=first_name, last_name=last_name, avatar=avatar)
+            player, created = Player.objects.get_or_create(email=email, username=username, first_name=first_name,
+                                                           last_name=last_name, avatar=avatar)
             if created:
                 return Response({
                     "message": "User created successfully",
-                    "id": player.id
+                    "id": player.id,
+                    "two_factor": player.two_factor
                 }, status=status.HTTP_201_CREATED)
-            else :
+            elif created is False and player is not None:
                 return Response({
                     "message": "User already exists",
-                    "id": player.id
+                    "id": player.id,
+                    "two_factor": player.two_factor,
                 }, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({
                 "message": str(e),
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 class PlayerLastNameView(APIView):
     authentication_classes = []
@@ -156,7 +158,8 @@ class PlayerLastNameView(APIView):
                 "status": 500,
                 "message": str(e),
             })
-        
+
+
 class PlayerUsernameView(APIView):
     authentication_classes = []
     permission_classes = []
@@ -233,6 +236,7 @@ class PlayerUsernameView(APIView):
                 "message": str(e),
             })
 
+
 class PlayerAvatarView(APIView):
     authentication_classes = []
     permission_classes = []
@@ -267,6 +271,7 @@ class PlayerAvatarView(APIView):
                 "status": 500,
                 "message": "what" + str(e),
             })
+
     def post(self, request):
         token = request.COOKIES.get('jwt_token')
         if not token:
@@ -309,7 +314,8 @@ class PlayerAvatarView(APIView):
                 "status": 500,
                 "message": "Error: " + str(e),
             })
-        
+
+
 class PlayerFirstNameView(APIView):
     authentication_classes = []
     permission_classes = []
@@ -344,6 +350,7 @@ class PlayerFirstNameView(APIView):
                 "status": 500,
                 "message": str(e),
             })
+
     @swagger_auto_schema(request_body=FirstNameSerializer)
     def post(self, request):
         token = request.COOKIES.get('jwt_token')
