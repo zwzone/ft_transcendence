@@ -64,7 +64,6 @@ def intra_callback_auth(request):
     player_data = requests.post(f'{settings.PRIVATE_PLAYER_URL}', json=data)
     if not player_data.ok:
         return redirect("https://localhost/login")
-    # TODO: Fix this
     if player_data.json()['two_factor']:
         return Response({"statusCode": 200, "id": player_data.json()['id'], 'message': 'Enable two-factor'})
     player_id = player_data.json()['id']
@@ -137,7 +136,6 @@ def google_callback_auth(request):
     player_data = requests.post(f'{settings.PRIVATE_PLAYER_URL}', json=data)
     if not player_data.ok:
         return redirect("https://localhost/login")
-    # TODO: Fix this
     if player_data.json()['two_factor']:
         return Response({"statusCode": 200, "id": player_data.json()['id'], 'message': 'Enable two-factor'})
     player_id = player_data.json()['id']
