@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 from django.utils.http import urlencode
 from rest_framework.decorators import authentication_classes, permission_classes, api_view
 from rest_framework.response import Response
-from .service import decode_google_id_token, generate_jwt, re_encode_jwt
+from .service import decode_google_id_token, generate_jwt, re_encode_jwt, check_2fa_code
 from django.conf import settings
 import jwt
 from django.core.cache import cache
@@ -177,23 +177,28 @@ def logout_user(request):
 @authentication_classes([])
 @permission_classes([])
 def verify_two_factor(request):
-    code = request.POST.get("code")
-    id = request.POST.get("id")
     secret_key = settings.SECRET_KEY
-    secret_2fa = hotp_secret(id, secret_key)
-    if totp(secret_2fa) != code:
-        return Response({"message": "Incorrect 2FA code."}, status=200)
-    if id is not None:
-        jwt_token = re_encode_jwt(id)
+    code = request.POST.get("code")
+    player_id = request.POST.get("id")
+    if player_id is None:
+        jwt_token = request.COOKIES.get("jwt_token")
+        try:
+            decoded_token = jwt.decode(jwt_token, settings.SECRET_KEY, algorithms=["HS256"])
+            player_id = decoded_token['id']
+            if not check_2fa_code(player_id, code):
+                return Response({"statusCode": 401, "message": "Incorrect 2FA code."})
+            return Response({"statusCode": 200, "message": "Successfully verified"})
+        except:
+            return Response({"statusCode": 401, "error": "Invalid token"})
+    else:
+        if not check_2fa_code(player_id, code):
+            return Response({"statusCode": 401, "message": "Incorrect 2FA code."})
+        jwt_token = re_encode_jwt(player_id)
         response = redirect("https://localhost/home")
         response.set_cookie("jwt_token", value=jwt_token, httponly=True, secure=True)
-        return response
-    else:
-        jwt_token = request.COOKIES.get("jwt_token")
-        if jwt_token is None:
-            return redirect("https://localhost/login")
         requests.post(f'{settings.PRIVATE_PLAYER_URL}2fa/', json={"2fa": True})
-        return Response({"statusCode": 200, "message":"Successful"})
+        return Response({"statusCode": 200, "message": "Successfully verified"})
+
 
 @api_view(["GET"])
 @authentication_classes([])

@@ -2,7 +2,7 @@ import time
 from typing import Dict
 import jwt, datetime
 from django.conf import settings
-
+from .guard import totp, hotp_secret
 
 def generate_jwt(email: str) -> str:
     payload = {
@@ -27,3 +27,8 @@ def re_encode_jwt(id: int) -> str:
     }
     jwt_token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
     return jwt_token
+
+def check_2fa_code(player_id: int, code: int) -> bool:
+    secret_key = settings.SECRET_KEY
+    secret_2fa = hotp_secret(player_id, secret_key)
+    return totp(secret_2fa) != code
