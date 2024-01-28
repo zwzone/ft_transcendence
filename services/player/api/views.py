@@ -80,7 +80,7 @@ class PlayerInfoView(APIView):
         except Exception as e:
             return Response({
                 "message": str(e),
-            }, status=200)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class PlayerLastNameView(APIView):
