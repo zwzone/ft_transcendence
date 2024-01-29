@@ -7,7 +7,7 @@ class JWTRevocationMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        jwt_token = request.COOKIES['jwt_token']
+        jwt_token = request.COOKIES.get("jwt_token")
         if jwt_token and cache.get(jwt_token) is not None:
             return Response({"statusCode": 401, "error": "Invalid token"})
         response = self.get_response(request)
