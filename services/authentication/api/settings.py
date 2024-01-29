@@ -11,19 +11,12 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-from datetime import timedelta
-from os import getenv, path
-import dotenv
+from os import getenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent
 AUTH_DIR = Path(__file__).resolve().parent.parent
 SERVICES_DIR = Path(__file__).resolve().parent.parent.parent
-
-# Load .env file
-dotenv_file = SERVICES_DIR / ".env"
-if path.isfile(dotenv_file):
-    dotenv.load_dotenv(dotenv_file)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -35,15 +28,10 @@ SECRET_KEY = getenv("DJANGO_SECRET_KEY")
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    ".localhost",
-    "127.0.0.1",
-    "[::1]",
-    ".authentication",
+    "authentication",
 ]
 
-
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -53,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "rest_framework",
     "api",
-    "django_extensions",
 ]
 
 MIDDLEWARE = [

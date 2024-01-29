@@ -1,13 +1,14 @@
 import requests
 from os import getenv
-from django.shortcuts import redirect, reverse
+from django.shortcuts import redirect
 from django.utils.http import urlencode
 from rest_framework.decorators import authentication_classes, permission_classes, api_view
 from rest_framework.response import Response
-from .service import decode_google_id_token, generate_jwt, re_encode_jwt
+from .service import decode_google_id_token, generate_jwt, re_encode_jwt, check_2fa_code
 from django.conf import settings
 import jwt
 from django.core.cache import cache
+from .guard import totp, hotp_secret
 
 
 @api_view(['GET'])
@@ -62,10 +63,12 @@ def intra_callback_auth(request):
     }
     player_data = requests.post(f'{settings.PRIVATE_PLAYER_URL}', json=data)
     if not player_data.ok:
-        return redirect("https://localhost/login")
+        return redirect("https://localhost/login/")
+    if player_data.json()['two_factor']:
+        return Response({"statusCode": 200, "id": player_data.json()['id'], 'message': 'Enable two-factor'})
     player_id = player_data.json()['id']
     jwt_token = re_encode_jwt(player_id)
-    response = redirect("https://localhost/home")
+    response = redirect("https://localhost/home/")
     response.set_cookie("jwt_token", value=jwt_token, httponly=True, secure=True)
     return response
 
@@ -132,25 +135,29 @@ def google_callback_auth(request):
     }
     player_data = requests.post(f'{settings.PRIVATE_PLAYER_URL}', json=data)
     if not player_data.ok:
-        return redirect("https://localhost/login")
+        return redirect("https://localhost/login/")
+    if player_data.json()['two_factor']:
+        return Response({"statusCode": 200, "id": player_data.json()['id'], 'message': 'Enable two-factor'})
     player_id = player_data.json()['id']
     jwt_token = re_encode_jwt(player_id)
-    response = redirect("https://localhost/home")
+    response = redirect("https://localhost/home/")
     response.set_cookie("jwt_token", value=jwt_token, httponly=True, secure=True)
     return response
+
 
 @api_view(["GET"])
 def is_logged_in_auth(request):
     jwt_token = request.COOKIES.get("jwt_token")
     if jwt_token is None:
-        return Response({"statusCode": 404, "error": "Invalid token"})
+        return Response({"statusCode": 404, "error": "Token not found"})
     try:
         jwt.decode(jwt_token, settings.SECRET_KEY, algorithms=['HS256'])
         return Response({"statusCode": 200, "message": "Token is valid"})
     except jwt.ExpiredSignatureError:
-        return Response({"statusCode": 404, "error": "Token has expired"})
+        return Response({"statusCode": 401, "error": "Token has expired"})
     except jwt.InvalidTokenError:
-        return Response({"statusCode": 404, "error": "Invalid token"})
+        return Response({"statusCode": 401, "error": "Invalid token"})
+
 
 @api_view(["GET"])
 @authentication_classes([])
@@ -159,8 +166,52 @@ def logout_user(request):
     jwt_token = request.COOKIES.get("jwt_token")
     if jwt_token is not None:
         cache.set(jwt_token, True, timeout=None)
-        response = redirect("https://localhost/login")
-        response.delete_cookie('jwt_token')
+        response = redirect("https://localhost/login/")
+        response.delete_cookie("jwt_token")
         return response
     else:
         return Response({"statusCode": 400, "detail": "No valid access token found"})
+
+
+@api_view(["POST"])
+@authentication_classes([])
+@permission_classes([])
+def verify_two_factor(request):
+    secret_key = settings.SECRET_KEY
+    code = request.POST.get("code")
+    player_id = request.POST.get("id")
+    if player_id is None:
+        jwt_token = request.COOKIES.get("jwt_token")
+        try:
+            decoded_token = jwt.decode(jwt_token, settings.SECRET_KEY, algorithms=["HS256"])
+            player_id = decoded_token['id']
+            if not check_2fa_code(player_id, code):
+                return Response({"statusCode": 401, "message": "Incorrect 2FA code."})
+            return Response({"statusCode": 200, "message": "Successfully verified"})
+        except:
+            return Response({"statusCode": 401, "error": "Invalid token"})
+    else:
+        if not check_2fa_code(player_id, code):
+            return Response({"statusCode": 401, "message": "Incorrect 2FA code."})
+        jwt_token = re_encode_jwt(player_id)
+        response = redirect("https://localhost/home/")
+        response.set_cookie("jwt_token", value=jwt_token, httponly=True, secure=True)
+        requests.post(f'{settings.PRIVATE_PLAYER_URL}2fa/', json={"2fa": True})
+        return Response({"statusCode": 200, "message": "Successfully verified"})
+
+
+@api_view(["GET"])
+@authentication_classes([])
+@permission_classes([])
+def enable_two_factor(request):
+    token = request.COOKIES.get("jwt_token")
+    decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+    player_id = decoded_token['id']
+    secret_key = settings.SECRET_KEY
+    secret = hotp_secret(player_id, secret_key)
+    response_data = {
+        "status": "pending",
+        "message": "Please submit your 2FA code.",
+        "key": secret,
+    }
+    return Response(response_data)

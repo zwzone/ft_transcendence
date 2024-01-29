@@ -9,17 +9,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Favicon -->
-  <link rel="shortcut icon" href="public/pong_icon.png" type="image/x-icon">
+  <link rel="shortcut icon" href="/public/pong_icon.png" type="image/x-icon">
 
   <!-- Bootstrap -->
-  <link rel="stylesheet" href="bootstrap-5.3.2-dist/css/bootstrap.min.css">
-  <script defer src="bootstrap-5.3.2-dist/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="/bootstrap-5.3.2-dist/css/bootstrap.min.css">
+  <script defer src="/bootstrap-5.3.2-dist/js/bootstrap.min.js"></script>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 
   <!-- Vanilla JS -->
-  <script defer src="app.js" type="module"></script>
+  <script defer src="/app.js" type="module"></script>
 
   <!-- TITLE -->
   <title>ft_transcendence</title>
@@ -57,7 +57,7 @@
   <!-- LOGIN PAGE -->
   <template id="login-template">
     <div class="d-flex flex-column justify-content-center align-items-center gap-3 pt-5">
-      <img class="w-75" src="public/pong.svg" alt="logo">
+      <img class="w-75" src="/public/pong.svg" alt="logo">
       <h1 class="display-1 text-center fw-bold m-0">PING PONG</h1>
     </div>
     <div class="d-flex flex-column justify-content-center align-items-center gap-3">
@@ -69,9 +69,10 @@
 
   <!-- NOTFOUNT PAGE -->
   <template id="notfound-template">
+    <div></div>
     <div class="d-flex flex-column justify-content-center align-items-center w-100 h-100">
-      <h1 class="fw-bold text-center text-danger">OPS, <span class="fw-bold display-1">404</span></h1>
-      <h2 class="fw-bold text-center text-danger">ROUTE NOT FOUND !</h2>
+      <h1 class="fw-bold text-center text-black-50">Oops, <span class="fw-bold display-1">404</span></h1>
+      <h2 class="fw-bold text-center text-black-50">ROUTE NOT FOUND !</h2>
     </div>
     <my-footer></my-footer>
   </template>
@@ -82,8 +83,11 @@
     <main class="container-fluid d-flex flex-column justify-content-center gap-5 my-5">
       <div class="player-data d-flex justify-content-around align-items-center flex-wrap gap-2 p-3 rounded-5">
         <div class="data-section d-flex flex-column justify-content-center align-items-center gap-2 p-2 rounded-5">
-          <img class="avatar border border-1 border-white rounded-4" src="public/leaf1.png" alt="avatar">
-          <h1 class="text-center m-0 p-3 rounded-5" id="full-name">Zakaria Wina</h1>
+          <img class="avatar border border-1 border-white rounded-4" alt="avatar">
+          <h1 class="text-center m-0 p-3 rounded-5" id="full-name">
+            <span class="first_name"></span>
+            <span class="last_name"></span>
+          </h1>
         </div>
         <div class="data-section d-flex flex-column gap-2 p-2 rounded-5">
           <div class="d-flex justify-content-center align-items-center rounded-5">
@@ -153,19 +157,19 @@
     <main class="container-fluid d-flex flex-column justify-content-center gap-5 my-5">
       <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-3 rounded-5">
         <h2 class="fw-bold text-center m-0 px-4 py-2">Change avatar</h2>
-        <img class="avatar rounded-4 border border-1 border-white" src="public/leaf1.png" alt="avatar">
+        <img class="avatar rounded-4 border border-1 border-white" alt="avatar">
       </div>
       <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-3 rounded-5">
         <h2 class="fw-bold text-center m-0 px-4 py-2">Change Username</h2>
-        <input class="border rounded-4 px-3 py-3 fs-5" type="text" placeholder="Zwzone">
+        <input class="username border rounded-4 px-3 py-3 fs-5" type="text">
       </div>
       <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-3 rounded-5">
         <h2 class="fw-bold text-center m-0 px-4 py-2">Change First Name</h2>
-        <input class="border rounded-4 px-4 py-2" type="text" placeholder="Zakaria">
+        <input class="first_name border rounded-4 px-4 py-2" type="text">
       </div>
       <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-3 rounded-5">
         <h2 class="fw-bold text-center m-0 px-4 py-2">Change Last Name</h2>
-        <input class="border rounded-4 px-4 py-2" type="text" placeholder="Wina">
+        <input class="last_name border rounded-4 px-4 py-2" type="text">
       </div>
       <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-3 rounded-5">
         <h2 class="fw-bold text-center m-0 px-4 py-2">Two Factor Authentication</h2>
@@ -210,7 +214,7 @@
 
   <!-- NAVBAR -->
   <template id="my-navbar">
-    <a class="logo btn rounded-5 fs-3 fw-bold px-4 py-0" href="/home">FT_TRANSCENDENCE</a>
+    <a class="logo link btn rounded-5 fs-3 px-4 py-0" href="/home/">FT_TRANSCENDENCE</a>
     <div class="hamburger btn rounded-2 px-2 py-1">
       <div class="line rounded-1"></div>
       <div class="line rounded-1"></div>
@@ -219,16 +223,16 @@
     <nav class="nav-bar d-flex justify-content-center align-items-center">
       <ul class="d-flex justify-content-center align-items-center p-0 m-0 gap-1">
         <li>
-          <a class="link btn rounded-5 fs-5 fw-bold px-4 py-0" href="/tournament">Tournament</a>
+          <a class="link btn rounded-5 fs-5 px-4 py-0" href="/tournament/">Tournament</a>
         </li>
         <li>
-          <a class="link btn rounded-5 fs-5 fw-bold px-4 py-0" href="/profile">Profile</a>
+          <a class="link btn rounded-5 fs-5 px-4 py-0" href="/profile/">Profile</a>
         </li>
         <li>
-          <a class="link btn rounded-5 fs-5 fw-bold px-4 py-0" href="/setting">Setting</a>
+          <a class="link btn rounded-5 fs-5 px-4 py-0" href="/setting/">Setting</a>
         </li>
         <li>
-          <a class="logout btn rounded-5 fs-5 fw-bold px-4 py-0" href="/login">Logout</a>
+          <a class="logout btn rounded-5 fs-5 px-4 py-0" href="https://localhost/authentication/logout/">Logout</a>
         </li>
       </ul>
     </nav>
@@ -253,7 +257,7 @@
 
   <!-- FRIEND CARD -->
   <template id="friend-card">
-    <img class="avatar rounded-4 border border-1 border-white" src="public/leaf1.png" alt="avatar">
+    <img class="avatar rounded-4 border border-1 border-white" src="/public/leaf1.png" alt="avatar">
     <h6 class="text-center m-0">Zakaria Wina</h6>
   </template>
 
@@ -275,7 +279,7 @@
   <!-- TOURNAMENT PLAYER CARD -->
   <template id="tournament-player-card">
     <div class="d-flex flex-column justify-content-center align-items-center m-0 p-1 gap-1 rounded-4">
-      <img class="avatar border border-1 border-white rounded-4" src="public/leaf1.png" alt="avatar">
+      <img class="avatar border border-1 border-white rounded-4" src="/public/leaf1.png" alt="avatar">
       <h6 class="text-center m-0 py-1 px-2 rounded-4 fw-bold">Zakaria Wina</h6>
     </div>
     <h3 class="fw-bold text-center m-0 p-1 rounded-bottom-4">
