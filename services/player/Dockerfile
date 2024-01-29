@@ -8,6 +8,8 @@ RUN         mkdir -p /microservice/player/
 
 COPY        . /microservice/player/
 
+RUN         pip install --upgrade pip
+
 RUN         pip install -r /microservice/player/requirements.txt
 
 WORKDIR     /microservice/player/
