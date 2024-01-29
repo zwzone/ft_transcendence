@@ -1,4 +1,3 @@
-import fetching from "../utilities/fetching.js";
 import Router from "../router/router.js";
 
 export default class Navbar extends HTMLElement {
@@ -27,17 +26,11 @@ export default class Navbar extends HTMLElement {
 
     const logo = this.querySelector(".logo");
     const links = this.querySelectorAll(".link.btn");
-    const logout = this.querySelector(".logout.btn");
     const hamburger = this.querySelector(".hamburger");
 
     logo.addEventListener("click", handleLink);
     links.forEach((link) => {
       link.addEventListener("click", handleLink);
-    });
-    logout.addEventListener("click", (event) => {
-      fetching("https://localhost/authentication/logout/").then((res) => {
-        handleLink(event);
-      });
     });
 
     hamburger.addEventListener("click", (event) => {

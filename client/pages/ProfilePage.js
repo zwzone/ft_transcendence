@@ -1,3 +1,5 @@
+import fetching from "../utilities/fetching.js";
+
 export default class ProfilePage extends HTMLElement {
   constructor() {
     super();
@@ -9,6 +11,21 @@ export default class ProfilePage extends HTMLElement {
     this.appendChild(component);
 
     this.classList.add("my-page");
+
+    fetching("https://localhost/player/avatar/").then((res) => {
+      console.log("CURRENT", res);
+      console.log(this.querySelector(".player-data .avatar"));
+      this.querySelector(".player-data .avatar").setAttribute(
+        "src",
+        res.avatar,
+      );
+    });
+    fetching("https://localhost/player/first_name/").then((res) => {
+      this.querySelector(".player-data .first_name").innerText = res.first_name;
+    });
+    fetching("https://localhost/player/last_name/").then((res) => {
+      this.querySelector(".player-data .last_name").innerText = res.last_name;
+    });
   }
 }
 

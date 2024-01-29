@@ -167,7 +167,7 @@ def logout_user(request):
     if jwt_token is not None:
         cache.set(jwt_token, True, timeout=None)
         response = redirect("https://localhost/login/")
-        response.delete_cookie('jwt_token')
+        response.delete_cookie("jwt_token")
         return response
     else:
         return Response({"statusCode": 400, "detail": "No valid access token found"})
