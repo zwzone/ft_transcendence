@@ -1,7 +1,7 @@
 #canvas-pong {
     width: 80%;
     height: 50%;
-    background: url("../public/background.jpg");
+    background-image: url("../public/stadium.jpeg");
     background-position: center;
     background-size: cover;
     border-radius: 8px;

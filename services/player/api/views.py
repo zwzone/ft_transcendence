@@ -254,7 +254,7 @@ class PlayerAvatarView(APIView):
             user = Player.objects.get(id=id)
             return Response({
                 "status": 200,
-                "avatar": user.Avatar
+                "avatar": user.avatar
             })
         except Player.DoesNotExist:
             return Response({
