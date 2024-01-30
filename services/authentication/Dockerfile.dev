@@ -6,6 +6,12 @@ RUN         apt update -y && \
 
 RUN         mkdir -p /microservice/authentication/
 
+COPY        ./requirements.txt /microservice/player/
+
+RUN         pip install --upgrade pip
+
+RUN         pip install -r /microservice/player/requirements.txt
+
 WORKDIR     /microservice/authentication/
 
 CMD         [ "bash", "./tools/microservice-run.sh" ]

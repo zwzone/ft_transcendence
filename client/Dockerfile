@@ -10,7 +10,7 @@ COPY		./conf/nginx.conf /etc/nginx/sites-enabled/ft_transcendence.conf
 RUN			openssl req -x509 -newkey rsa:2048 -nodes \
 			-out /etc/ssl/certs/ft_transcendence.crt \
 			-keyout /etc/ssl/private/ft_transcendence.key \
-			-subj "/C=FR/ST=BG/L=Paris/O=1337/OU=1337/CN=localhost/UID=team_trans"
+			-subj "/C=MR/ST=BG/L=Bengreuir/O=1337/OU=1337/CN=localhost/UID=team_trans"
 
 RUN			mkdir -p /var/www/ft_transcendence/
 
