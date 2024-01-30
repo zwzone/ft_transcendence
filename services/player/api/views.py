@@ -1,6 +1,7 @@
 from drf_yasg.utils import swagger_auto_schema
 from django.conf import settings
 from rest_framework import status
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import PlayerSerializer, UsernameSerializer, FirstNameSerializer, LastNameSerializer
@@ -9,7 +10,7 @@ import jwt
 from jwt.exceptions import ExpiredSignatureError
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
-
+from .decorators import jwt_cookie_required
 
 class PlayerInfoView(APIView):
     authentication_classes = []
@@ -392,70 +393,27 @@ class PlayerFirstNameView(APIView):
                 "message": str(e),
             })
 
-# this is commented out because it is not used right now
-
-# class UserByUsernameView(APIView):
-#     authentication_classes = []
-#     permission_classes = []
-
-#     def get(self, request, username):
-#         try:
-#             user = Player.objects.get(username=username)
-#             serializer = PlayerSerializer(user)
-#             return Response({
-#                 "status": 200,
-#                 "user": serializer.data
-#             })
-#         except Player.DoesNotExist:
-#             return Response({
-#                 "status": 404,
-#                 "message": "User not found",
-#             })
+@api_view(["POST"])
+@jwt_cookie_required
+def enable_2fa(request):
+    player_id = request.decoded_token
+    player = Player.objects.get(id=player_id)
+    player.two_factor = True
+    player.save()
+    return Response({
+        "status": 200,
+        "message": "two_factor has been enabled successfully",
+    })
 
 
-# class UpdateAvatarView(APIView):
-#     authentication_classes = []
-#     permission_classes = []
-
-#     @swagger_auto_schema(methods=['post'], request_body=AvatarSerializer)
-#     def post(self, request):
-#         token = request.COOKIES.get('jwt_token')
-#         if not token:
-#             return Response({
-#                 "status": 401,
-#                 "message": "JWT token not found in cookies",
-#             })
-
-#         try:
-#             decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-#             id = decoded_token['id']
-#             user = Player.objects.get(id=id)
-
-#             avatar_file = request.FILES.get('avatar')
-
-#             if avatar_file:
-#                 file_path = os.path.join(settings.MEDIA_ROOT, f"avatars/{id}")
-#                 default_storage.save(file_path, ContentFile(avatar_file.read()))
-#                 user.Avatar = file_path
-#                 user.save()
-
-#                 return Response({
-#                     "status": 200,
-#                     "message": "Avatar uploaded successfully",
-#                 })
-#             else:
-#                 return Response({
-#                     "status": 400,
-#                     "message": "Avatar file not provided",
-#                 })
-
-#         except Player.DoesNotExist:
-#             return Response({
-#                 "status": 404,
-#                 "message": "User not found",
-#             })
-#         except Exception as e:
-#             return Response({
-#                 "status": 500,
-#                 "message": "Error: " + str(e),
-#             })
+@api_view(["POST"])
+@jwt_cookie_required
+def disable_2fa(request):
+    player_id = request.decoded_token
+    player = Player.objects.get(id=player_id)
+    player.two_factor = False
+    player.save()
+    return Response({
+        "status": 200,
+        "message": "two_factor has been disabled successfully"
+    })
