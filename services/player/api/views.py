@@ -1,8 +1,5 @@
-from drf_yasg.utils import swagger_auto_schema
 from django.conf import settings
 from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.views import APIView
 from .serializers import PlayerSerializer, UsernameSerializer, FirstNameSerializer, LastNameSerializer
 import jwt
 from jwt.exceptions import ExpiredSignatureError
@@ -395,26 +392,6 @@ class PlayerFirstNameView(APIView):
             })
 
 
-#this is my model for the friend request 
-# class Player(AbstractUser):
-#     email = models.EmailField(max_length=30, blank=False, null=False)
-#     first_name = models.CharField(max_length=20, blank=False, null=False)
-#     last_name = models.CharField(max_length=20, blank=False, null=False)
-#     username = models.CharField(max_length=20, blank=False, null=False, unique=True)
-#     avatar = models.URLField(blank=True, null=True)
-#     id = models.AutoField(primary_key=True)
-
-#     def __str__(self):
-#         return self.email
-
-# class Friendship(models.Model):
-#     sender = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='sent_friend_requests')
-#     receiver = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='received_friend_requests')
-#     created_at = models.DateTimeField(auto_now_add=True)
-
-#     def __str__(self):
-#         return f'{self.sender.username} -> {self.receiver.username}' so this is the model for the friend request
-
 class PlayerAddFriend(APIView):
     authentication_classes = []
     permission_classes = []
@@ -461,6 +438,8 @@ class PlayerAddFriend(APIView):
             "status": 404,
             "message": "Player not found"
         })
+
+
 class AcceptFriendRequest(APIView):
     authentication_classes = []
     permission_classes = []
@@ -512,50 +491,3 @@ class AcceptFriendRequest(APIView):
                 "status": 404,
                 "message": "Friendship not found"
             })
-
-# class UpdateAvatarView(APIView):
-#     authentication_classes = []
-#     permission_classes = []
-
-#     @swagger_auto_schema(methods=['post'], request_body=AvatarSerializer)
-#     def post(self, request):
-#         token = request.COOKIES.get('jwt_token')
-#         if not token:
-#             return Response({
-#                 "status": 401,
-#                 "message": "JWT token not found in cookies",
-#             })
-
-#         try:
-#             decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-#             id = decoded_token['id']
-#             user = Player.objects.get(id=id)
-
-#             avatar_file = request.FILES.get('avatar')
-
-#             if avatar_file:
-#                 file_path = os.path.join(settings.MEDIA_ROOT, f"avatars/{id}")
-#                 default_storage.save(file_path, ContentFile(avatar_file.read()))
-#                 user.Avatar = file_path
-#                 user.save()
-
-#                 return Response({
-#                     "status": 200,
-#                     "message": "Avatar uploaded successfully",
-#                 })
-#             else:
-#                 return Response({
-#                     "status": 400,
-#                     "message": "Avatar file not provided",
-#                 })
-
-#         except Player.DoesNotExist:
-#             return Response({
-#                 "status": 404,
-#                 "message": "User not found",
-#             })
-#         except Exception as e:
-#             return Response({
-#                 "status": 500,
-#                 "message": "Error: " + str(e),
-#             })

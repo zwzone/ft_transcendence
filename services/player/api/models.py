@@ -14,6 +14,7 @@ class Player(AbstractUser):
     def __str__(self):
         return self.email
 
+
 class Friendship(models.Model):
     sender = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='sent_friend_requests')
     receiver = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='received_friend_requests')
