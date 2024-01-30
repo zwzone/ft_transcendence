@@ -21,10 +21,10 @@ export default class ProfilePage extends HTMLElement {
       );
     });
     fetching("https://localhost/player/first_name/").then((res) => {
-      this.querySelector(".player-data .first_name").innerText = res.first_name;
+      this.querySelector(".player-data .first-name").innerText = res.first_name;
     });
     fetching("https://localhost/player/last_name/").then((res) => {
-      this.querySelector(".player-data .last_name").innerText = res.last_name;
+      this.querySelector(".player-data .last-name").innerText = res.last_name;
     });
   }
 }
