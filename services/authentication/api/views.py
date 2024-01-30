@@ -174,10 +174,7 @@ def logout_user(request):
 
 
 @api_view(["POST"])
-@authentication_classes([])
-@permission_classes([])
 def verify_two_factor(request):
-    secret_key = settings.SECRET_KEY
     code = request.POST.get("code")
     player_id = request.POST.get("id")
     if player_id is None:
@@ -201,8 +198,6 @@ def verify_two_factor(request):
 
 
 @api_view(["GET"])
-@authentication_classes([])
-@permission_classes([])
 def enable_two_factor(request):
     token = request.COOKIES.get("jwt_token")
     decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
