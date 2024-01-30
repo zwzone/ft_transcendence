@@ -1,5 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from enum import Enum
+
+
+class FriendshipStatus(Enum):
+    ACCEPTED = 'accepted'
+    PENDING = 'pending'
 
 
 class Player(AbstractUser):
@@ -13,3 +19,18 @@ class Player(AbstractUser):
 
     def __str__(self):
         return self.email
+
+
+class Friendship(models.Model):
+    STATUS_CHOICES = [
+        (FriendshipStatus.ACCEPTED.value, 'AC'),
+        (FriendshipStatus.PENDING.value, 'PN'),
+    ]
+
+    sender = models.ForeignKey('Player', on_delete=models.CASCADE, related_name='sent_friend_requests')
+    receiver = models.ForeignKey('Player', on_delete=models.CASCADE, related_name='received_friend_requests')
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=2, choices=STATUS_CHOICES, default=FriendshipStatus.PENDING.value)
+
+    def __str__(self):
+        return f'{self.sender.username} -> {self.receiver.username}'

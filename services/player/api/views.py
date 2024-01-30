@@ -1,15 +1,14 @@
-from drf_yasg.utils import swagger_auto_schema
 from django.conf import settings
 from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.views import APIView
 from .serializers import PlayerSerializer, UsernameSerializer, FirstNameSerializer, LastNameSerializer
-from .models import Player
 import jwt
 from jwt.exceptions import ExpiredSignatureError
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
-
+from .models import Player, Friendship
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from drf_yasg.utils import swagger_auto_schema
 
 class PlayerInfoView(APIView):
     authentication_classes = []
@@ -392,70 +391,103 @@ class PlayerFirstNameView(APIView):
                 "message": str(e),
             })
 
-# this is commented out because it is not used right now
 
-# class UserByUsernameView(APIView):
-#     authentication_classes = []
-#     permission_classes = []
+class PlayerAddFriend(APIView):
+    authentication_classes = []
+    permission_classes = []
 
-#     def get(self, request, username):
-#         try:
-#             user = Player.objects.get(username=username)
-#             serializer = PlayerSerializer(user)
-#             return Response({
-#                 "status": 200,
-#                 "user": serializer.data
-#             })
-#         except Player.DoesNotExist:
-#             return Response({
-#                 "status": 404,
-#                 "message": "User not found",
-#             })
+    @swagger_auto_schema(request_body=FirstNameSerializer)
+    def post(self, request):
+        token = request.COOKIES.get('jwt_token')
+        if not token:
+            return Response({
+                "status": 401,
+                "message": "JWT token not found in cookies",
+            })
+        try:
+            decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+            id = decoded_token['id']
+            sender_username = Player.objects.get(id=id)
+            receiver_username = request.data.get('receiver_username')
+        except Player.DoesNotExist:
+            return Response({
+                "status": 404,
+                "message": "User not found",
+            })
+        except Exception as e:
+            return Response({
+                "status": 500,
+                "message": str(e),
+            })
+
+        try:
+            sender = Player.objects.get(username=sender_username)
+            receiver = Player.objects.get(username=receiver_username)
+
+            friendship = Friendship.objects.create(sender=sender, receiver=receiver)
+            
+            friendship.pending = True
+            friendship.save()
+
+            return Response({
+                "status": 200,
+                "message": "Friend request sent successfully"
+            })
+        except Player.DoesNotExist:
+            return Response({
+            "status": 404,
+            "message": "Player not found"
+        })
 
 
-# class UpdateAvatarView(APIView):
-#     authentication_classes = []
-#     permission_classes = []
+class AcceptFriendRequest(APIView):
+    authentication_classes = []
+    permission_classes = []
 
-#     @swagger_auto_schema(methods=['post'], request_body=AvatarSerializer)
-#     def post(self, request):
-#         token = request.COOKIES.get('jwt_token')
-#         if not token:
-#             return Response({
-#                 "status": 401,
-#                 "message": "JWT token not found in cookies",
-#             })
+    def post(self, request):
+        token = request.COOKIES.get('jwt_token')
+        if not token:
+            return Response({
+                "status": 401,
+                "message": "JWT token not found in cookies",
+            })
 
-#         try:
-#             decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-#             id = decoded_token['id']
-#             user = Player.objects.get(id=id)
+        try:
+            decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+            id = decoded_token['id']
+            receiver_username = Player.objects.get(id=id)
+            sender_username = request.data.get('sender_username')
+        except Player.DoesNotExist:
+            return Response({
+                "status": 404,
+                "message": "User not found",
+            })
+        except Exception as e:
+            return Response({
+                "status": 500,
+                "message": str(e),
+            })
 
-#             avatar_file = request.FILES.get('avatar')
+        try:
+            sender = Player.objects.get(username=sender_username)
+            receiver = Player.objects.get(username=receiver_username)
 
-#             if avatar_file:
-#                 file_path = os.path.join(settings.MEDIA_ROOT, f"avatars/{id}")
-#                 default_storage.save(file_path, ContentFile(avatar_file.read()))
-#                 user.Avatar = file_path
-#                 user.save()
+            friendship = Friendship.objects.get(sender=sender, receiver=receiver)
+            friendship.accepted = True
+            friendship.pending = False
+            friendship.save()
 
-#                 return Response({
-#                     "status": 200,
-#                     "message": "Avatar uploaded successfully",
-#                 })
-#             else:
-#                 return Response({
-#                     "status": 400,
-#                     "message": "Avatar file not provided",
-#                 })
-
-#         except Player.DoesNotExist:
-#             return Response({
-#                 "status": 404,
-#                 "message": "User not found",
-#             })
-#         except Exception as e:
-#             return Response({
-#                 "status": 500,
-#                 "message": "Error: " + str(e),
-#             })
+            return Response({
+                "status": 200,
+                "message": "Friend request accepted successfully"
+            })
+        except Player.DoesNotExist:
+            return Response({
+                "status": 404,
+                "message": "Player not found"
+            })
+        except Friendship.DoesNotExist:
+            return Response({
+                "status": 404,
+                "message": "Friendship not found"
+            })
