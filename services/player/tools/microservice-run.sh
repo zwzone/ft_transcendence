@@ -1,9 +1,7 @@
 #/bin/bash
 
-pip install -r ./requirements.txt
-
 python manage.py makemigrations
 
 python manage.py migrate --run-syncdb
 
-python manage.py runserver 0.0.0.0:8000
+daphne api.asgi:application --port 8000 --bind 0.0.0.0 -v2
