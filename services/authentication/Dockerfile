@@ -6,7 +6,10 @@ RUN         apt update -y && \
 
 RUN         mkdir -p /microservice/authentication/
 
+
 COPY        . /microservice/authentication/
+
+RUN         pip install --upgrade pip
 
 RUN         pip install -r /microservice/authentication/requirements.txt
 

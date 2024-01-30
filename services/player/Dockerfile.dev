@@ -4,7 +4,14 @@ RUN         apt update -y && \
             apt upgrade -y && \
 			apt install curl vim nano lsof -y
 
+
 RUN         mkdir -p /microservice/player/
+
+COPY        ./requirements.txt /microservice/player/
+
+RUN         pip install --upgrade pip
+
+RUN         pip install -r /microservice/player/requirements.txt
 
 WORKDIR     /microservice/player/
 
