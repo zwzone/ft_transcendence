@@ -14,6 +14,8 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
+    path('enable/2fa/', views.enable_2fa, name="enable_2fa"),
+    path('disable/2fa/', views.disable_2fa, name="disable_2fa"),
     path('', views.PlayerInfoView.as_view(), name='playerView'),
     path('username/', views.PlayerUsernameView.as_view(), name='playerUsernameView'),
     path('first_name/', views.PlayerFirstNameView.as_view(), name='playerFirstNameView'),

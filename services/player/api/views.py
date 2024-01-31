@@ -1,5 +1,8 @@
 from django.conf import settings
 from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from .serializers import PlayerSerializer, UsernameSerializer, FirstNameSerializer, LastNameSerializer
 import jwt
 from jwt.exceptions import ExpiredSignatureError
@@ -9,6 +12,7 @@ from .models import Player, Friendship
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
+from .decorators import jwt_cookie_required
 
 class PlayerInfoView(APIView):
     authentication_classes = []
@@ -425,7 +429,7 @@ class PlayerAddFriend(APIView):
             receiver = Player.objects.get(username=receiver_username)
 
             friendship = Friendship.objects.create(sender=sender, receiver=receiver)
-            
+
             friendship.pending = True
             friendship.save()
 
@@ -491,3 +495,29 @@ class AcceptFriendRequest(APIView):
                 "status": 404,
                 "message": "Friendship not found"
             })
+
+
+@api_view(["POST"])
+@jwt_cookie_required
+def enable_2fa(request):
+    player_id = request.decoded_token
+    player = Player.objects.get(id=player_id)
+    player.two_factor = True
+    player.save()
+    return Response({
+        "status": 200,
+        "message": "two_factor has been enabled successfully",
+    })
+
+
+@api_view(["POST"])
+@jwt_cookie_required
+def disable_2fa(request):
+    player_id = request.decoded_token
+    player = Player.objects.get(id=player_id)
+    player.two_factor = False
+    player.save()
+    return Response({
+        "status": 200,
+        "message": "two_factor has been disabled successfully"
+    })
