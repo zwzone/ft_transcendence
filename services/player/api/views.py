@@ -9,8 +9,6 @@ from jwt.exceptions import ExpiredSignatureError
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from .models import Player, Friendship
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 from .decorators import jwt_cookie_required
 
@@ -496,7 +494,6 @@ class AcceptFriendRequest(APIView):
                 "message": "Friendship not found"
             })
 
-
 @api_view(["POST"])
 @jwt_cookie_required
 def enable_2fa(request):
@@ -508,7 +505,6 @@ def enable_2fa(request):
         "status": 200,
         "message": "two_factor has been enabled successfully",
     })
-
 
 @api_view(["POST"])
 @jwt_cookie_required
