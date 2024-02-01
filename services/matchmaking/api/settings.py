@@ -11,36 +11,34 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-from os import getenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent
-PLAYER_DIR = Path(__file__).resolve().parent.parent
-SERVICES_DIR = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = getenv("DJANGO_SECRET_KEY")
+SECRET_KEY = 'django-insecure-%pqjphu#*&6up8xnnpm59v0avn8im^bcqd_3=4+w^eizeergdp'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = [
-    "player",
-]
+ALLOWED_HOSTS = []
+
 
 # Application definition
+
 INSTALLED_APPS = [
+    'daphne',
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    "rest_framework",
-    "api",
 ]
 
 MIDDLEWARE = [
@@ -72,6 +70,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'api.wsgi.application'
+ASGI_APPLICATION = 'api.asgi.application'
 
 
 # Database
@@ -80,7 +79,7 @@ WSGI_APPLICATION = 'api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': PLAYER_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -109,7 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = "Africa/Casablanca"
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -125,14 +124,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# Add Player model to AUTH_USER_MODEL
-AUTH_USER_MODEL = "api.Player"
-
-# Public URLs
-PUBLIC_PLAYER_URL=getenv("PUBLIC_PLAYER_URL")
-PUBLIC_AUTHENTICATION_URL=getenv("PUBLIC_AUTHENTICATION_URL")
-
-# Private URLs
-PRIVATE_PLAYER_URL=getenv("PRIVATE_PLAYER_URL")
-PRIVATE_AUTHENTICATION_URL=getenv("PRIVATE_AUTHENTICATION_URL")
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}

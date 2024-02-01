@@ -1,30 +1,23 @@
 from django.conf import settings
-from rest_framework import status
-from .serializers import PlayerSerializer, UsernameSerializer, FirstNameSerializer, LastNameSerializer
-import jwt
-from jwt.exceptions import ExpiredSignatureError
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
-from .models import Player, Friendship
-from rest_framework.views import APIView
+from django.db import IntegrityError
+from django.utils.decorators import method_decorator
+from rest_framework import status
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from drf_yasg.utils import swagger_auto_schema
+from rest_framework.views import APIView
+from .serializers import PlayerSerializer
+from .models import Player, Friendship
+from .decorators import jwt_cookie_required
 
-class PlayerInfoView(APIView):
-    authentication_classes = []
-    permission_classes = []
 
+class PlayerView(APIView):
+
+    @method_decorator(jwt_cookie_required)
     def get(self, request):
-        token = request.COOKIES.get('jwt_token')
-        if not token:
-            return Response({
-                "status": 401,
-                "message": "JWT token not found in cookies",
-            })
         try:
-            decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-            id = decoded_token['id']
-            user = Player.objects.get(id=id)
+            user = Player.objects.get(id=request.decoded_token['id'])
             serializer = PlayerSerializer(user)
             return Response({
                 "status": 200,
@@ -35,378 +28,86 @@ class PlayerInfoView(APIView):
                 "status": 404,
                 "message": "User not found",
             })
-        except ExpiredSignatureError:
-            return Response({
-                "status": 401,
-                "message": "JWT token has expired",
-            })
         except Exception as e:
             return Response({
                 "status": 500,
                 "message": str(e),
             })
 
-    @swagger_auto_schema(request_body=PlayerSerializer)
+    @method_decorator(jwt_cookie_required)
     def post(self, request):
-        token = request.data.get('token')
-        if not token:
-            return Response({
-                "message": "JWT token not found",
-            }, status=status.HTTP_401_UNAUTHORIZED)
-        try:
-            decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-            if 'email' in decoded_token:
-                email = decoded_token['email']
-                player = request.data.get('player')
-                username = player['username']
-                first_name = player['first_name']
-                last_name = player['last_name']
-                avatar = player['avatar']
-            player, created = Player.objects.get_or_create(email=email, username=username, first_name=first_name,
-                                                           last_name=last_name, avatar=avatar)
-            if created:
-                return Response({
-                    "message": "User created successfully",
-                    "id": player.id,
-                    "two_factor": player.two_factor
-                }, status=status.HTTP_201_CREATED)
-            elif created is False and player is not None:
+        if "email" in request.decoded_token:
+            email = request.decoded_token['email']
+            if Player.objects.filter(email=email).exists():
+                player = Player.objects.get(email=email)
                 return Response({
                     "message": "User already exists",
                     "id": player.id,
-                    "two_factor": player.two_factor,
+                    "two_factor": player.two_factor
                 }, status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response({
-                "message": str(e),
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-class PlayerLastNameView(APIView):
-    authentication_classes = []
-    permission_classes = []
-
-    def get(self, request):
-        token = request.COOKIES.get('jwt_token')
-        if not token:
-            return Response({
-                "status": 401,
-                "message": "JWT token not found in cookies",
-            })
-        try:
-            decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-            id = decoded_token['id']
-            user = Player.objects.get(id=id)
-            return Response({
-                "status": 200,
-                "last_name": user.last_name
-            })
-        except Player.DoesNotExist:
-            return Response({
-                "status": 404,
-                "message": "User not found",
-            })
-        except ExpiredSignatureError:
-            return Response({
-                "status": 401,
-                "message": "JWT token has expired",
-            })
-        except Exception as e:
-            return Response({
-                "status": 500,
-                "message": str(e),
-            })
-
-    @swagger_auto_schema(request_body=LastNameSerializer)
-    def post(self, request):
-        token = request.COOKIES.get('jwt_token')
-        if not token:
-            return Response({
-                "status": 401,
-                "message": "JWT token not found in cookies",
-            })
-        try:
-            decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-            id = decoded_token['id']
-            user = Player.objects.get(id=id)
-            last_name = request.data.get('last_name')
-            if not last_name:
+            player = request.data.get('player')
+            username = player['username']
+            first_name = player['first_name']
+            last_name = player['last_name']
+            avatar = player['avatar']
+            try:
+                player, created = Player.objects.create(
+                    email=email,
+                    username=username,
+                    first_name=first_name,
+                    last_name=last_name,
+                    avatar=avatar
+                )
+                if created:
+                    return Response({
+                        "message": "User created successfully",
+                        "id": player.id,
+                        "two_factor": player.two_factor
+                    }, status=status.HTTP_201_CREATED)
+            except IntegrityError:
                 return Response({
-                    "status": 400,
-                    "message": "Last name not provided",
-                })
-            user.last_name = last_name
-            user.save()
-            serializer = PlayerSerializer(user)
-            return Response({
-                "status": 200,
-                "message": "Last name updated successfully",
-            })
-        except Player.DoesNotExist:
-            return Response({
-                "status": 404,
-                "message": "User not found",
-            })
-        except ExpiredSignatureError:
-            return Response({
-                "status": 401,
-                "message": "JWT token has expired",
-            })
-        except Exception as e:
-            return Response({
-                "status": 500,
-                "message": str(e),
-            })
-
-
-class PlayerUsernameView(APIView):
-    authentication_classes = []
-    permission_classes = []
-
-    def get(self, request):
-        token = request.COOKIES.get('jwt_token')
-        if not token:
-            return Response({
-                "status": 401,
-                "message": "JWT token not found in cookies",
-            })
-        try:
-            decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-            id = decoded_token['id']
-            user = Player.objects.get(id=id)
-            return Response({
-                "status": 200,
-                "username": user.username
-            })
-        except Player.DoesNotExist:
-            return Response({
-                "status": 404,
-                "message": "User not found",
-            })
-        except ExpiredSignatureError:
-            return Response({
-                "status": 401,
-                "message": "JWT token has expired",
-            })
-        except Exception as e:
-            return Response({
-                "status": 500,
-                "message": str(e),
-            })
-
-    @swagger_auto_schema(request_body=UsernameSerializer)
-    def post(self, request):
-        token = request.COOKIES.get('jwt_token')
-        if not token:
-            return Response({
-                "status": 401,
-                "message": "JWT token not found in cookies",
-            })
-        try:
-            decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-            id = decoded_token['id']
-            user = Player.objects.get(id=id)
-            username = request.data.get('username')
-            if not username:
+                    "message": f"An error occurred while creating the player: {e}",
+                }, status=status.HTTP_409_CONFLICT)
+            except Exception as e:
                 return Response({
-                    "status": 400,
-                    "message": "Username not provided",
-                })
-            user.username = username
-            user.save()
-            serializer = PlayerSerializer(user)
-            return Response({
-                "status": 200,
-                "message": "Username updated successfully",
-            })
-        except Player.DoesNotExist:
-            return Response({
-                "status": 404,
-                "message": "User not found",
-            })
-        except ExpiredSignatureError:
-            return Response({
-                "status": 401,
-                "message": "JWT token has expired",
-            })
-        except Exception as e:
-            return Response({
-                "status": 500,
-                "message": str(e),
-            })
-
-
-class PlayerAvatarView(APIView):
-    authentication_classes = []
-    permission_classes = []
-
-    def get(self, request):
-        token = request.COOKIES.get('jwt_token')
-        if not token:
-            return Response({
-                "status": 401,
-                "message": "JWT token not found in cookies",
-            })
-        try:
-            decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-            id = decoded_token['id']
-            user = Player.objects.get(id=id)
-            return Response({
-                "status": 200,
-                "avatar": user.avatar
-            })
-        except Player.DoesNotExist:
-            return Response({
-                "status": 404,
-                "message": "User not found",
-            })
-        except ExpiredSignatureError:
-            return Response({
-                "status": 401,
-                "message": "JWT token has expired",
-            })
-        except Exception as e:
-            return Response({
-                "status": 500,
-                "message": "what" + str(e),
-            })
-
-    def post(self, request):
-        token = request.COOKIES.get('jwt_token')
-        if not token:
-            return Response({
-                "status": 401,
-                "message": "JWT token not found in cookies",
-            })
-
-        try:
-            decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-            id = decoded_token['id']
-            user = Player.objects.get(id=id)
-
-            avatar_file = request.FILES.get('avatar')
-
-            if avatar_file:
-                file_name = default_storage.save(avatar_file.name, avatar_file)
-                file_url = default_storage.url(file_name)
-                user.Avatar = file_url
-                user.save()
-
+                    "message": str(e),
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        elif "id" in request.decoded_token:
+            try:
+                id = request.decoded_token['id']
+                player_data = request.data.get('player')  
+                player = Player.objects.get(id=id)
+                if "username" in player_data:
+                    player.username = player_data['username']
+                if "first_name" in player_data:
+                    player.first_name = player_data['first_name']
+                if "last_name" in player_data:
+                    player.last_name = player_data['last_name']
+                if "two_factor" in player_data:
+                    player.two_factor = player_data['two_factor']
+                player.save()
                 return Response({
                     "status": 200,
-                    "message": "Avatar uploaded successfully",
-                    "avatar_url": file_url
+                    "message": "User updated successfully",
                 })
-            else:
+            except player.DoesNotExist:
                 return Response({
-                    "status": 400,
-                    "message": "Avatar file not provided",
+                    "status": 404,
+                    "message": "User not found",
                 })
-
-        except Player.DoesNotExist:
-            return Response({
-                "status": 404,
-                "message": "User not found",
-            })
-        except Exception as e:
-            return Response({
-                "status": 500,
-                "message": "Error: " + str(e),
-            })
-
-
-class PlayerFirstNameView(APIView):
-    authentication_classes = []
-    permission_classes = []
-
-    def get(self, request):
-        token = request.COOKIES.get('jwt_token')
-        if not token:
-            return Response({
-                "status": 401,
-                "message": "JWT token not found in cookies",
-            })
-        try:
-            decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-            id = decoded_token['id']
-            user = Player.objects.get(id=id)
-            return Response({
-                "status": 200,
-                "first_name": user.first_name
-            })
-        except Player.DoesNotExist:
-            return Response({
-                "status": 404,
-                "message": "User not found",
-            })
-        except ExpiredSignatureError:
-            return Response({
-                "status": 401,
-                "message": "JWT token has expired",
-            })
-        except Exception as e:
-            return Response({
-                "status": 500,
-                "message": str(e),
-            })
-
-    @swagger_auto_schema(request_body=FirstNameSerializer)
-    def post(self, request):
-        token = request.COOKIES.get('jwt_token')
-        if not token:
-            return Response({
-                "status": 401,
-                "message": "JWT token not found in cookies",
-            })
-        try:
-            decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-            id = decoded_token['id']
-            user = Player.objects.get(id=id)
-            first_name = request.data.get('first_name')
-            if not first_name:
+            except Exception as e:
                 return Response({
-                    "status": 400,
-                    "message": "First name not provided",
+                    "status": 500,
+                    "message": str(e),
                 })
-            user.first_name = first_name
-            user.save()
-            serializer = PlayerSerializer(user)
-            return Response({
-                "status": 200,
-                "message": "First name updated successfully",
-            })
-        except Player.DoesNotExist:
-            return Response({
-                "status": 404,
-                "message": "User not found",
-            })
-        except ExpiredSignatureError:
-            return Response({
-                "status": 401,
-                "message": "JWT token has expired",
-            })
-        except Exception as e:
-            return Response({
-                "status": 500,
-                "message": str(e),
-            })
 
 
 class PlayerAddFriend(APIView):
-    authentication_classes = []
-    permission_classes = []
 
-    @swagger_auto_schema(request_body=FirstNameSerializer)
+    @method_decorator(jwt_cookie_required)
     def post(self, request):
-        token = request.COOKIES.get('jwt_token')
-        if not token:
-            return Response({
-                "status": 401,
-                "message": "JWT token not found in cookies",
-            })
+        id = request.decoded_token['id']
         try:
-            decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-            id = decoded_token['id']
             sender_username = Player.objects.get(id=id)
             receiver_username = request.data.get('receiver_username')
         except Player.DoesNotExist:
@@ -419,16 +120,12 @@ class PlayerAddFriend(APIView):
                 "status": 500,
                 "message": str(e),
             })
-
         try:
             sender = Player.objects.get(username=sender_username)
             receiver = Player.objects.get(username=receiver_username)
-
             friendship = Friendship.objects.create(sender=sender, receiver=receiver)
-            
             friendship.pending = True
             friendship.save()
-
             return Response({
                 "status": 200,
                 "message": "Friend request sent successfully"
@@ -441,20 +138,11 @@ class PlayerAddFriend(APIView):
 
 
 class AcceptFriendRequest(APIView):
-    authentication_classes = []
-    permission_classes = []
 
+    @method_decorator(jwt_cookie_required)
     def post(self, request):
-        token = request.COOKIES.get('jwt_token')
-        if not token:
-            return Response({
-                "status": 401,
-                "message": "JWT token not found in cookies",
-            })
-
+        id = request.decoded_token['id']
         try:
-            decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-            id = decoded_token['id']
             receiver_username = Player.objects.get(id=id)
             sender_username = request.data.get('sender_username')
         except Player.DoesNotExist:
@@ -467,16 +155,13 @@ class AcceptFriendRequest(APIView):
                 "status": 500,
                 "message": str(e),
             })
-
         try:
             sender = Player.objects.get(username=sender_username)
             receiver = Player.objects.get(username=receiver_username)
-
             friendship = Friendship.objects.get(sender=sender, receiver=receiver)
             friendship.accepted = True
             friendship.pending = False
             friendship.save()
-
             return Response({
                 "status": 200,
                 "message": "Friend request accepted successfully"
