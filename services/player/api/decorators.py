@@ -1,7 +1,7 @@
-import jwt
 from django.conf import settings
 from django.core.cache import cache
 from rest_framework.response import Response
+import jwt
 
 
 def jwt_cookie_required(view_func):
@@ -13,11 +13,12 @@ def jwt_cookie_required(view_func):
             decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
             if cache.get(decoded_token) is not None:
                 return Response({"statusCode": 401, "error": "Invalid token"})
-            request.decoded_token = decoded_token['id']
+            request.decoded_token = decoded_token
             return view_func(request, *args, **kwargs)
-
         except jwt.ExpiredSignatureError:
             return Response({"statusCode": 401, 'error': 'Token is expired'})
         except jwt.InvalidTokenError:
             return Response({"statusCode": 401, 'error': 'Invalid token'})
+        except Exception as e:
+            return Response({"statusCode": 500, 'error': str(e)})
     return wrapped_view

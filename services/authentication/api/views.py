@@ -52,16 +52,14 @@ def intra_callback_auth(request):
     user_data = user_response.json();
     jwt_token = generate_jwt(user_data["email"])
     data = {
-        "token": jwt_token,
         "player": {
-            "email": user_data["email"],
+            "username": user_data["login"],
             "first_name": user_data["first_name"],
             "last_name": user_data["last_name"],
-            "username": user_data["login"],
             "avatar": user_data["image"]["link"],
         }
     }
-    player_data = requests.post(f'{settings.PRIVATE_PLAYER_URL}', json=data)
+    player_data = requests.post(f'{settings.PRIVATE_PLAYER_URL}', json=data, cookies={"jwt_token": jwt_token})
     if not player_data.ok:
         return redirect("https://localhost/login/")
     if player_data.json()['two_factor']:
@@ -124,16 +122,14 @@ def google_callback_auth(request):
     id_token_decoded = decode_google_id_token(id_token)
     jwt_token = generate_jwt(id_token_decoded['email'])
     data = {
-        "token": jwt_token,
         "player": {
-            "email": id_token_decoded['email'],
+            "username": id_token_decoded['name'],
             "first_name": id_token_decoded['given_name'],
             "last_name": id_token_decoded['family_name'],
-            "username": id_token_decoded['name'],
             "avatar": id_token_decoded['picture'],
         }
     }
-    player_data = requests.post(f'{settings.PRIVATE_PLAYER_URL}', json=data)
+    player_data = requests.post(f'{settings.PRIVATE_PLAYER_URL}', json=data, cookies={"jwt_token": jwt_token})
     if not player_data.ok:
         return redirect("https://localhost/login/")
     if player_data.json()['two_factor']:
