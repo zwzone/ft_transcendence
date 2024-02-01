@@ -22,6 +22,8 @@ export function runGame(canvas, ctx) {
             ball.positionY = tmp["ball"].positionY;
             paddle1.positionY = tmp["padd_left"]["info"].positionY;
             paddle2.positionY = tmp["padd_right"]["info"].positionY;
+            paddle1.score = tmp["padd_left"]['info']["score"];
+            paddle2.score = tmp["padd_right"]['info']["score"];
             gameLoop(canvas, ctx, ball, paddle1, paddle2);
         };
     };
@@ -49,6 +51,7 @@ class Paddle {
         this.positionY = position[1];
         this.sizeX = size[0];
         this.sizeY = size[1];
+        this.score = 0;
     }
 
     update(right) {
@@ -176,23 +179,8 @@ function Score(ctx, canvas, right, left) {
 
 function gameLoop(canvas, ctx, ball, paddle1, paddle2) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // window.requestAnimationFrame(() =>
-    //   gameLoop(canvas, ctx, ball, paddle1, paddle2),
-    // );
-    // ball.update();
-    // paddle1.update(true);
-    // paddle2.update(false);
-    // ballCollision(canvas, ball);
-    // paddleCollision(canvas, paddle1);
-    // paddleCollision(canvas, paddle2);
-    // BallPaddleCollision(ball, paddle1);
-    // BallPaddleCollision(ball, paddle2);
     ball.render(canvas, ctx);
     paddle1.render(canvas, ctx);
     paddle2.render(canvas, ctx);
-    // Score(ctx, canvas, right, left);
-    // if (ball.speedX > 0) ball.speedX += 0.01;
-    // else ball.speedX -= 0.01;
-    // if (ball.speedY > 0) ball.speedY += 0.01;
-    // else ball.speedY -= 0.01;
+    Score(ctx, canvas, paddle2.score, paddle1.score);
 }
