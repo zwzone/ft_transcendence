@@ -52,6 +52,7 @@ def intra_callback_auth(request):
     user_data = user_response.json();
     jwt_token = generate_jwt(user_data["email"])
     data = {
+        "create": True,
         "token": jwt_token,
         "player": {
             "email": user_data["email"],
@@ -61,7 +62,7 @@ def intra_callback_auth(request):
             "avatar": user_data["image"]["link"],
         }
     }
-    player_data = requests.post(f'{settings.PRIVATE_PLAYER_URL}', json=data)
+    player_data = requests.post(f'{settings.PRIVATE_PLAYER_URL}', json=data, cookies={"jwt_token": jwt_token})
     if not player_data.ok:
         return redirect("https://localhost/login/")
     if player_data.json()['two_factor']:
@@ -133,7 +134,7 @@ def google_callback_auth(request):
             "avatar": id_token_decoded['picture'],
         }
     }
-    player_data = requests.post(f'{settings.PRIVATE_PLAYER_URL}', json=data)
+    player_data = requests.post(f'{settings.PRIVATE_PLAYER_URL}', json=data, cookies={"jwt_token": jwt_token})
     if not player_data.ok:
         return redirect("https://localhost/login/")
     if player_data.json()['two_factor']:
