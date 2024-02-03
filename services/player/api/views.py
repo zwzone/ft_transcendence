@@ -23,7 +23,7 @@ class PlayerInfo(APIView):
             serializer = PlayerSerializer(user)
             return Response({
                 "status": 200,
-                "user": serializer.data
+                "player": serializer.data
             })
         except Player.DoesNotExist:
             return Response({

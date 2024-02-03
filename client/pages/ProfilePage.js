@@ -12,19 +12,15 @@ export default class ProfilePage extends HTMLElement {
 
     this.classList.add("my-page");
 
-    fetching("https://localhost/player/avatar/").then((res) => {
-      console.log("CURRENT", res);
-      console.log(this.querySelector(".player-data .avatar"));
+    fetching("https://localhost/player/").then((res) => {
       this.querySelector(".player-data .avatar").setAttribute(
         "src",
-        res.avatar,
+        res.player.avatar,
       );
-    });
-    fetching("https://localhost/player/first_name/").then((res) => {
-      this.querySelector(".player-data .first-name").innerText = res.first_name;
-    });
-    fetching("https://localhost/player/last_name/").then((res) => {
-      this.querySelector(".player-data .last-name").innerText = res.last_name;
+      this.querySelector(".player-data .first-name").innerText =
+        res.player.first_name;
+      this.querySelector(".player-data .last-name").innerText =
+        res.player.last_name;
     });
   }
 }

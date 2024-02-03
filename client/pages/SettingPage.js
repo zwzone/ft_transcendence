@@ -21,25 +21,21 @@ export default class SettingPage extends HTMLElement {
     const input_last_name = this.querySelector(".input-last-name");
     const button_last_name = this.querySelector(".button-last-name");
 
-    fetching("https://localhost/player/avatar/").then((res) => {
-      avatar.src = res.avatar;
-    });
-    fetching("https://localhost/player/username/").then((res) => {
-      this.querySelector(".input-username").placeholder = res.username;
-    });
-    fetching("https://localhost/player/first_name/").then((res) => {
-      this.querySelector(".input-first-name").placeholder = res.first_name;
-    });
-    fetching("https://localhost/player/last_name/").then((res) => {
-      this.querySelector(".input-last-name").placeholder = res.last_name;
+    fetching("https://localhost/player/").then((res) => {
+      avatar.src = res.player.avatar;
+      this.querySelector(".input-username").placeholder = res.player.username;
+      this.querySelector(".input-first-name").placeholder =
+        res.player.first_name;
+      this.querySelector(".input-last-name").placeholder = res.player.last_name;
     });
 
     input_avatar.onchange = function () {
-      console.log("input_avatar :", input_avatar.files[0]);
-      avatar.src = URL.createObjectURL(input_avatar.files[0]);
-      fetching("https://localhost/player/avatar/", "POST", {
-        avatar: input_avatar.files[0],
-      });
+      const avatarImage = input_avatar.files[0];
+      console.log("input_avatar :", avatarImage);
+      avatar.src = URL.createObjectURL(avatarImage);
+      const formData = new FormData();
+      formData.append("avatar", avatarImage);
+      fetching("https://localhost/player/avatar/", "POST", formData);
     };
     button_username.onclick = (event) => {
       this.input_change(input_username, "username");
@@ -53,10 +49,19 @@ export default class SettingPage extends HTMLElement {
   }
 
   input_change(input, field) {
-    console.log("hello");
-    fetching(`https://localhost/player/${field}/`, "POST", {
-      [field]: input.value,
-    });
+    console.log({ [field]: input.value });
+    fetching(
+      `https://localhost/player/`,
+      "POST",
+      JSON.stringify({
+        player: {
+          [field]: input.value,
+        },
+      }),
+      {
+        "Content-Type": "application/json",
+      },
+    );
   }
 }
 
