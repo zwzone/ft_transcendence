@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 from .serializers import PlayerSerializer
 from .models import Player, Friendship
 from .decorators import jwt_cookie_required
+import urllib.parse
 import os
 
 
@@ -91,7 +92,7 @@ class PlayerInfo(APIView):
                     "status": 200,
                     "message": "User updated successfully",
                 })
-            except player.DoesNotExist:
+            except Player.DoesNotExist:
                 return Response({
                     "status": 404,
                     "message": "User not found",
@@ -106,14 +107,15 @@ class PlayerInfo(APIView):
 class PlayerAvatarUpload(APIView):
 
     @method_decorator(jwt_cookie_required)
-    def get(self, request):
+    def post(self, request):
         try:
             id = request.decoded_token['id']
             file = request.FILES['avatar']
             file_path = os.path.join(settings.MEDIA_ROOT, file.name)
             default_storage.save(file_path, ContentFile(file.read()))
+            file_url = urllib.parse.urljoin(settings.PUBLIC_PLAYER_URL, os.path.join(settings.MEDIA_URL, file.name))
             player = Player.objects.get(id=id)
-            player.avatar = file_path
+            player.avatar = file_url
             player.save()
             return Response({
                 "status": 200,
