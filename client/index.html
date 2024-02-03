@@ -85,8 +85,8 @@
         <div class="data-section d-flex flex-column justify-content-center align-items-center gap-2 p-2 rounded-5">
           <img class="avatar border border-1 border-white rounded-4" alt="avatar">
           <h1 class="text-center m-0 p-3 rounded-5" id="full-name">
-            <span class="first_name"></span>
-            <span class="last_name"></span>
+            <span class="first-name"></span>
+            <span class="last-name"></span>
           </h1>
         </div>
         <div class="data-section d-flex flex-column gap-2 p-2 rounded-5">
@@ -154,26 +154,44 @@
   <!-- SETTING PAGE -->
   <template id="setting-template">
     <my-navbar></my-navbar>
-    <main class="container-fluid d-flex flex-column justify-content-center gap-5 my-5">
+    <main class="container-fluid d-flex flex-column justify-content-center gap-5 my-5 p-5 rounded-5">
+      <h1 class="setting-header p-5 rounded-5 text-center display-1 fw-bold">
+        SETTINGS
+      </h1>
       <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-3 rounded-5">
-        <h2 class="fw-bold text-center m-0 px-4 py-2">Change avatar</h2>
-        <img class="avatar rounded-4 border border-1 border-white" alt="avatar">
+        <h2 class="text-center m-0 px-4 py-2">Change avatar</h2>
+        <div class="setting-avatar d-flex justify-content-center align-items-center gap-1">
+          <img class="avatar rounded-5 border border-1 border-white" alt="avatar">
+          <input type="file" id="input-avatar" accept="image/jpeg, image/png, image/jpg">
+          <label class="change-avatar d-flex justify-content-center align-items-center rounded-5 border border-1 border-white" for="input-avatar">
+            <img src="/public/image-edit.svg" alt="image edit">
+          </label>
+        </div>
       </div>
       <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-3 rounded-5">
-        <h2 class="fw-bold text-center m-0 px-4 py-2">Change Username</h2>
-        <input class="username border rounded-4 px-3 py-3 fs-5" type="text">
+        <h2 class="text-center m-0 px-4 py-2">Change Username</h2>
+        <div class="setting-username d-flex justify-content-center gap-1">
+          <input type="text" class="input-username border rounded-4 px-3 py-3 fs-5">
+          <button class="button-username btn rounded-4">Submit</button>
+        </div>
       </div>
       <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-3 rounded-5">
-        <h2 class="fw-bold text-center m-0 px-4 py-2">Change First Name</h2>
-        <input class="first_name border rounded-4 px-4 py-2" type="text">
+        <h2 class="text-center m-0 px-4 py-2">Change First Name</h2>
+        <div class="setting-first-name d-flex justify-content-center gap-1">
+          <input type="text" class="input-first-name border rounded-4 px-3 py-3 fs-5">
+          <button class="button-first-name btn rounded-4">Submit</button>
+        </div>
       </div>
       <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-3 rounded-5">
-        <h2 class="fw-bold text-center m-0 px-4 py-2">Change Last Name</h2>
-        <input class="last_name border rounded-4 px-4 py-2" type="text">
+        <h2 class="text-center m-0 px-4 py-2">Change Last Name</h2>
+        <div class="setting-last-name d-flex justify-content-center gap-1">
+          <input type="text" class="input-last-name border rounded-4 px-3 py-3 fs-5">
+          <button class="button-last-name btn rounded-4">Submit</button>
+        </div>
       </div>
       <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-3 rounded-5">
-        <h2 class="fw-bold text-center m-0 px-4 py-2">Two Factor Authentication</h2>
-        <div class="twofa p-2 rounded-5">
+        <h2 class="text-center m-0 px-4 py-2">Two Factor Authentication</h2>
+        <div class="setting-twofa p-2 rounded-5">
           <label class="switch">
             <input type="checkbox">
             <span class="slider round rounded-5"></span>

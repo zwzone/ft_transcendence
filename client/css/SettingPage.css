@@ -1,24 +1,58 @@
 setting-page main {
+  background-color: var(--color-primary-300);
   max-width: 1080px;
 }
 
-setting-page .setting-data {
+.setting-header,
+.setting-data {
   background-color: var(--color-primary-400);
   color: var(--color-secondary-100);
 }
 
-setting-page .setting-data>.avatar {
+.setting-avatar {
+  position: relative;
+}
+
+.setting-avatar .avatar {
   width: 150px;
   height: 150px;
+}
+
+.change-avatar {
+  width: 150px;
+  height: 150px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  opacity: 0;
+  transition: opacity .2s;
   background-color: var(--color-primary-300);
+  cursor: pointer;
 }
 
-setting-page .setting-data>input {
-  background-color: var(--color-secondary-100);
-  border-color: var(--color-primary-100)
+.change-avatar:hover {
+  opacity: 50%;
 }
 
-setting-page .twofa {
+.change-avatar img {
+  width: 70%;
+  height: 70%;
+}
+
+#input-avatar {
+  display: none;
+}
+
+.setting-data button {
+  background-color: var(--color-primary-300);
+  color: var(--color-secondary-100);
+}
+
+.setting-data button:hover {
+  background-color: var(--color-primary-200);
+}
+
+.setting-twofa {
   background-color: var(--color-secondary-100);
 }
 

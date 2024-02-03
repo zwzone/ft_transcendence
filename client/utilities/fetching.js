@@ -1,11 +1,13 @@
 export default async function fetching(
   resource,
-  credentials = "same-origin",
   method = "GET",
+  body = null,
+  headers = {},
 ) {
   const res = await fetch(resource, {
     method: method,
-    credentials: credentials,
+    body: body,
+    headers: headers,
   });
   const json = await res.json();
   console.log(resource, json);
