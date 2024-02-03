@@ -25,7 +25,7 @@ SERVICES_DIR = Path(__file__).resolve().parent.parent.parent
 SECRET_KEY = getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = getenv("DEBUG") == "True"
 
 ALLOWED_HOSTS = [
     "player",
@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "rest_framework",
-    "drf_yasg",
     "api",
 ]
 
@@ -120,7 +119,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = PLAYER_DIR / 'static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = PLAYER_DIR / 'assets/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

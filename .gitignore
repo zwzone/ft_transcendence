@@ -7,3 +7,5 @@ db.sqlite3
 *.pyc
 migrations/
 !migrations/__init__.py
+static/
+assets/
