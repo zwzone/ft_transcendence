@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('intra/', views.intra_auth, name='intraView'),
@@ -11,3 +13,5 @@ urlpatterns = [
     path('2FA/enable/', views.enable_two_factor, name='enable_two_factorView'),
     path('2FA/verify/', views.verify_two_factor, name='verify_two_factorView')
 ]
+
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
