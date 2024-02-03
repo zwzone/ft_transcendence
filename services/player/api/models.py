@@ -20,7 +20,7 @@ class Player(AbstractBaseUser):
     username = models.CharField(max_length=20, blank=False, null=False, unique=False)
     first_name = models.CharField(max_length=20, blank=False, null=False)
     last_name = models.CharField(max_length=20, blank=False, null=False)
-    tournament_name = models.CharField(max_length=20, blank=False, null=False)
+    tournament_name = models.CharField(max_length=20, blank=False, null=True)
     avatar = models.URLField(blank=False, null=False)
     two_factor = models.BooleanField(default=False)
     status = models.CharField(max_length=2, choices=STATUS_CHOICES, default=Status.ONLINE.value)

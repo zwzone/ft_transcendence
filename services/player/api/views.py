@@ -53,19 +53,18 @@ class PlayerInfo(APIView):
             last_name = player['last_name']
             avatar = player['avatar']
             try:
-                player, created = Player.objects.create(
+                player = Player.objects.create(
                     email=email,
                     username=username,
                     first_name=first_name,
                     last_name=last_name,
                     avatar=avatar
                 )
-                if created:
-                    return Response({
-                        "message": "User created successfully",
-                        "id": player.id,
-                        "two_factor": player.two_factor
-                    }, status=status.HTTP_201_CREATED)
+                return Response({
+                    "message": "User created successfully",
+                    "id": player.id,
+                    "two_factor": player.two_factor
+                }, status=status.HTTP_201_CREATED)
             except IntegrityError:
                 return Response({
                     "message": f"An error occurred while creating the player: {e}",
