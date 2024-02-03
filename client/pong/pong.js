@@ -2,7 +2,7 @@ let ws;
 
 export function runGame(canvas, ctx) {
     console.log("waiting...");
-    ws = new WebSocket("ws://127.0.0.1:8000/ws/matchemaking/2/");
+    ws = new WebSocket("ws://127.0.0.1:8000/ws/matchmaking/2/");
     canvas.width = 1920;
     canvas.height = 1080;
     const ball = new Ball([10, 10], [canvas.width / 2, canvas.height / 2], 20);
