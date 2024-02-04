@@ -21,7 +21,7 @@ export default class SettingPage extends HTMLElement {
     const input_last_name = this.querySelector(".input-last-name");
     const button_last_name = this.querySelector(".button-last-name");
 
-    fetching("https://localhost/player/").then((res) => {
+    fetching(`https://${window.ft_transcendence_host}/player/`).then((res) => {
       avatar.src = res.player.avatar;
       this.querySelector(".input-username").placeholder = res.player.username;
       this.querySelector(".input-first-name").placeholder =
@@ -35,7 +35,7 @@ export default class SettingPage extends HTMLElement {
       avatar.src = URL.createObjectURL(avatarImage);
       const formData = new FormData();
       formData.append("avatar", avatarImage);
-      fetching("https://localhost/player/avatar/", "POST", formData);
+      fetching(`https://${window.ft_transcendence_host}/player/avatar/`, "POST", formData);
     };
     button_username.onclick = (event) => {
       this.input_change(input_username, "username");
@@ -51,7 +51,7 @@ export default class SettingPage extends HTMLElement {
   input_change(input, field) {
     console.log({ [field]: input.value });
     fetching(
-      `https://localhost/player/`,
+      `https://${window.ft_transcendence_host}/player/`,
       "POST",
       JSON.stringify({
         player: {

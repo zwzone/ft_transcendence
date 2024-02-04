@@ -2,7 +2,7 @@ let ws;
 
 export function runGame(canvas, ctx) {
     console.log("waiting...");
-    ws = new WebSocket("ws://127.0.0.1:8000/ws/matchmaking/2/");
+    ws = new WebSocket(`ws://${window.ft_transcendence_host}:8000/ws/matchmaking/2/`);
     canvas.width = 1920;
     canvas.height = 1080;
     const ball = new Ball([10, 10], [canvas.width / 2, canvas.height / 2], 20);
@@ -15,7 +15,7 @@ export function runGame(canvas, ctx) {
     ws.onmessage = function (e) {
         console.log(e.data);
         ws.close();
-        ws = new WebSocket(`ws://127.0.0.1:9000/ws/pong/${e.data}/2/`);
+        ws = new WebSocket(`ws://${window.ft_transcendence_host}:9000/ws/pong/${e.data}/2/`);
         ws.onmessage = function (e) {
             let tmp = JSON.parse(e.data);
             ball.positionX = tmp["ball"].positionX;
