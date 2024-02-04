@@ -9,3 +9,4 @@ migrations/
 !migrations/__init__.py
 static/
 assets/
+.DS_Store
