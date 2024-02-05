@@ -127,6 +127,9 @@ STATIC_ROOT = AUTH_DIR / 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# ft_transcendence hostname
+FT_TRANSCENDENCE_HOST=getenv("FT_TRANSCENDENCE_HOST")
+
 # Public URLs
 PUBLIC_PLAYER_URL=getenv("PUBLIC_PLAYER_URL")
 PUBLIC_AUTHENTICATION_URL=getenv("PUBLIC_AUTHENTICATION_URL")

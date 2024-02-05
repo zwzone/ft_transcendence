@@ -17,7 +17,7 @@ const router = {
     // check if the player is logged in
     let pathname = window.location.pathname;
     if (pathname == "/") pathname = "/home/";
-    fetching("https://localhost/authentication/isloggedin/").then((res) => {
+    fetching(`https://${window.ft_transcendence_host}/authentication/isloggedin/`).then((res) => {
       if (res.statusCode == 200) {
         if (pathname == "/login/") pathname = "/home/";
       } else {
