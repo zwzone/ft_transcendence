@@ -20,6 +20,8 @@ import SettingPage from "./pages/SettingPage.js";
 import TournamentPage from "./pages/TournamentPage.js";
 import NotfoundPage from "./pages/NotfoundPage.js";
 
+window.ft_transcendence_host = "localhost";
+
 window.addEventListener("DOMContentLoaded", () => {
   router.init();
 });

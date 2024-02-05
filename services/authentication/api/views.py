@@ -61,12 +61,12 @@ def intra_callback_auth(request):
     }
     player_data = requests.post(f'{settings.PRIVATE_PLAYER_URL}', json=data, cookies={"jwt_token": jwt_token})
     if not player_data.ok:
-        return redirect("https://localhost/login/")
+        return redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/login/")
     if player_data.json()['two_factor']:
         return Response({"statusCode": 200, "id": player_data.json()['id'], 'message': 'Enable two-factor'})
     player_id = player_data.json()['id']
     jwt_token = re_encode_jwt(player_id)
-    response = redirect("https://localhost/home/")
+    response = redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/home/")
     response.set_cookie("jwt_token", value=jwt_token, httponly=True, secure=True)
     return response
 
@@ -131,12 +131,12 @@ def google_callback_auth(request):
     }
     player_data = requests.post(f'{settings.PRIVATE_PLAYER_URL}', json=data, cookies={"jwt_token": jwt_token})
     if not player_data.ok:
-        return redirect("https://localhost/login/")
+        return redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/login/")
     if player_data.json()['two_factor']:
         return Response({"statusCode": 200, "id": player_data.json()['id'], 'message': 'Enable two-factor'})
     player_id = player_data.json()['id']
     jwt_token = re_encode_jwt(player_id)
-    response = redirect("https://localhost/home/")
+    response = redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/home/")
     response.set_cookie("jwt_token", value=jwt_token, httponly=True, secure=True)
     return response
 
@@ -162,7 +162,7 @@ def logout_user(request):
     jwt_token = request.COOKIES.get("jwt_token")
     if jwt_token is not None:
         cache.set(jwt_token, True, timeout=None)
-        response = redirect("https://localhost/login/")
+        response = redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/login/")
         response.delete_cookie("jwt_token")
         return response
     else:
@@ -187,7 +187,7 @@ def verify_two_factor(request):
         if not check_2fa_code(player_id, code):
             return Response({"statusCode": 401, "message": "Incorrect 2FA code."})
         jwt_token = re_encode_jwt(player_id)
-        response = redirect("https://localhost/home/")
+        response = redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/home/")
         response.set_cookie("jwt_token", value=jwt_token, httponly=True, secure=True)
         requests.post(f'{settings.PRIVATE_PLAYER_URL}2fa/', json={"2fa": True})
         return Response({"statusCode": 200, "message": "Successfully verified"})
