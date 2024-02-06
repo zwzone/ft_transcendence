@@ -183,7 +183,7 @@ class PlayerFriendship(APIView):
                 else:
                     return Response({
                         "status": 400,
-                        "message": "Invalid key",
+                        "message": "Invalid request",
                     })
             except Exception as e:
                 return Response({
@@ -196,7 +196,12 @@ class PlayerFriendship(APIView):
             id = request.decoded_token['id']
             try:
                 sender = Player.objects.get(id=id)
-                receiver_id = request.data.get('receiver_id')
+                receiver_id = request.data.get('target_id')
+                if receiver_id == id:
+                    return Response({
+                        "status": 400,
+                        "message": "You can't send a friend request to yourself",
+                    })
                 receiver = Player.objects.get(id=receiver_id)
                 if Player.objects.filter(id=receiver_id).exists():
                     if Friendship.objects.filter(sender=sender, receiver=receiver).exists():
@@ -234,7 +239,8 @@ class PlayerFriendship(APIView):
             try :
                 id = request.decoded_token['id']
                 sender = Player.objects.get(id=id)
-                receiver = Player.objects.get(id=request.data.get('receiver_id'))
+                receiver_id = request.data.get('target_id')
+                receiver = Player.objects.get(id=receiver_id)
                 friendship = Friendship.objects.get(sender=sender, receiver=receiver)
                 friendship.delete()
                 return Response({
