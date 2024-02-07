@@ -138,7 +138,8 @@ class PlayerFriendship(APIView):
         def get(self, request):
             id = request.decoded_token['id']
             try:
-                if (request.data.get('get') == 'invitations'):
+                get_type = request.query_params.get('target')
+                if get_type == 'invitations':
                     friendships = Friendship.objects.filter(receiver=id, status='PN')
                     friendship_data = []
                     for friendship in friendships:
@@ -152,7 +153,7 @@ class PlayerFriendship(APIView):
                         "status": 200,
                         "friendships": friendship_data
                     })
-                elif (request.data.get('get') == 'friends'):
+                elif get_type == 'friends':
                     friendships = Friendship.objects.filter(sender=id, status='AC')
                     friendship_data = []
                     for friendship in friendships:
@@ -166,7 +167,7 @@ class PlayerFriendship(APIView):
                         "status": 200,
                         "friendships": friendship_data
                     })
-                elif (request.data.get('get') == 'requests'):
+                elif get_type == 'requests':
                     friendships = Friendship.objects.filter(sender=id, status='PN')
                     friendship_data = []
                     for friendship in friendships:
