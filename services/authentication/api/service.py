@@ -1,7 +1,9 @@
 from typing import Dict
 import jwt, datetime
 from django.conf import settings
-from .guard import totp, hotp_secret
+from pyotp.totp import TOTP
+from base64 import b32encode
+
 
 def generate_jwt(email: str) -> str:
     payload = {
@@ -27,7 +29,16 @@ def re_encode_jwt(id: int) -> str:
     jwt_token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
     return jwt_token
 
+def get_2fa_qr_code(player_id: int) -> str:
+    player_id = str(player_id)
+    return TOTP(b32encode(player_id.encode("utf-8"))).provisioning_uri(name="player", issuer_name="ft_transcendence")
+
 def check_2fa_code(player_id: int, code: int) -> bool:
-    secret_key = settings.SECRET_KEY
-    secret_2fa = hotp_secret(player_id, secret_key)
-    return totp(secret_2fa) != code
+    player_id = str(player_id)
+    print("CHECK_2FA_CODE -> code:", code)
+    print("-----------------------")
+    totp = TOTP(b32encode(player_id.encode("utf-8")))
+    print("+++++++++++++++++++++++")
+    check = totp.verify(code)
+    print("***********************")
+    return check

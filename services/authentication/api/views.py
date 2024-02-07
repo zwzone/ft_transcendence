@@ -1,14 +1,16 @@
-import requests
-from os import getenv
+from django.conf import settings
+from django.core.cache import cache
+from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.utils.http import urlencode
 from rest_framework.decorators import authentication_classes, permission_classes, api_view
 from rest_framework.response import Response
-from .service import decode_google_id_token, generate_jwt, re_encode_jwt, check_2fa_code
-from django.conf import settings
+from .service import decode_google_id_token, generate_jwt, re_encode_jwt, check_2fa_code, get_2fa_qr_code
+from os import getenv
+from qr_code.qrcode.maker import make_qr_code_image
+from qr_code.qrcode.utils import QRCodeOptions
+import requests
 import jwt
-from django.core.cache import cache
-from .guard import totp, hotp_secret
 
 
 @api_view(['GET'])
@@ -171,8 +173,8 @@ def logout_user(request):
 
 @api_view(["POST"])
 def verify_two_factor(request):
-    code = request.POST.get("code")
-    player_id = request.POST.get("id")
+    code = request.data.get("code")
+    player_id = request.data.get("id")
     if player_id is None:
         jwt_token = request.COOKIES.get("jwt_token")
         try:
@@ -198,11 +200,6 @@ def enable_two_factor(request):
     token = request.COOKIES.get("jwt_token")
     decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
     player_id = decoded_token['id']
-    secret_key = settings.SECRET_KEY
-    secret = hotp_secret(player_id, secret_key)
-    response_data = {
-        "status": "pending",
-        "message": "Please submit your 2FA code.",
-        "key": secret,
-    }
-    return Response(response_data)
+    qr_code = get_2fa_qr_code(player_id)
+    image = make_qr_code_image(qr_code, QRCodeOptions(), True);
+    return HttpResponse(image, content_type='image/svg+xml')
