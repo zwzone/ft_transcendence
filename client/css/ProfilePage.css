@@ -18,12 +18,14 @@ profile-page .player-data>.data-section>img {
   background-color: var(--color-primary-300);
 }
 
-profile-page .player-data>.data-section>h1 {
+profile-page .player-data>.data-section>h1,
+profile-page .player-data>.data-section>h4,
+profile-page .player-data>.data-section>div {
   background-color: var(--color-primary-200);
 }
 
 profile-page .player-data>.data-section>h4 {
-  color: var(--color-primary-100)
+  color: var(--color-primary-400)
 }
 
 profile-page .player-data-related {
