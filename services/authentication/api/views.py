@@ -52,9 +52,10 @@ def intra_callback_auth(request):
     if not user_response.ok:
         return Response({"statusCode": 401, "detail": "No access token in the token response"})
     user_data = user_response.json();
-    jwt_token = generate_jwt(user_data["email"])
+    jwt_token = generate_jwt(None, True)
     data = {
         "player": {
+            "email": user_data["email"],
             "username": user_data["login"],
             "first_name": user_data["first_name"],
             "last_name": user_data["last_name"],
@@ -67,7 +68,7 @@ def intra_callback_auth(request):
     if player_data.json()['two_factor']:
         return Response({"statusCode": 200, "id": player_data.json()['id'], 'message': 'Enable two-factor'})
     player_id = player_data.json()['id']
-    jwt_token = re_encode_jwt(player_id)
+    jwt_token = generate_jwt(player_id, False)
     response = redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/home/")
     response.set_cookie("jwt_token", value=jwt_token, httponly=True, secure=True)
     return response
@@ -122,9 +123,10 @@ def google_callback_auth(request):
         return Response({"statusCode": 401, "error": "AccessToken is invalid"})
     id_token = tokens["id_token"]
     id_token_decoded = decode_google_id_token(id_token)
-    jwt_token = generate_jwt(id_token_decoded['email'])
+    jwt_token = generate_jwt(None, True)
     data = {
         "player": {
+            "email": id_token_decoded['email'],
             "username": id_token_decoded['name'],
             "first_name": id_token_decoded['given_name'],
             "last_name": id_token_decoded['family_name'],
@@ -137,7 +139,7 @@ def google_callback_auth(request):
     if player_data.json()['two_factor']:
         return Response({"statusCode": 200, "id": player_data.json()['id'], 'message': 'Enable two-factor'})
     player_id = player_data.json()['id']
-    jwt_token = re_encode_jwt(player_id)
+    jwt_token = generate_jwt(player_id, False)
     response = redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/home/")
     response.set_cookie("jwt_token", value=jwt_token, httponly=True, secure=True)
     return response
