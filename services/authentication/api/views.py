@@ -151,7 +151,7 @@ def is_logged_in_auth(request):
 
 
 @api_view(["GET"])
-@method_decorator(jwt_cookie_required)
+@jwt_cookie_required
 def logout_user(request):
     if request.decoded_token is not None:
         cache.set(request.decoded_token, True, timeout=None)
@@ -163,7 +163,7 @@ def logout_user(request):
 
 
 @api_view(["POST"])
-@method_decorator(jwt_cookie_required)
+@jwt_cookie_required
 def verify_two_factor(request):
     code = request.POST.get("code")
     player_id = request.POST.get("id")
@@ -183,7 +183,7 @@ def verify_two_factor(request):
 
 
 @api_view(["GET"])
-@method_decorator(jwt_cookie_required)
+@jwt_cookie_required
 def enable_two_factor(request):
     token = request.COOKIES.get("jwt_token")
     decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
