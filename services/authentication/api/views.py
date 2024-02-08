@@ -3,9 +3,9 @@ from django.core.cache import cache
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.utils.http import urlencode
-from rest_framework.decorators import authentication_classes, permission_classes, api_view
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .service import decode_google_id_token, generate_jwt, re_encode_jwt, check_2fa_code, get_2fa_qr_code
+from .service import decode_google_id_token, generate_jwt, check_2fa_code, jwt_cookie_required, get_2fa_qr_code
 from os import getenv
 from qr_code.qrcode.maker import make_qr_code_image
 from qr_code.qrcode.utils import QRCodeOptions
@@ -14,8 +14,6 @@ import jwt
 
 
 @api_view(['GET'])
-@authentication_classes([])
-@permission_classes([])
 def intra_auth(request):
     redirect_uri = urlencode({"redirect_uri": f"{settings.PUBLIC_AUTHENTICATION_URL}intra/callback/"})
     authorization_url = f"https://api.intra.42.fr/oauth/authorize?client_id={getenv('INTRA_CLIENT_ID')}&{redirect_uri}&response_type=code"
@@ -23,8 +21,6 @@ def intra_auth(request):
 
 
 @api_view(['GET'])
-@authentication_classes([])
-@permission_classes([])
 def intra_callback_auth(request):
     code = request.GET.get("code")
     error_message = request.GET.get("error")
@@ -75,8 +71,6 @@ def intra_callback_auth(request):
 
 
 @api_view(["GET"])
-@authentication_classes([])
-@permission_classes([])
 def google_auth(request):
     SCOPES = [
         "https://www.googleapis.com/auth/userinfo.email",
@@ -99,8 +93,6 @@ def google_auth(request):
 
 
 @api_view(["GET"])
-@authentication_classes([])
-@permission_classes([])
 def google_callback_auth(request):
     code = request.GET.get("code")
     error = request.GET.get("error")
@@ -146,26 +138,16 @@ def google_callback_auth(request):
 
 
 @api_view(["GET"])
+@jwt_cookie_required
 def is_logged_in_auth(request):
-    jwt_token = request.COOKIES.get("jwt_token")
-    if jwt_token is None:
-        return Response({"statusCode": 404, "error": "Token not found"})
-    try:
-        jwt.decode(jwt_token, settings.SECRET_KEY, algorithms=['HS256'])
-        return Response({"statusCode": 200, "message": "Token is valid"})
-    except jwt.ExpiredSignatureError:
-        return Response({"statusCode": 401, "error": "Token has expired"})
-    except jwt.InvalidTokenError:
-        return Response({"statusCode": 401, "error": "Invalid token"})
+    return Response({"statusCode": 200, "message": "Token is valid"})
 
 
 @api_view(["GET"])
-@authentication_classes([])
-@permission_classes([])
+@jwt_cookie_required
 def logout_user(request):
-    jwt_token = request.COOKIES.get("jwt_token")
-    if jwt_token is not None:
-        cache.set(jwt_token, True, timeout=None)
+    if request.decoded_token is not None:
+        cache.set(request.decoded_token, True, timeout=None)
         response = redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/login/")
         response.delete_cookie("jwt_token")
         return response
@@ -174,23 +156,19 @@ def logout_user(request):
 
 
 @api_view(["POST"])
+@jwt_cookie_required
 def verify_two_factor(request):
     code = request.data.get("code")
     player_id = request.data.get("id")
     if player_id is None:
-        jwt_token = request.COOKIES.get("jwt_token")
-        try:
-            decoded_token = jwt.decode(jwt_token, settings.SECRET_KEY, algorithms=["HS256"])
-            player_id = decoded_token['id']
-            if not check_2fa_code(player_id, code):
-                return Response({"statusCode": 401, "message": "Incorrect 2FA code."})
-            return Response({"statusCode": 200, "message": "Successfully verified"})
-        except:
-            return Response({"statusCode": 401, "error": "Invalid token"})
+        player_id = request.decoded_token['id']
+        if not check_2fa_code(player_id, code):
+            return Response({"statusCode": 401, "message": "Incorrect 2FA code."})
+        return Response({"statusCode": 200, "message": "Successfully verified"})
     else:
         if not check_2fa_code(player_id, code):
             return Response({"statusCode": 401, "message": "Incorrect 2FA code."})
-        jwt_token = re_encode_jwt(player_id)
+        jwt_token = generate_jwt(player_id, False)
         response = redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/home/")
         response.set_cookie("jwt_token", value=jwt_token, httponly=True, secure=True)
         requests.post(f'{settings.PRIVATE_PLAYER_URL}2fa/', json={"2fa": True})
@@ -198,6 +176,7 @@ def verify_two_factor(request):
 
 
 @api_view(["GET"])
+@jwt_cookie_required
 def enable_two_factor(request):
     token = request.COOKIES.get("jwt_token")
     decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
