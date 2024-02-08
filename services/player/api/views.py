@@ -4,7 +4,6 @@ from django.core.files.storage import default_storage
 from django.db import IntegrityError
 from django.utils.decorators import method_decorator
 from rest_framework import status
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import PlayerSerializer
@@ -65,7 +64,7 @@ class PlayerInfo(APIView):
                     "id": player.id,
                     "two_factor": player.two_factor
                 }, status=status.HTTP_201_CREATED)
-            except IntegrityError:
+            except IntegrityError as e:
                 return Response({
                     "message": f"An error occurred while creating the player: {e}",
                 }, status=status.HTTP_409_CONFLICT)
@@ -76,7 +75,7 @@ class PlayerInfo(APIView):
         else:
             try:
                 id = request.decoded_token['id']
-                player_data = request.data.get('player')  
+                player_data = request.data.get('player')
                 player = Player.objects.get(id=id)
                 if "username" in player_data:
                     player.username = player_data['username']
@@ -133,7 +132,7 @@ class PlayerAvatarUpload(APIView):
 
 
 class PlayerFriendship(APIView):
-    
+
         @method_decorator(jwt_cookie_required)
         def get(self, request):
             id = request.decoded_token['id']
@@ -234,7 +233,7 @@ class PlayerFriendship(APIView):
                         "status": 500,
                         "message": str(e),
                     })
-    
+
         @method_decorator(jwt_cookie_required)
         def delete(self, request):
             try :
