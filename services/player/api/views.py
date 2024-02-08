@@ -38,9 +38,8 @@ class PlayerInfo(APIView):
 
     @method_decorator(jwt_cookie_required)
     def post(self, request):
-        if request.decoded_token['authority']:
-            player_data = request.data.get('player')
-            email = player_data['email']
+        if "email" in request.decoded_token:
+            email = request.decoded_token['email']
             if Player.objects.filter(email=email).exists():
                 player = Player.objects.get(email=email)
                 return Response({
@@ -48,10 +47,11 @@ class PlayerInfo(APIView):
                     "id": player.id,
                     "two_factor": player.two_factor
                 }, status=status.HTTP_200_OK)
-            username = player_data['username']
-            first_name = player_data['first_name']
-            last_name = player_data['last_name']
-            avatar = player_data['avatar']
+            player = request.data.get('player')
+            username = player['username']
+            first_name = player['first_name']
+            last_name = player['last_name']
+            avatar = player['avatar']
             try:
                 player = Player.objects.create(
                     email=email,
@@ -65,7 +65,7 @@ class PlayerInfo(APIView):
                     "id": player.id,
                     "two_factor": player.two_factor
                 }, status=status.HTTP_201_CREATED)
-            except IntegrityError:
+            except IntegrityError as e:
                 return Response({
                     "message": f"An error occurred while creating the player: {e}",
                 }, status=status.HTTP_409_CONFLICT)
@@ -73,10 +73,10 @@ class PlayerInfo(APIView):
                 return Response({
                     "message": str(e),
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        else:
+        elif "id" in request.decoded_token:
             try:
                 id = request.decoded_token['id']
-                player_data = request.data.get('player')  
+                player_data = request.data.get('player')
                 player = Player.objects.get(id=id)
                 if "username" in player_data:
                     player.username = player_data['username']
@@ -133,7 +133,7 @@ class PlayerAvatarUpload(APIView):
 
 
 class PlayerFriendship(APIView):
-    
+
         @method_decorator(jwt_cookie_required)
         def get(self, request):
             id = request.decoded_token['id']
@@ -234,7 +234,7 @@ class PlayerFriendship(APIView):
                         "status": 500,
                         "message": str(e),
                     })
-    
+
         @method_decorator(jwt_cookie_required)
         def delete(self, request):
             try :
