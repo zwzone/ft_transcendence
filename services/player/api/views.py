@@ -4,7 +4,6 @@ from django.core.files.storage import default_storage
 from django.db import IntegrityError
 from django.utils.decorators import method_decorator
 from rest_framework import status
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import PlayerSerializer
@@ -38,8 +37,9 @@ class PlayerInfo(APIView):
 
     @method_decorator(jwt_cookie_required)
     def post(self, request):
-        if "email" in request.decoded_token:
-            email = request.decoded_token['email']
+        if request.decoded_token['authority']:
+            player_data = request.data.get('player')
+            email = player_data['email']
             if Player.objects.filter(email=email).exists():
                 player = Player.objects.get(email=email)
                 return Response({
@@ -47,11 +47,10 @@ class PlayerInfo(APIView):
                     "id": player.id,
                     "two_factor": player.two_factor
                 }, status=status.HTTP_200_OK)
-            player = request.data.get('player')
-            username = player['username']
-            first_name = player['first_name']
-            last_name = player['last_name']
-            avatar = player['avatar']
+            username = player_data['username']
+            first_name = player_data['first_name']
+            last_name = player_data['last_name']
+            avatar = player_data['avatar']
             try:
                 player = Player.objects.create(
                     email=email,
@@ -73,7 +72,7 @@ class PlayerInfo(APIView):
                 return Response({
                     "message": str(e),
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        elif "id" in request.decoded_token:
+        else:
             try:
                 id = request.decoded_token['id']
                 player_data = request.data.get('player')
