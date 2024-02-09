@@ -4,6 +4,7 @@ const routes = {
   "/game/": "game-page",
   "/home/": "home-page",
   "/login/": "login-page",
+  "/twofa/": "twofa-page",
   "/profile/": "profile-page",
   "/setting/": "setting-page",
   "/tournament/": "tournament-page",
@@ -19,7 +20,7 @@ const router = {
     if (pathname == "/") pathname = "/home/";
     fetching(`https://${window.ft_transcendence_host}/authentication/isloggedin/`).then((res) => {
       if (res.statusCode == 200) {
-        if (pathname == "/login/") pathname = "/home/";
+        if (pathname == "/login/" || pathname == "/twofa/") pathname = "/home/";
       } else {
         if (
           pathname == "/game/" ||
@@ -37,7 +38,7 @@ const router = {
   go: (route, state) => {
     if (state == "add" && window.location.pathname != route)
       history.pushState({ route }, "", route);
-    if (state == "replace") history.replaceState({ route }, "", route);
+    if (state == "replace") history.replaceState({ route }, "", route + window.location.search);
     let pageElement;
     if (routes.hasOwnProperty(route)) {
       pageElement = document.createElement(routes[route]);

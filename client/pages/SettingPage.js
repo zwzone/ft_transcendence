@@ -9,7 +9,6 @@ export default class SettingPage extends HTMLElement {
     const template = document.getElementById("setting-template");
     const component = template.content.cloneNode(true);
     this.appendChild(component);
-
     this.classList.add("my-page");
 
     const avatar = this.querySelector(".setting-avatar .avatar");
@@ -20,48 +19,68 @@ export default class SettingPage extends HTMLElement {
     const button_first_name = this.querySelector(".button-first-name");
     const input_last_name = this.querySelector(".input-last-name");
     const button_last_name = this.querySelector(".button-last-name");
+    const checkbox_twofa = this.querySelector(".setting-twofa input[type=checkbox]");
+    const popup_twofa = this.querySelector(".popup-twofa");
+    const popup_twofa_close = this.querySelector(".popup-twofa-close");
 
     fetching(`https://${window.ft_transcendence_host}/player/`).then((res) => {
       avatar.src = res.player.avatar;
-      this.querySelector(".input-username").placeholder = res.player.username;
-      this.querySelector(".input-first-name").placeholder =
-        res.player.first_name;
-      this.querySelector(".input-last-name").placeholder = res.player.last_name;
+      input_username.placeholder = res.player.username;
+      input_first_name.placeholder = res.player.first_name;
+      input_last_name.placeholder = res.player.last_name;
+      checkbox_twofa.checked = res.player.two_factor;
     });
 
     input_avatar.onchange = function () {
       const avatarImage = input_avatar.files[0];
-      console.log("input_avatar :", avatarImage);
       avatar.src = URL.createObjectURL(avatarImage);
       const formData = new FormData();
       formData.append("avatar", avatarImage);
       fetching(`https://${window.ft_transcendence_host}/player/avatar/`, "POST", formData);
     };
     button_username.onclick = (event) => {
-      this.input_change(input_username, "username");
+      player_post_changes("username", input_username.value);
     };
     button_first_name.onclick = (event) => {
-      this.input_change(input_first_name, "first_name");
+      player_post_changes("first_name", input_first_name.value);
     };
     button_last_name.onclick = (event) => {
-      this.input_change(input_last_name, "last_name");
+      player_post_changes("last_name", input_last_name.value);
     };
-  }
+    checkbox_twofa.onchange = (event) => {
+      if (checkbox_twofa.checked) {
+        fetch(`https://localhost/authentication/2FA/qrcode/`)
+          .then((res) => res.blob())
+          .then((blob) => set_qrcode(blob));
+      } else {
+        player_post_changes("two_factor", checkbox_twofa.checked);
+      }
+    };
 
-  input_change(input, field) {
-    console.log({ [field]: input.value });
-    fetching(
-      `https://${window.ft_transcendence_host}/player/`,
-      "POST",
-      JSON.stringify({
-        player: {
-          [field]: input.value,
-        },
-      }),
-      {
-        "Content-Type": "application/json",
-      },
-    );
+    popup_twofa_close.onclick = (event) => {
+      checkbox_twofa.checked = !checkbox_twofa.checked;
+      popup_twofa.removeChild(popup_twofa.lastChild);
+      popup_twofa.style.display = "none";
+    };
+
+    function player_post_changes(field, value) {
+      fetching(
+        `https://${window.ft_transcendence_host}/player/`,
+        "POST",
+        JSON.stringify({ player: { [field]: value } }),
+        { "Content-Type": "application/json" },
+      );
+    }
+
+    function set_qrcode(blob) {
+      const url = URL.createObjectURL(blob);
+      const img = new Image();
+      img.src = url;
+      img.onload = () => {
+        popup_twofa.style.display = "flex";
+        popup_twofa.appendChild(img);
+      };
+    }
   }
 }
 
