@@ -67,6 +67,16 @@
     <my-footer></my-footer>
   </template>
 
+  <!-- 2FA PAGE -->
+  <template id="twofa-template">
+    <div></div>
+    <div class="d-flex flex-column justify-content-center align-items-center w-100 h-100">
+      <h1 class="fw-bold text-center text-black-50">TWO FACTOR AUTHENTICATION</h1>
+      <twofa-input></twofa-input>
+    </div>
+    <my-footer></my-footer>
+  </template>
+
   <!-- NOTFOUNT PAGE -->
   <template id="notfound-template">
     <div></div>
@@ -200,8 +210,7 @@
           <div class="popup-twofa flex-column justify-content-center align-items-center">
             <button class="popup-twofa-close btn-close"></button>
             <div class="d-flex justify-content-center align-items-center">
-              <input type="number">
-              <button class="popup-twofa-send btn">Z</button>
+              <twofa-input></twofa-input>
             </div>
           </div>
         </div>
@@ -236,6 +245,12 @@
   <!-- LOGIN BUTTON -->
   <template id="login-button">
     <a class="btn btn-lg border border-5 rounded-5 fw-bold fs-1 text-light"></a>
+  </template>
+
+  <!-- 2FA BUTTON -->
+  <template id="twofa-input">
+    <input type="number">
+    <button>Send</button>
   </template>
 
   <!-- NAVBAR -->

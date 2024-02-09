@@ -7,7 +7,6 @@ export default class PlayCard extends HTMLElement {
     const template = document.getElementById("play-card");
     const component = template.content.cloneNode(true);
     this.appendChild(component);
-
     this.classList.add(
       "d-flex",
       "justify-content-center",

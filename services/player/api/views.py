@@ -18,8 +18,8 @@ class PlayerInfo(APIView):
     @method_decorator(jwt_cookie_required)
     def get(self, request):
         try:
-            user = Player.objects.get(id=request.decoded_token['id'])
-            serializer = PlayerSerializer(user)
+            player = Player.objects.get(id=request.decoded_token['id'])
+            serializer = PlayerSerializer(player)
             return Response({
                 "status": 200,
                 "player": serializer.data
@@ -37,7 +37,7 @@ class PlayerInfo(APIView):
 
     @method_decorator(jwt_cookie_required)
     def post(self, request):
-        if request.decoded_token['authority']:
+        if request.decoded_token['id'] is None:
             player_data = request.data.get('player')
             email = player_data['email']
             if Player.objects.filter(email=email).exists():
@@ -74,21 +74,27 @@ class PlayerInfo(APIView):
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
             try:
+                changed = False
                 id = request.decoded_token['id']
                 player_data = request.data.get('player')
                 player = Player.objects.get(id=id)
                 if "username" in player_data:
                     player.username = player_data['username']
+                    changed = True
                 if "first_name" in player_data:
                     player.first_name = player_data['first_name']
+                    changed = True
                 if "last_name" in player_data:
                     player.last_name = player_data['last_name']
-                if "two_factor" in player_data:
+                    changed = True
+                if "two_factor" in player_data and (request.decoded_token['authority'] is True or player_data['two_factor'] is False):
                     player.two_factor = player_data['two_factor']
+                    changed = True
                 player.save()
+                message = "User updated successfully" if changed else "No changes detected"
                 return Response({
                     "status": 200,
-                    "message": "User updated successfully",
+                    "message": message,
                 })
             except Player.DoesNotExist:
                 return Response({

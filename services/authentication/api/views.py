@@ -60,12 +60,13 @@ def intra_callback_auth(request):
     }
     player_data = requests.post(f'{settings.PRIVATE_PLAYER_URL}', json=data, cookies={"jwt_token": jwt_token})
     if not player_data.ok:
-        return redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/login/")
-    if player_data.json()['two_factor']:
-        return Response({"statusCode": 200, "id": player_data.json()['id'], 'message': 'Enable two-factor'})
+        return redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/login/", permanent=True)
     player_id = player_data.json()['id']
+    if player_data.json()['two_factor']:
+        params = urlencode({"id": player_id})
+        return redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/twofa/?{params}", permanent=True)
     jwt_token = generate_jwt(player_id, False)
-    response = redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/home/")
+    response = redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/home/", permanent=True)
     response.set_cookie("jwt_token", value=jwt_token, httponly=True, secure=True)
     return response
 
@@ -127,12 +128,13 @@ def google_callback_auth(request):
     }
     player_data = requests.post(f'{settings.PRIVATE_PLAYER_URL}', json=data, cookies={"jwt_token": jwt_token})
     if not player_data.ok:
-        return redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/login/")
-    if player_data.json()['two_factor']:
-        return Response({"statusCode": 200, "id": player_data.json()['id'], 'message': 'Enable two-factor'})
+        return redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/login/", permanent=True)
     player_id = player_data.json()['id']
+    if player_data.json()['two_factor']:
+        params = urlencode({"id": player_id})
+        return redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/twofa/?{params}", permanent=True)
     jwt_token = generate_jwt(player_id, False)
-    response = redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/home/")
+    response = redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/home/", permanent=True)
     response.set_cookie("jwt_token", value=jwt_token, httponly=True, secure=True)
     return response
 
@@ -148,7 +150,7 @@ def is_logged_in_auth(request):
 def logout_user(request):
     if request.decoded_token is not None:
         cache.set(request.decoded_token, True, timeout=None)
-        response = redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/login/")
+        response = redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/login/", permanent=True)
         response.delete_cookie("jwt_token")
         return response
     else:
@@ -156,23 +158,30 @@ def logout_user(request):
 
 
 @api_view(["POST"])
-@jwt_cookie_required
 def verify_two_factor(request):
     code = request.data.get("code")
     player_id = request.data.get("id")
+    # if player sends from setting page
     if player_id is None:
-        player_id = request.decoded_token['id']
+        jwt_token = request.COOKIES.get("jwt_token")
+        try:
+            decoded_token = jwt.decode(jwt_token, settings.SECRET_KEY, algorithms=["HS256"])
+        except:
+            return Response({"statusCode": 401, "error": "Invalid token"})
+        player_id = decoded_token['id']
         if not check_2fa_code(player_id, code):
             return Response({"statusCode": 401, "message": "Incorrect 2FA code."})
+        jwt_token = generate_jwt(player_id, True)
+        requests.post(f'{settings.PRIVATE_PLAYER_URL}', json={"player": {"two_factor": True}}, cookies={"jwt_token": jwt_token})
         return Response({"statusCode": 200, "message": "Successfully verified"})
+    # if player sends from twofa page
     else:
         if not check_2fa_code(player_id, code):
             return Response({"statusCode": 401, "message": "Incorrect 2FA code."})
         jwt_token = generate_jwt(player_id, False)
-        response = redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/home/")
+        response = Response({"statusCode": 200, "message": "Successfully verified", "redirected": True})
         response.set_cookie("jwt_token", value=jwt_token, httponly=True, secure=True)
-        requests.post(f'{settings.PRIVATE_PLAYER_URL}2fa/', json={"2fa": True})
-        return Response({"statusCode": 200, "message": "Successfully verified"})
+        return response
 
 
 @api_view(["GET"])

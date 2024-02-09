@@ -7,7 +7,6 @@ export default class TournamentPlayerCard extends HTMLElement {
     const template = document.getElementById("tournament-player-card");
     const component = template.content.cloneNode(true);
     this.appendChild(component);
-
     this.classList.add(
       "d-flex",
       "flex-column",

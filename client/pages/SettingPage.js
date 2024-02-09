@@ -22,8 +22,6 @@ export default class SettingPage extends HTMLElement {
     const checkbox_twofa = this.querySelector(".setting-twofa input[type=checkbox]");
     const popup_twofa = this.querySelector(".popup-twofa");
     const popup_twofa_close = this.querySelector(".popup-twofa-close");
-    const popup_twofa_input = this.querySelector(".popup-twofa input");
-    const popup_twofa_send = this.querySelector(".popup-twofa-send");
 
     fetching(`https://${window.ft_transcendence_host}/player/`).then((res) => {
       avatar.src = res.player.avatar;
@@ -60,27 +58,10 @@ export default class SettingPage extends HTMLElement {
     };
 
     popup_twofa_close.onclick = (event) => {
-      checkbox_twofa.checked = false;
-      popup_twofa_closing();
-    };
-    popup_twofa_send.onclick = (event) => {
-      fetching(
-        `https://${window.ft_transcendence_host}/authentication/2FA/verify/`,
-        "POST",
-        JSON.stringify({ code: popup_twofa_input.value }),
-        { "Content-Type": "application/json" },
-      ).then((res) => {
-        if (res.statusCode === 200) {
-          player_post_changes("two_factor", checkbox_twofa.checked);
-          popup_twofa_closing();
-        }
-      });
-    };
-
-    function popup_twofa_closing() {
+      checkbox_twofa.checked = !checkbox_twofa.checked;
       popup_twofa.removeChild(popup_twofa.lastChild);
       popup_twofa.style.display = "none";
-    }
+    };
 
     function player_post_changes(field, value) {
       fetching(

@@ -8,7 +8,6 @@ export default class Navbar extends HTMLElement {
     const template = document.getElementById("my-navbar");
     const component = template.content.cloneNode(true);
     this.appendChild(component);
-
     this.classList.add(
       "d-flex",
       "justify-content-between",

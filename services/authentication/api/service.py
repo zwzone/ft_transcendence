@@ -12,7 +12,7 @@ def generate_jwt(id: int, authority: bool) -> str:
     payload = {
         'id': id,
         'authority': authority,
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=10),
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1),
         'iat': datetime.datetime.utcnow(),
     }
     jwt_token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
@@ -24,15 +24,14 @@ def decode_google_id_token(id_token: str) -> Dict[str, str]:
     return decoded_token
 
 
+def get_2fa_qr_code(player_id: int) -> str:
+    player_id_encoded = str(player_id).encode("utf-8")
+    return TOTP(b32encode(player_id_encoded)).provisioning_uri(name="player", issuer_name="ft_transcendence")
+
+
 def check_2fa_code(player_id: int, code: int) -> bool:
-    player_id = str(player_id)
-    print("CHECK_2FA_CODE -> code:", code)
-    print("-----------------------")
-    totp = TOTP(b32encode(player_id.encode("utf-8")))
-    print("+++++++++++++++++++++++")
-    check = totp.verify(code)
-    print("***********************")
-    return check
+    player_id_encoded = str(player_id).encode("utf-8")
+    return TOTP(b32encode(player_id_encoded)).verify(code)
 
 
 def jwt_cookie_required(view_func):
