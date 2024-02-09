@@ -37,7 +37,7 @@ class PlayerInfo(APIView):
 
     @method_decorator(jwt_cookie_required)
     def post(self, request):
-        if request.decoded_token['id'] is None:
+        if request.decoded_token['authority']:
             player_data = request.data.get('player')
             email = player_data['email']
             if Player.objects.filter(email=email).exists():

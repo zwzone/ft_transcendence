@@ -186,7 +186,7 @@ def verify_two_factor(request):
 
 @api_view(["GET"])
 @jwt_cookie_required
-def enable_two_factor(request):
+def qrcode_two_factor(request):
     token = request.COOKIES.get("jwt_token")
     decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
     player_id = decoded_token['id']

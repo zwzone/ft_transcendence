@@ -49,7 +49,7 @@ export default class SettingPage extends HTMLElement {
     };
     checkbox_twofa.onchange = (event) => {
       if (checkbox_twofa.checked) {
-        fetch(`https://localhost/authentication/2FA/enable/`)
+        fetch(`https://localhost/authentication/2FA/qrcode/`)
           .then((res) => res.blob())
           .then((blob) => set_qrcode(blob));
       } else {
