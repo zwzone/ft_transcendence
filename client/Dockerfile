@@ -2,7 +2,7 @@ FROM		debian:bullseye
 
 RUN			apt update -y && \
 			apt upgrade -y && \
-			apt install curl vim nano lsof -y && \
+			apt install curl vim nano lsof inotify -y && \
 			apt install nginx -y
 
 COPY		./conf/nginx.conf /etc/nginx/sites-enabled/ft_transcendence.conf

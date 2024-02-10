@@ -8,7 +8,8 @@ services:
         ports:
             - 443:443
         volumes:
-            - ./client:/var/www/ft_transcendence/:ro
+            - ft-trascendence-vol-client:/var/www/ft_transcendence/:rw
+            - ft-trascendence-vol-conf:/etc/nginx/sites-enabled/:rw
         networks:
             - ft_transcendence
         restart: on-failure
@@ -45,3 +46,20 @@ networks:
     ft_transcendence:
         name: ft_transcendence
         driver: bridge
+
+volumes:
+  ft-trascendence-vol-client:
+    driver: local
+    name: ft-trascendence-vol-client
+    driver_opts:
+      type: bind
+      o: bind
+      device: /Users/ychaaibi/Desktop/ft_transcendence/client/
+    
+  ft-trascendence-vol-conf:
+    driver: local
+    name: ft-trascendence-vol-conf
+    driver_opts:
+      type: bind
+      o: bind
+      device: /Users/ychaaibi/Desktop/ft_transcendence/client/conf
