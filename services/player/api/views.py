@@ -78,16 +78,41 @@ class PlayerInfo(APIView):
                 id = request.decoded_token['id']
                 player_data = request.data.get('player')
                 player = Player.objects.get(id=id)
-                if "username" in player_data:
+                if "username" in player_data :
+                    if  not player_data['username'].isalnum() \
+                            and not'_' in player_data['username'] \
+                            or len(player_data['username']) > 8 :
+                        return Response({
+                            "status": 400,
+                            "message": "Username invalid",
+                        })
                     player.username = player_data['username']
                     changed = True
-                if "first_name" in player_data:
+                if "first_name" in player_data :
+                    if not player_data['first_name'].isalpha() \
+                            and not ' ' in player_data['first_name'] \
+                            or player_data['first_name'].isspace() \
+                            or len(player_data['first_name']) > 20:
+                        return Response({
+                            "status": 400,
+                            "message": "First name is invalid",
+                        })
                     player.first_name = player_data['first_name']
                     changed = True
-                if "last_name" in player_data:
+                if "last_name" in player_data :
+                    if not player_data['last_name'].isalpha() \
+                            and not ' ' in player_data['last_name'] \
+                            or player_data['last_name'].isspace() \
+                            or len(player_data['last_name']) > 10:
+                        return Response({
+                            "status": 400,
+                            "message": "Last name invalid",
+                        })
                     player.last_name = player_data['last_name']
                     changed = True
-                if "two_factor" in player_data and (request.decoded_token['authority'] is True or player_data['two_factor'] is False):
+                if "two_factor" in player_data \
+                        and (request.decoded_token['authority'] \
+                        or isinstance(player_data['two_factor'], bool)):
                     player.two_factor = player_data['two_factor']
                     changed = True
                 player.save()
