@@ -4,14 +4,14 @@ RUN         apt update -y && \
             apt upgrade -y && \
 			apt install curl vim nano lsof -y
 
-RUN         mkdir -p /microservice/authentication/
+RUN         mkdir -p /microservice/pong/
 
-COPY        . /microservice/authentication/
+COPY        . /microservice/pong/
 
 RUN         pip install --upgrade pip
 
-RUN         pip install -r /microservice/authentication/requirements.txt
+RUN         pip install -r /microservice/pong/requirements.txt
 
-WORKDIR     /microservice/authentication/
+WORKDIR     /microservice/pong/
 
 CMD         [ "bash", "./tools/microservice-run.sh" ]
