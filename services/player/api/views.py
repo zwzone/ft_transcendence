@@ -110,9 +110,7 @@ class PlayerInfo(APIView):
                         })
                     player.last_name = player_data['last_name']
                     changed = True
-                if "two_factor" in player_data \
-                        and (request.decoded_token['authority'] \
-                        or isinstance(player_data['two_factor'], bool)):
+                if "two_factor" in player_data and (request.decoded_token['authority'] is True or player_data['two_factor'] is False):
                     player.two_factor = player_data['two_factor']
                     changed = True
                 player.save()
