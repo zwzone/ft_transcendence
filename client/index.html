@@ -111,7 +111,7 @@
           </div>
         </div>
       </div>
-      <div class="player-data-related d-flex justify-content-around align-items-center flex-wrap gap-2 p-3 rounded-5">
+      <div class="player-data-related d-flex justify-content-around align-items-start flex-wrap gap-2 p-3 rounded-5">
         <div class="match-history d-flex flex-column justify-content-center gap-2 p-3 rounded-5 flex-grow-1">
           <h2 class="text-center m-0 px-3 py-1 rounded-5">Match History</h2>
           <div class="match-cards d-flex flex-column justify-content-center gap-1">
@@ -124,38 +124,7 @@
         </div>
         <div class="friend-list d-flex flex-column justify-content-center gap-2 p-3 rounded-5 flex-grow-1">
           <h2 class="text-center m-0 px-3 py-1 rounded-5">My Friends</h2>
-          <div class="friend-cards d-grid gap-1">
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-            <friend-card></friend-card>
-          </div>
+          <friends-list></friends-list>
         </div>
       </div>
     </main>
@@ -294,6 +263,24 @@
       <button class="btn btn-lg fw-bold">Play With AI</button>
       <button class="btn btn-lg fw-bold">Play CO-OP</button>
     </div>
+  </template>
+
+  <!-- FRIENDS LIST -->
+  <template id="friends-list">
+    <nav class="friends-tabs">
+      <ul class="d-flex justify-content-center align-items-center p-0 m-0 gap-1">
+        <li>
+          <button class="btn friends-btn">Friends</button>
+        </li>
+        <li>
+          <button class="btn requests-btn">Requests</button>
+        </li>
+        <li>
+          <button class="btn invites-btn">Invites</button>
+        </li>
+      </ul>
+    </nav>
+    <div class="friend-cards"></div>
   </template>
 
   <!-- FRIEND CARD -->

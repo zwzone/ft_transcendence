@@ -5,6 +5,7 @@ import router from "./router/router.js";
 import Navbar from "./components/Navbar.js";
 import Footer from "./components/Footer.js";
 import PlayCard from "./components/PlayCard.js";
+import FriendsList from "./components/FriendsList.js";
 import FriendCard from "./components/FriendCard.js";
 import MatchCard from "./components/MatchCard.js";
 import LoginButton from "./components/LoginButton.js";
