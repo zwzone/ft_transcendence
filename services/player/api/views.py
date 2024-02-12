@@ -78,37 +78,38 @@ class PlayerInfo(APIView):
                 id = request.decoded_token['id']
                 player_data = request.data.get('player')
                 player = Player.objects.get(id=id)
-                if "username" in player_data :
-                    if  not player_data['username'].isalnum() \
-                            and not'_' in player_data['username'] \
-                            or len(player_data['username']) > 8 :
+                if "username" in player_data:
+                    if not player_data['username'].isalnum() \
+                        and '_' not in player_data['username'] \
+                        or len(player_data['username']) > 8 \
+                        or len(player_data['username']) < 3:
                         return Response({
                             "status": 400,
                             "message": "Username invalid",
                         })
-                    player.username = player_data['username']
+                    player.username = ' '.join(player_data['username'].split())
                     changed = True
-                if "first_name" in player_data :
-                    if not player_data['first_name'].isalpha() \
-                            and not ' ' in player_data['first_name'] \
-                            or player_data['first_name'].isspace() \
-                            or len(player_data['first_name']) > 20:
+                if "first_name" in player_data:
+                    first_name = ' '.join(player_data['first_name'].split())
+                    if not first_name.isalpha() or \
+                        len(first_name) > 20 or \
+                        len(first_name) < 2:
                         return Response({
                             "status": 400,
                             "message": "First name is invalid",
                         })
-                    player.first_name = player_data['first_name']
+                    player.first_name = first_name
                     changed = True
-                if "last_name" in player_data :
-                    if not player_data['last_name'].isalpha() \
-                            and not ' ' in player_data['last_name'] \
-                            or player_data['last_name'].isspace() \
-                            or len(player_data['last_name']) > 10:
+                if "last_name" in player_data:
+                    last_name = ' '.join(player_data['last_name'].split())
+                    if not last_name.isalpha() \
+                        or len(last_name) > 20 \
+                        or len(last_name) < 2:
                         return Response({
                             "status": 400,
                             "message": "Last name invalid",
                         })
-                    player.last_name = player_data['last_name']
+                    player.last_name = ' '.join(player_data['last_name'].split())
                     changed = True
                 if "two_factor" in player_data and (request.decoded_token['authority'] is True or player_data['two_factor'] is False):
                     player.two_factor = player_data['two_factor']
