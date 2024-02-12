@@ -5,6 +5,8 @@ services:
             dockerfile: Dockerfile.dev
         image: ft-transcendence:develop
         container_name: ft-transcendence
+        environment:
+            - STAGE=Development
         ports:
             - 443:443
         volumes:
@@ -20,6 +22,8 @@ services:
             dockerfile: Dockerfile.dev
         image: authentication:develop
         container_name: authentication
+        environment:
+            - STAGE=Development
         env_file:
             - ./services/.env
         volumes:
@@ -34,6 +38,8 @@ services:
             dockerfile: Dockerfile.dev
         image: player:develop
         container_name:  player
+        environment:
+            - STAGE=Development
         env_file:
             - ./services/.env
         volumes:
@@ -42,24 +48,39 @@ services:
             - ft_transcendence
         restart: on-failure
 
+    matchmaking:
+        build:
+            context: ./services/matchmaking/
+            dockerfile: Dockerfile.dev
+        image: matchmaking:develop
+        container_name:  matchmaking
+        environment:
+            - STAGE=Development
+        env_file:
+            - ./services/.env
+        volumes:
+            - ./services/matchmaking/:/microservice/matchmaking/:rw
+        networks:
+            - ft_transcendence
+        restart: on-failure
+
+    pong:
+        build:
+            context: ./services/pong/
+            dockerfile: Dockerfile.dev
+        image: pong:develop
+        container_name:  pong
+        environment:
+            - STAGE=Development
+        env_file:
+            - ./services/.env
+        volumes:
+            - ./services/pong/:/microservice/pong/:rw
+        networks:
+            - ft_transcendence
+        restart: on-failure
+
 networks:
     ft_transcendence:
         name: ft_transcendence
         driver: bridge
-
-# volumes:
-#   ft-trascendence-vol-client:
-#     driver: local
-#     name: ft-trascendence-vol-client
-#     driver_opts:
-#       type: bind
-#       o: bind
-#       device: /Users/ychaaibi/Desktop/ft_transcendence/client/
-    
-#   ft-trascendence-vol-conf:
-#     driver: local
-#     name: ft-trascendence-vol-conf
-#     driver_opts:
-#       type: bind
-#       o: bind
-#       device: /Users/ychaaibi/Desktop/ft_transcendence/client/conf

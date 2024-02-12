@@ -15,7 +15,7 @@ export function runGame(canvas, ctx) {
     ws.onmessage = function (e) {
         console.log(e.data);
         ws.close();
-        ws = new WebSocket(`wss://${window.ft_transcendence_host}:9000/ws/pong/${e.data}/2/`);
+        ws = new WebSocket(`wss://${window.ft_transcendence_host}:8000/ws/pong/${e.data}/2/`);
         ws.onmessage = function (e) {
             let tmp = JSON.parse(e.data);
             ball.positionX = tmp["ball"].positionX;
