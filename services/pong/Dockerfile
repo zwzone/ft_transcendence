@@ -8,6 +8,10 @@ RUN         mkdir -p /microservice/pong/
 
 COPY        . /microservice/pong/
 
+COPY		./private/ssl/certs/ft_transcendence.crt /etc/ssl/certs/ft_transcendence.crt
+
+COPY		./private/ssl/private/ft_transcendence.key /etc/ssl/private/ft_transcendence.key
+
 RUN         pip install --upgrade pip
 
 RUN         pip install -r /microservice/pong/requirements.txt

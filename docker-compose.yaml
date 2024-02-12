@@ -22,7 +22,7 @@ services:
         environment:
             - STAGE=Deployment
         env_file:
-            - ./services/.env
+            - .env
         networks:
             - ft_transcendence
         restart: on-failure
@@ -36,7 +36,7 @@ services:
         environment:
             - STAGE=Deployment
         env_file:
-            - ./services/.env 
+            - .env 
         networks:
             - ft_transcendence
         restart: on-failure
@@ -50,7 +50,7 @@ services:
         environment:
             - STAGE=Deployment
         env_file:
-            - ./services/.env 
+            - .env 
         networks:
             - ft_transcendence
         restart: on-failure
@@ -64,7 +64,7 @@ services:
         environment:
             - STAGE=Deployment
         env_file:
-            - ./services/.env 
+            - .env 
         networks:
             - ft_transcendence
         restart: on-failure

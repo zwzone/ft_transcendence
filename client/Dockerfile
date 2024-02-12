@@ -2,15 +2,14 @@ FROM		debian:bullseye
 
 RUN			apt update -y && \
 			apt upgrade -y && \
-			apt install curl vim nano lsof inotify -y && \
+			apt install curl vim nano lsof -y && \
 			apt install nginx -y
 
-COPY		./conf/nginx.conf /etc/nginx/sites-enabled/ft_transcendence.conf
+COPY		conf/nginx.conf /etc/nginx/sites-enabled/ft_transcendence.conf
 
-RUN			openssl req -x509 -newkey rsa:2048 -nodes \
-			-out /etc/ssl/certs/ft_transcendence.crt \
-			-keyout /etc/ssl/private/ft_transcendence.key \
-			-subj "/C=MR/ST=BG/L=Bengreuir/O=1337/OU=1337/CN=localhost/UID=team_trans"
+COPY		./private/ssl/certs/ft_transcendence.crt /etc/ssl/certs/ft_transcendence.crt
+
+COPY		./private/ssl/private/ft_transcendence.key /etc/ssl/private/ft_transcendence.key
 
 RUN			mkdir -p /var/www/ft_transcendence/
 

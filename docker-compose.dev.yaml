@@ -7,15 +7,15 @@ services:
         container_name: ft-transcendence
         environment:
             - STAGE=Development
+        volumes:
+            - ./client:/var/www/ft_transcendence/:ro
+            - ./client/conf/:/etc/nginx/sites-enabled/:ro
         ports:
             - 443:443
-        volumes:
-            - ./client:/var/www/ft_transcendence/:rw
-            - ./client/conf:/etc/nginx/sites-enabled/:rw
         networks:
             - ft_transcendence
         restart: on-failure
-
+    
     authentication:
         build:
             context: ./services/authentication/
@@ -25,7 +25,7 @@ services:
         environment:
             - STAGE=Development
         env_file:
-            - ./services/.env
+            - .env
         volumes:
             - ./services/authentication/:/microservice/authentication/:rw
         networks:
@@ -41,7 +41,7 @@ services:
         environment:
             - STAGE=Development
         env_file:
-            - ./services/.env
+            - .env
         volumes:
             - ./services/player/:/microservice/player/:rw
         networks:
@@ -57,7 +57,7 @@ services:
         environment:
             - STAGE=Development
         env_file:
-            - ./services/.env
+            - .env
         volumes:
             - ./services/matchmaking/:/microservice/matchmaking/:rw
         networks:
@@ -73,7 +73,7 @@ services:
         environment:
             - STAGE=Development
         env_file:
-            - ./services/.env
+            - .env
         volumes:
             - ./services/pong/:/microservice/pong/:rw
         networks:
