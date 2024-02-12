@@ -79,8 +79,7 @@ class PlayerInfo(APIView):
                 player_data = request.data.get('player')
                 player = Player.objects.get(id=id)
                 if "username" in player_data:
-                    if not player_data['username'].isalnum() \
-                        and '_' not in player_data['username'] \
+                    if not player_data['username'].replace('_', '').isalnum() \
                         or len(player_data['username']) > 8 \
                         or len(player_data['username']) < 3:
                         return Response({
@@ -91,7 +90,7 @@ class PlayerInfo(APIView):
                     changed = True
                 if "first_name" in player_data:
                     first_name = ' '.join(player_data['first_name'].split())
-                    if not first_name.isalpha() or \
+                    if not first_name.replace(" ", "").isalpha() or \
                         len(first_name) > 20 or \
                         len(first_name) < 2:
                         return Response({
@@ -102,7 +101,7 @@ class PlayerInfo(APIView):
                     changed = True
                 if "last_name" in player_data:
                     last_name = ' '.join(player_data['last_name'].split())
-                    if not last_name.isalpha() \
+                    if not last_name.replace(" ", "").isalpha() \
                         or len(last_name) > 20 \
                         or len(last_name) < 2:
                         return Response({
