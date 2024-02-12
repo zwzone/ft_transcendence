@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.core.cache import cache
-from django.db import IntegrityError
 from rest_framework.response import Response
 from pyotp.totp import TOTP
 from base64 import b32encode
@@ -73,5 +72,5 @@ def create_player(player_data):
             avatar=avatar
         )
         return player
-    except IntegrityError as e:
+    except Exception as e:
         return None
