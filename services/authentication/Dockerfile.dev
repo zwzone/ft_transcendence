@@ -6,11 +6,15 @@ RUN         apt update -y && \
 
 RUN         mkdir -p /microservice/authentication/
 
-COPY        ./requirements.txt /microservice/player/
+COPY        requirements.txt /microservice/authentication/
+
+COPY		./private/ssl/certs/ft_transcendence.crt /etc/ssl/certs/ft_transcendence.crt
+
+COPY		./private/ssl/private/ft_transcendence.key /etc/ssl/private/ft_transcendence.key
 
 RUN         pip install --upgrade pip
 
-RUN         pip install -r /microservice/player/requirements.txt
+RUN         pip install -r /microservice/authentication/requirements.txt
 
 WORKDIR     /microservice/authentication/
 

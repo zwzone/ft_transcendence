@@ -19,7 +19,7 @@ develop-re: develop-down develop
 deploy-re: deploy-down deploy
 
 logs:
-	docker-compose logs -f
+	docker compose -f docker-compose.dev.yaml logs -f
 
 reset-db:
 	rm -f services/authentication/db.sqlite3 services/player/db.sqlite3

@@ -1,4 +1,4 @@
-import { runGame } from "../pong/pong.js";
+import { runGame } from "../utilities/pong.js";
 
 export default class GamePage extends HTMLElement {
   constructor() {
