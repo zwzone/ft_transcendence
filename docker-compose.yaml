@@ -5,6 +5,8 @@ services:
             dockerfile: Dockerfile
         image: ft-transcendence:deploy
         container_name: ft-transcendence
+        environment:
+            - STAGE=Deployment
         ports:
             - 443:443
         networks:
@@ -17,8 +19,10 @@ services:
             dockerfile: Dockerfile
         image: authentication:deploy
         container_name: authentication
+        environment:
+            - STAGE=Deployment
         env_file:
-            - ./services/.env
+            - .env
         networks:
             - ft_transcendence
         restart: on-failure
@@ -29,11 +33,42 @@ services:
             dockerfile: Dockerfile
         image: player:deploy
         container_name:  player
+        environment:
+            - STAGE=Deployment
         env_file:
-            - ./services/.env 
+            - .env 
         networks:
             - ft_transcendence
         restart: on-failure
+
+    matchmaking:
+        build:
+            context: ./services/matchmaking/
+            dockerfile: Dockerfile
+        image: matchmaking:deploy
+        container_name:  matchmaking
+        environment:
+            - STAGE=Deployment
+        env_file:
+            - .env 
+        networks:
+            - ft_transcendence
+        restart: on-failure
+
+    pong:
+        build:
+            context: ./services/pong/
+            dockerfile: Dockerfile
+        image: pong:deploy
+        container_name:  pong
+        environment:
+            - STAGE=Deployment
+        env_file:
+            - .env 
+        networks:
+            - ft_transcendence
+        restart: on-failure
+
 
 networks:
     ft_transcendence:

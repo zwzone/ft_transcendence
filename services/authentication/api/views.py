@@ -5,12 +5,13 @@ from django.shortcuts import redirect
 from django.utils.http import urlencode
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .service import decode_google_id_token, generate_jwt, check_2fa_code, jwt_cookie_required, get_2fa_qr_code
+from .service import decode_google_id_token, generate_jwt, check_2fa_code, jwt_cookie_required, get_2fa_qr_code, create_player
 from os import getenv
 from qr_code.qrcode.maker import make_qr_code_image
 from qr_code.qrcode.utils import QRCodeOptions
 import requests
 import jwt
+from .models import Player
 
 
 @api_view(['GET'])
@@ -47,25 +48,22 @@ def intra_callback_auth(request):
     )
     if not user_response.ok:
         return Response({"statusCode": 401, "detail": "No access token in the token response"})
-    user_data = user_response.json();
-    jwt_token = generate_jwt(None, True)
     data = {
         "player": {
-            "email": user_data["email"],
-            "username": user_data["login"],
-            "first_name": user_data["first_name"],
-            "last_name": user_data["last_name"],
-            "avatar": user_data["image"]["link"],
+            "email": user_response.json()['email'],
+            "username": user_response.json()['login'],
+            "first_name": user_response.json()['first_name'],
+            "last_name": user_response.json()['last_name'],
+            "avatar": user_response.json()['image']['link'],
         }
     }
-    player_data = requests.post(f'{settings.PRIVATE_PLAYER_URL}', json=data, cookies={"jwt_token": jwt_token})
-    if not player_data.ok:
+    player = create_player(data)
+    if player is None:
         return redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/login/", permanent=True)
-    player_id = player_data.json()['id']
-    if player_data.json()['two_factor']:
-        params = urlencode({"id": player_id})
+    if player.two_factor:
+        params = urlencode({"id": player.id})
         return redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/twofa/?{params}", permanent=True)
-    jwt_token = generate_jwt(player_id, False)
+    jwt_token = generate_jwt(player.id)
     response = redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/home/", permanent=True)
     response.set_cookie("jwt_token", value=jwt_token, httponly=True, secure=True)
     return response
@@ -114,26 +112,24 @@ def google_callback_auth(request):
     tokens = auth_response.json()
     if tokens["access_token"] is None:
         return Response({"statusCode": 401, "error": "AccessToken is invalid"})
-    id_token = tokens["id_token"]
-    id_token_decoded = decode_google_id_token(id_token)
-    jwt_token = generate_jwt(None, True)
+    token = tokens["id_token"]
+    token_decoded = decode_google_id_token(token)
     data = {
         "player": {
-            "email": id_token_decoded['email'],
-            "username": id_token_decoded['name'],
-            "first_name": id_token_decoded['given_name'],
-            "last_name": id_token_decoded['family_name'],
-            "avatar": id_token_decoded['picture'],
+            "email": token_decoded['email'],
+            "username": token_decoded['name'],
+            "first_name": token_decoded['given_name'],
+            "last_name": token_decoded['family_name'],
+            "avatar": token_decoded['picture'],
         }
     }
-    player_data = requests.post(f'{settings.PRIVATE_PLAYER_URL}', json=data, cookies={"jwt_token": jwt_token})
-    if not player_data.ok:
+    player = create_player(data)
+    if player is None:
         return redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/login/", permanent=True)
-    player_id = player_data.json()['id']
-    if player_data.json()['two_factor']:
-        params = urlencode({"id": player_id})
+    if player.two_factor:
+        params = urlencode({"id": player.id})
         return redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/twofa/?{params}", permanent=True)
-    jwt_token = generate_jwt(player_id, False)
+    jwt_token = generate_jwt(player.id)
     response = redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/home/", permanent=True)
     response.set_cookie("jwt_token", value=jwt_token, httponly=True, secure=True)
     return response
@@ -161,7 +157,6 @@ def logout_user(request):
 def verify_two_factor(request):
     code = request.data.get("code")
     player_id = request.data.get("id")
-    # if player sends from setting page
     if player_id is None:
         jwt_token = request.COOKIES.get("jwt_token")
         try:
@@ -171,14 +166,14 @@ def verify_two_factor(request):
         player_id = decoded_token['id']
         if not check_2fa_code(player_id, code):
             return Response({"statusCode": 401, "message": "Incorrect 2FA code."})
-        jwt_token = generate_jwt(player_id, True)
-        requests.post(f'{settings.PRIVATE_PLAYER_URL}', json={"player": {"two_factor": True}}, cookies={"jwt_token": jwt_token})
+        player = Player.objects.get(id=player_id)
+        player.two_factor = True
+        player.save()
         return Response({"statusCode": 200, "message": "Successfully verified"})
-    # if player sends from twofa page
     else:
         if not check_2fa_code(player_id, code):
             return Response({"statusCode": 401, "message": "Incorrect 2FA code."})
-        jwt_token = generate_jwt(player_id, False)
+        jwt_token = generate_jwt(player_id)
         response = Response({"statusCode": 200, "message": "Successfully verified", "redirected": True})
         response.set_cookie("jwt_token", value=jwt_token, httponly=True, secure=True)
         return response
