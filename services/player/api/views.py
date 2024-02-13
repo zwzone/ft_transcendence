@@ -51,6 +51,8 @@ class PlayerInfo(APIView):
             if "last_name" in player_data:
                 player.last_name = player_data['last_name']
                 changed = True
+            if "two_factor" in player_data and player_data['two_factor'] is False:
+                player.two_factor = player_data['two_factor']
             player.save()
             message = "User updated successfully" if changed else "No changes detected"
             return Response({
