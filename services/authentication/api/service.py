@@ -54,7 +54,7 @@ def jwt_cookie_required(view_func):
     return wrapped_view
 
 
-def create_player(player_data):
+def create_player(player_data: Dict[str, str]):
     try:
         email = player_data['email']
         if Player.objects.filter(email=email).exists():
@@ -69,7 +69,7 @@ def create_player(player_data):
             username=username,
             first_name=first_name,
             last_name=last_name,
-            avatar=avatar
+            avatar=avatar,
         )
         return player
     except Exception as e:
