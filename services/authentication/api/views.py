@@ -48,16 +48,14 @@ def intra_callback_auth(request):
     )
     if not user_response.ok:
         return Response({"statusCode": 401, "detail": "No access token in the token response"})
-    data = {
-        "player": {
-            "email": user_response.json()['email'],
-            "username": user_response.json()['login'],
-            "first_name": user_response.json()['first_name'],
-            "last_name": user_response.json()['last_name'],
-            "avatar": user_response.json()['image']['link'],
-        }
+    player_data = {
+        "email": user_response.json()['email'],
+        "username": user_response.json()['login'],
+        "first_name": user_response.json()['first_name'],
+        "last_name": user_response.json()['last_name'],
+        "avatar": user_response.json()['image']['link'],
     }
-    player = create_player(data)
+    player = create_player(player_data)
     if player is None:
         return redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/login/", permanent=True)
     if player.two_factor:
@@ -114,16 +112,14 @@ def google_callback_auth(request):
         return Response({"statusCode": 401, "error": "AccessToken is invalid"})
     token = tokens["id_token"]
     token_decoded = decode_google_id_token(token)
-    data = {
-        "player": {
-            "email": token_decoded['email'],
-            "username": token_decoded['name'],
-            "first_name": token_decoded['given_name'],
-            "last_name": token_decoded['family_name'],
-            "avatar": token_decoded['picture'],
-        }
+    player_data = {
+        "email": token_decoded['email'],
+        "username": token_decoded['name'],
+        "first_name": token_decoded['given_name'],
+        "last_name": token_decoded['family_name'],
+        "avatar": token_decoded['picture'],
     }
-    player = create_player(data)
+    player = create_player(player_data)
     if player is None:
         return redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/login/", permanent=True)
     if player.two_factor:
