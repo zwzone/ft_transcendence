@@ -7,14 +7,14 @@ rooms = {}
 canvas_width = 1920
 canvas_height = 1080
 padd_left = {
-    'speed': 15,
+    'speed': 20,
     'positionX': 60,
     'positionY': canvas_height / 2 - 100,
     'sizeX': 40,
     'sizeY': 200,
 }
 padd_right = {
-    'speed': 15,
+    'speed': 20,
     'positionX': canvas_width - 100,
     'positionY': canvas_height / 2 - 100,
     'sizeX': 40,
@@ -75,6 +75,7 @@ class Pong(AsyncWebsocketConsumer):
                 rooms[room_id]['padd_left']['info']['positionY'] += rooms[room_id]['padd_left']['info']['speed']
             elif self.channel_name in rooms[room_id]['padd_right']['player']:
                 rooms[room_id]['padd_right']['info']['positionY'] += rooms[room_id]['padd_right']['info']['speed']
+        self.paddleCollision(room_id)
 
     async def start_game(self, room_id):
         self.init_game(room_id)
@@ -96,7 +97,8 @@ class Pong(AsyncWebsocketConsumer):
             'speedY': 10,
             'positionX': 10,
             'positionY': 10,
-            'size': 20
+            'size': 20,
+            'dir': True
         }
         rooms[room_id]['padd_left']['info']['score'] = 0
         rooms[room_id]['padd_right']['info']['score'] = 0
@@ -104,12 +106,18 @@ class Pong(AsyncWebsocketConsumer):
     def reset_game(self, room_id):
         if rooms[room_id]['ball']['speedX'] > 0:
             rooms[room_id]['padd_right']['info']['score'] += 1
+            rooms[room_id]['ball']['speedX'] = 10
         else:
             rooms[room_id]['padd_left']['info']['score'] += 1
+            rooms[room_id]['ball']['speedX'] = -10
         rooms[room_id]['ball']['positionX'] = canvas_width / 2
         rooms[room_id]['ball']['positionY'] = canvas_height / 2
-        rooms[room_id]['ball']['speedX'] = 10
-        rooms[room_id]['ball']['speedY'] = 10
+        if rooms[room_id]['ball']['dir']:
+            rooms[room_id]['ball']['speedY'] = -10
+            rooms[room_id]['ball']['dir'] = False
+        else:
+            rooms[room_id]['ball']['speedY'] = 10
+            rooms[room_id]['ball']['dir'] = True
         rooms[room_id]['padd_left']['info']['positionX'] = 60
         rooms[room_id]['padd_left']['info']['positionY'] = canvas_height / 2 - 100
         rooms[room_id]['padd_right']['info']['positionX'] = canvas_width - 100
@@ -201,5 +209,13 @@ class Pong(AsyncWebsocketConsumer):
                     'message': 'ball',
                 }
             )
+            if rooms[room_id]['ball']['speedX'] > 0:
+                rooms[room_id]['ball']['speedX'] += 0.01
+            else:
+                rooms[room_id]['ball']['speedX'] -= 0.01
+            if rooms[room_id]['ball']['speedY'] > 0:
+                rooms[room_id]['ball']['speedY'] += 0.01
+            else:
+                rooms[room_id]['ball']['speedY'] -= 0.01
             await asyncio.sleep(0.015)
         print(rooms)
