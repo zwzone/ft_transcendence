@@ -43,13 +43,31 @@ class PlayerInfo(APIView):
             player_data = request.data.get('player')
             player = Player.objects.get(id=id)
             if "username" in player_data:
-                player.username = player_data['username']
+                username = ' '.join(player_data["username"].split())
+                if not username or len(player_data['username']) > 8 :
+                    return Response({
+                        "status": 400,
+                        "message": "Invalid username",
+                    })
+                player.username = username
                 changed = True
             if "first_name" in player_data:
-                player.first_name = player_data['first_name']
+                first_name = ' '.join(player_data['first_name'].split())
+                if not first_name or len(first_name) > 20 :
+                    return Response({
+                        "status": 400,
+                        "message": "Invali first name",
+                    })
+                player.first_name = first_name
                 changed = True
             if "last_name" in player_data:
-                player.last_name = player_data['last_name']
+                last_name = ' '.join(player_data['last_name'].split())
+                if not last_name or len(last_name) > 20 :
+                    return Response({
+                        "status": 400,
+                        "message": "Invalid last name",
+                    })
+                player.last_name = last_name
                 changed = True
             if "two_factor" in player_data and player_data['two_factor'] is False:
                 player.two_factor = player_data['two_factor']
