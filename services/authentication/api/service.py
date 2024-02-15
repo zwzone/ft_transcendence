@@ -6,12 +6,12 @@ from base64 import b32encode
 from typing import Dict
 import datetime
 import jwt
+from .models import Player
 
 
-def generate_jwt(id: int, authority: bool) -> str:
+def generate_jwt(id: int) -> str:
     payload = {
         'id': id,
-        'authority': authority,
         'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1),
         'iat': datetime.datetime.utcnow(),
     }
@@ -52,3 +52,25 @@ def jwt_cookie_required(view_func):
         except Exception as e:
             return Response({"statusCode": 500, 'error': str(e)})
     return wrapped_view
+
+
+def create_player(player_data: Dict[str, str]):
+    try:
+        email = player_data['email']
+        if Player.objects.filter(email=email).exists():
+            player = Player.objects.get(email=email)
+            return player
+        username = player_data['username']
+        first_name = player_data['first_name']
+        last_name = player_data['last_name']
+        avatar = player_data['avatar']
+        player = Player.objects.create(
+            email=email,
+            username=username,
+            first_name=first_name,
+            last_name=last_name,
+            avatar=avatar,
+        )
+        return player
+    except Exception as e:
+        return None

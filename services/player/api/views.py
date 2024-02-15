@@ -37,93 +37,56 @@ class PlayerInfo(APIView):
 
     @method_decorator(jwt_cookie_required)
     def post(self, request):
-        if request.decoded_token['authority']:
+        try:
+            changed = False
+            id = request.decoded_token['id']
             player_data = request.data.get('player')
-            email = player_data['email']
-            if Player.objects.filter(email=email).exists():
-                player = Player.objects.get(email=email)
-                return Response({
-                    "message": "User already exists",
-                    "id": player.id,
-                    "two_factor": player.two_factor
-                }, status=status.HTTP_200_OK)
-            username = player_data['username']
-            first_name = player_data['first_name']
-            last_name = player_data['last_name']
-            avatar = player_data['avatar']
-            try:
-                player = Player.objects.create(
-                    email=email,
-                    username=username,
-                    first_name=first_name,
-                    last_name=last_name,
-                    avatar=avatar
-                )
-                return Response({
-                    "message": "User created successfully",
-                    "id": player.id,
-                    "two_factor": player.two_factor
-                }, status=status.HTTP_201_CREATED)
-            except IntegrityError as e:
-                return Response({
-                    "message": f"An error occurred while creating the player: {e}",
-                }, status=status.HTTP_409_CONFLICT)
-            except Exception as e:
-                return Response({
-                    "message": str(e),
-                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        else:
-            try:
-                changed = False
-                id = request.decoded_token['id']
-                player_data = request.data.get('player')
-                player = Player.objects.get(id=id)
-                if "username" in player_data:
-                    username = ' '.join(player_data["username"].split())
-                    if not username or len(player_data['username']) > 8 :
-                        return Response({
-                            "status": 400,
-                            "message": "Username invalid",
-                        })
-                    player.username = username
-                    changed = True
-                if "first_name" in player_data:
-                    first_name = ' '.join(player_data['first_name'].split())
-                    if not first_name or len(first_name) > 20 :
-                        return Response({
-                            "status": 400,
-                            "message": "First name is invalid",
-                        })
-                    player.first_name = first_name
-                    changed = True
-                if "last_name" in player_data:
-                    last_name = ' '.join(player_data['last_name'].split())
-                    if not last_name or len(last_name) > 20 :
-                        return Response({
-                            "status": 400,
-                            "message": "Last name invalid",
-                        })
-                    player.last_name = last_name
-                    changed = True
-                if "two_factor" in player_data and (request.decoded_token['authority'] is True or player_data['two_factor'] is False):
-                    player.two_factor = player_data['two_factor']
-                    changed = True
-                player.save()
-                message = "User updated successfully" if changed else "No changes detected"
-                return Response({
-                    "status": 200,
-                    "message": message,
-                })
-            except Player.DoesNotExist:
-                return Response({
-                    "status": 404,
-                    "message": "User not found",
-                })
-            except Exception as e:
-                return Response({
-                    "status": 500,
-                    "message": str(e),
-                })
+            player = Player.objects.get(id=id)
+            if "username" in player_data:
+                username = ' '.join(player_data["username"].split())
+                if not username or len(player_data['username']) > 8 :
+                    return Response({
+                        "status": 400,
+                        "message": "Invalid username",
+                    })
+                player.username = username
+                changed = True
+            if "first_name" in player_data:
+                first_name = ' '.join(player_data['first_name'].split())
+                if not first_name or len(first_name) > 20 :
+                    return Response({
+                        "status": 400,
+                        "message": "Invali first name",
+                    })
+                player.first_name = first_name
+                changed = True
+            if "last_name" in player_data:
+                last_name = ' '.join(player_data['last_name'].split())
+                if not last_name or len(last_name) > 20 :
+                    return Response({
+                        "status": 400,
+                        "message": "Invalid last name",
+                    })
+                player.last_name = last_name
+                changed = True
+            if "two_factor" in player_data and player_data['two_factor'] is False:
+                player.two_factor = player_data['two_factor']
+            player.save()
+            message = "User updated successfully" if changed else "No changes detected"
+            return Response({
+                "status": 200,
+                "message": message,
+            })
+        except Player.DoesNotExist:
+            return Response({
+                "status": 404,
+                "message": "User not found",
+            })
+        except Exception as e:
+            return Response({
+                "status": 500,
+                "message": str(e),
+            })
 
 
 class PlayerAvatarUpload(APIView):

@@ -4,9 +4,9 @@ RUN         apt update -y && \
             apt upgrade -y && \
 			apt install curl vim nano lsof -y
 
-RUN         mkdir -p /microservice/player/
+RUN         mkdir -p /microservice/pong/
 
-COPY        ./requirements.txt /microservice/player/
+COPY        ./requirements.txt /microservice/pong/
 
 COPY		./private/ssl/certs/ft_transcendence.crt /etc/ssl/certs/ft_transcendence.crt
 
@@ -14,8 +14,8 @@ COPY		./private/ssl/private/ft_transcendence.key /etc/ssl/private/ft_transcenden
 
 RUN         pip install --upgrade pip
 
-RUN         pip install -r /microservice/player/requirements.txt
+RUN         pip install -r /microservice/pong/requirements.txt
 
-WORKDIR     /microservice/player/
+WORKDIR     /microservice/pong/
 
 CMD         [ "bash", "./tools/microservice-run.sh" ]
