@@ -69,7 +69,9 @@ export default class SettingPage extends HTMLElement {
         "POST",
         JSON.stringify({ player: { [field]: value } }),
         { "Content-Type": "application/json" },
-      );
+      ).then((res) => {
+        alert(res.message);
+      });
     }
 
     function set_qrcode(blob) {
