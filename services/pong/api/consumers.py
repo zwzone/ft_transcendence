@@ -95,8 +95,8 @@ class Pong(AsyncWebsocketConsumer):
         rooms[room_id]['ball'] = {
             'speedX': 10,
             'speedY': 10,
-            'positionX': 10,
-            'positionY': 10,
+            'positionX': canvas_width / 2,
+            'positionY': canvas_height / 2,
             'size': 20,
             'dir': True
         }

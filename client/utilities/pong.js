@@ -1,7 +1,6 @@
 let ws;
 
 export function runGame(canvas, ctx) {
-    console.log("waiting...");
     ws = new WebSocket(`wss://${window.ft_transcendence_host}/ws/matchmaking/2/`);
     canvas.width = 1920;
     canvas.height = 1080;
@@ -11,8 +10,20 @@ export function runGame(canvas, ctx) {
         15,
         [canvas.width - 100, canvas.height / 2 - 100],
         [40, 200],
-    );
+        );
+    ctx.fillStyle = "white";
+    ctx.font = "100px monospace";
+    ctx.textAlign = 'center';
+    let i = 0;
+    const intervalId = setInterval(() => {
+        i++;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillText("MATCHING" + ".".repeat(i) + " ".repeat(3 - i), canvas.width / 2 + i, canvas.height / 2);
+        if (i == 3)
+            i= 0;
+    }, 500);
     ws.onmessage = function (e) {
+        clearInterval(intervalId);
         console.log(e.data);
         ws.close();
         ws = new WebSocket(`wss://${window.ft_transcendence_host}/ws/pong/${e.data}/2/`);
@@ -75,7 +86,11 @@ class Paddle {
     render(canvas, ctx) {
         canvas;
         ctx.fillStyle = "whitesmoke";
-        ctx.fillRect(this.positionX, this.positionY, this.sizeX, this.sizeY);
+        ctx.beginPath();
+        ctx.roundRect(this.positionX, this.positionY, this.sizeX, this.sizeY, 20);
+        ctx.stroke();
+        ctx.fill();
+        // ctx.fillRect(this.positionX, this.positionY, this.sizeX, this.sizeY);
     }
 
     Center() {
