@@ -140,19 +140,33 @@ class PlayerFriendship(APIView):
                         "friendships": friendship_data
                     })
                 elif get_type == 'friends':
-                    friendships = Friendship.objects.filter(sender=id, status='AC')
+                    friendships = Friendship.objects.filter(status='AC')
                     friendship_data = []
+                    encountered_usernames = [] 
                     for friendship in friendships:
-                        friend = friendship.receiver
-                        friend_data = {
-                            "username": friend.username,
-                            "avatar": friend.avatar
-                        }
-                        friendship_data.append(friend_data)
-                    return Response({
-                        "status": 200,
-                        "friendships": friendship_data
-                    })
+                        sender_username = friendship.sender.username
+                        receiver_username = friendship.receiver.username
+                        
+                        if sender_username not in encountered_usernames:
+                            friend_data = {
+                                "username": sender_username,
+                                "avatar": friendship.sender.avatar
+                            }
+                            friendship_data.append(friend_data)
+                            encountered_usernames.append(sender_username)
+                        
+                        if receiver_username not in encountered_usernames:
+                            friend_data = {
+                                "username": receiver_username,
+                                "avatar": friendship.receiver.avatar
+                            }
+                            friendship_data.append(friend_data)
+                            encountered_usernames.append(receiver_username)
+
+                            return Response({
+                                "status": 200,
+                                "friendships": friendship_data
+                            })
                 elif get_type == 'requests':
                     friendships = Friendship.objects.filter(sender=id, status='PN')
                     friendship_data = []
