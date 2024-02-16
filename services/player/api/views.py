@@ -237,24 +237,26 @@ class PlayerFriendship(APIView):
 
         @method_decorator(jwt_cookie_required)
         def delete(self, request):
-            try :
-                id = request.decoded_token['id']
-                sender = Player.objects.get(id=id)
-                receiver_id = request.data.get('target_id')
-                receiver = Player.objects.get(id=receiver_id)
-                friendship = Friendship.objects.get(sender=sender, receiver=receiver)
-                friendship.delete()
-                return Response({
-                    "status": 200,
-                    "message": 'Friendship deleted successfully'
-                })
-            except Friendship.DoesNotExist:
-                return Response({
+            id = request.decoded_token['id']
+            sender = Player.objects.get(id=id)
+            receiver_id = request.data.get('target_id')
+            receiver = Player.objects.get(id=receiver_id)
+            friendship = Friendship.objects.get(sender=sender, receiver=receiver)
+            if friendship is None:
+                try :
+                    friendship = Friendship.objects.get(sender=receiver, receiver=sender)
+                    friendship.delete()
+                    return Response({
+                        "status": 200,
+                        "message": 'Friendship deleted successfully'
+                    })
+                except Friendship.DoesNotExist:
+                    return Response({
                     "status": 404,
                     "message": "Friend request not found",
                 })
-            except Exception as e:
-                return Response({
+                except Exception as e:
+                    return Response({
                     "status": 500,
                     "message": str(e),
                 })
