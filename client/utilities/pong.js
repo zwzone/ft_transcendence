@@ -24,7 +24,13 @@ export function runGame(canvas, ctx) {
   ws.onmessage = function (e) {
     clearInterval(intervalId);
     console.log(e.data);
-    ws.close();
+    if (e.data == "error") {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillText("ALREADY IN GAME", canvas.width / 2, canvas.height / 2);
+      console.log("Closed");
+      ws.close();
+      return ;
+    }
     ws = new WebSocket(`wss://${window.ft_transcendence_host}/ws/pong/${e.data}/2/`);
     ws.onmessage = function (e) {
       let tmp = JSON.parse(e.data);
