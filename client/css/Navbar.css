@@ -5,20 +5,17 @@ my-navbar {
   height: fit-content;
 }
 
-.logo,
-li .link {
+.link {
   color: var(--color-primary-100);
   transition: inherit;
 }
 
-.logo:hover,
-li .link:hover {
+.link:hover {
   background-color: var(--color-primary-100);
   color: var(--color-secondary-100);
 }
 
-.logo:active,
-li .link:active {
+.link:active {
   background-color: var(--color-secondary-100) !important;
   color: var(--color-primary-100) !important;
   border-color: var(--color-secondary-100) !important;
@@ -80,14 +77,12 @@ li .logout:active {
     background-color: var(--color-primary-200);
   }
 
-  my-navbar.active .logo,
-  my-navbar.active li .link {
+  my-navbar.active .link {
     background-color: var(--color-primary-200);
     color: var(--color-secondary-100);
   }
 
-  my-navbar.active .logo:hover,
-  my-navbar.active li .link:hover {
+  my-navbar.active .link:hover {
     background-color: var(--color-secondary-100);
     color: var(--color-primary-100);
   }
@@ -129,7 +124,7 @@ li .logout:active {
     flex-direction: column;
   }
 
-  .nav-bar.active {
+  my-navbar.active .nav-bar {
     display: flex !important;
   }
 }

@@ -11,19 +11,12 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-from datetime import timedelta
-from os import getenv, path
-import dotenv
+from os import getenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent
 AUTH_DIR = Path(__file__).resolve().parent.parent
 SERVICES_DIR = Path(__file__).resolve().parent.parent.parent
-
-# Load .env file
-dotenv_file = SERVICES_DIR / ".env"
-if path.isfile(dotenv_file):
-    dotenv.load_dotenv(dotenv_file)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -32,13 +25,13 @@ if path.isfile(dotenv_file):
 SECRET_KEY = getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = getenv("DEBUG") == "True"
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    "authentication",
+]
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -47,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "rest_framework",
+    "api",
 ]
 
 MIDDLEWARE = [
@@ -125,11 +119,21 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = AUTH_DIR / 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-PLAYER_URL = 'http://localhost:8001'
+# ft_transcendence hostname
+FT_TRANSCENDENCE_HOST=getenv("FT_TRANSCENDENCE_HOST")
+
+# Public URLs
+PUBLIC_PLAYER_URL=getenv("PUBLIC_PLAYER_URL")
+PUBLIC_AUTHENTICATION_URL=getenv("PUBLIC_AUTHENTICATION_URL")
+
+# Private URLs
+PRIVATE_PLAYER_URL=getenv("PRIVATE_PLAYER_URL")
+PRIVATE_AUTHENTICATION_URL=getenv("PRIVATE_AUTHENTICATION_URL")

@@ -15,29 +15,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from rest_framework import permissions
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
-from .views import PlayerUsernameView, PlayerLastNameView, \
-    PlayerFirstNameView , PlayerInfoView , PlayerAvatarView
-
-schema_view = get_schema_view(
-    openapi.Info(
-        title="Player API Documentation",
-        default_version='v1',
-    ),
-    public=True,
-    permission_classes=(permissions.AllowAny,),
-)
+from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('player/', PlayerInfoView.as_view(), name='playerView'),
-    path('player/username', PlayerUsernameView.as_view(), name='playerUsernameView'),
-    path('player/first_name', PlayerFirstNameView.as_view(), name='playerFirstNameView'),
-    path('player/last_name', PlayerLastNameView.as_view(), name='playerLastNameView'),
-    path('player/avatar', PlayerAvatarView.as_view(), name='playerAvatarView'),
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path('player/', include('api.endpoints')),
 ]

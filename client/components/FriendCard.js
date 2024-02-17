@@ -7,7 +7,6 @@ export default class FriendCard extends HTMLElement {
     const template = document.getElementById("friend-card");
     const component = template.content.cloneNode(true);
     this.appendChild(component);
-
     this.classList.add(
       "d-flex",
       "flex-column",

@@ -24,18 +24,15 @@ export default class Navbar extends HTMLElement {
     };
 
     const logo = this.querySelector(".logo");
+    const links = this.querySelectorAll(".link.btn");
     const hamburger = this.querySelector(".hamburger");
-    const nav = this.querySelector("nav.nav-bar");
-    const links = nav.querySelectorAll(".link.btn");
 
     logo.addEventListener("click", handleLink);
-
     links.forEach((link) => {
       link.addEventListener("click", handleLink);
     });
 
     hamburger.addEventListener("click", (event) => {
-      nav.classList.toggle("active");
       this.classList.toggle("active");
     });
   }

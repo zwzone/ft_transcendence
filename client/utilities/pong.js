@@ -1,17 +1,57 @@
+let ws;
+
 export function runGame(canvas, ctx) {
+  ws = new WebSocket(`wss://${window.ft_transcendence_host}/ws/matchmaking/2/`);
   canvas.width = 1920;
   canvas.height = 1080;
   const ball = new Ball([10, 10], [canvas.width / 2, canvas.height / 2], 20);
   const paddle1 = new Paddle(15, [60, canvas.height / 2 - 100], [40, 200]);
-  const paddle2 = new Paddle(
-    15,
-    [canvas.width - 100, canvas.height / 2 - 100],
-    [40, 200],
-  );
-  gameLoop(canvas, ctx, ball, paddle1, paddle2);
+  const paddle2 = new Paddle(15, [canvas.width - 100, canvas.height / 2 - 100], [40, 200]);
+  ctx.fillStyle = "white";
+  ctx.font = "100px monospace";
+  ctx.textAlign = "center";
+  let i = 0;
+  const intervalId = setInterval(() => {
+    i++;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillText(
+      "MATCHING" + ".".repeat(i) + " ".repeat(3 - i),
+      canvas.width / 2 + i,
+      canvas.height / 2,
+    );
+    if (i == 3) i = 0;
+  }, 500);
+  ws.onmessage = function (e) {
+    clearInterval(intervalId);
+    console.log(e.data);
+    if (e.data == "error") {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillText("ALREADY IN GAME", canvas.width / 2, canvas.height / 2);
+      console.log("Closed");
+      ws.close();
+      return ;
+    }
+    ws = new WebSocket(`wss://${window.ft_transcendence_host}/ws/pong/${e.data}/2/`);
+    ws.onmessage = function (e) {
+      let tmp = JSON.parse(e.data);
+      ball.positionX = tmp["ball"].positionX;
+      ball.positionY = tmp["ball"].positionY;
+      paddle1.positionY = tmp["padd_left"]["info"].positionY;
+      paddle2.positionY = tmp["padd_right"]["info"].positionY;
+      paddle1.score = tmp["padd_left"]["info"]["score"];
+      paddle2.score = tmp["padd_right"]["info"]["score"];
+      gameLoop(canvas, ctx, ball, paddle1, paddle2);
+    };
+  };
 }
 
 const KeyPressed = [];
+const keys = {
+  38: "up",
+  40: "down",
+  87: "w",
+  83: "s",
+};
 const KeyUP = 38;
 const keydown = 40;
 const keyW = 87;
@@ -27,6 +67,7 @@ class Paddle {
     this.positionY = position[1];
     this.sizeX = size[0];
     this.sizeY = size[1];
+    this.score = 0;
   }
 
   update(right) {
@@ -50,7 +91,11 @@ class Paddle {
   render(canvas, ctx) {
     canvas;
     ctx.fillStyle = "whitesmoke";
-    ctx.fillRect(this.positionX, this.positionY, this.sizeX, this.sizeY);
+    ctx.beginPath();
+    ctx.roundRect(this.positionX, this.positionY, this.sizeX, this.sizeY, 20);
+    ctx.stroke();
+    ctx.fill();
+    // ctx.fillRect(this.positionX, this.positionY, this.sizeX, this.sizeY);
   }
 
   Center() {
@@ -66,12 +111,14 @@ class Ball {
     this.positionY = position[1];
     this.size = size;
   }
+
   render(canvas, ctx) {
     ctx.beginPath();
     ctx.arc(this.positionX, this.positionY, this.size, 0, 2 * Math.PI);
     ctx.fillStyle = "white";
     ctx.fill();
   }
+
   update() {
     this.positionX += this.speedX;
     this.positionY += this.speedY;
@@ -80,6 +127,7 @@ class Ball {
 
 window.addEventListener("keydown", function (e) {
   KeyPressed[e.keyCode] = true;
+  if (e.keyCode in keys) ws.send(keys[e.keyCode]);
 });
 
 window.addEventListener("keyup", function (e) {
@@ -89,10 +137,7 @@ window.addEventListener("keyup", function (e) {
 function BallPaddleCollision(ball, paddle) {
   const dx = Math.abs(ball.positionX - paddle.Center()[0]);
   const dy = Math.abs(ball.positionY - paddle.Center()[1]);
-  if (
-    dx <= ball.size + paddle.sizeX / 2 &&
-    dy <= ball.size + paddle.sizeY / 2
-  ) {
+  if (dx <= ball.size + paddle.sizeX / 2 && dy <= ball.size + paddle.sizeY / 2) {
     if (
       (ball.speedX > 0 && ball.positionX >= paddle.Center()[0]) ||
       (ball.speedX < 0 && ball.positionX <= paddle.Center()[0])
@@ -113,10 +158,7 @@ function paddleCollision(canvas, paddle) {
 }
 
 function ballCollision(canvas, ball) {
-  if (
-    ball.positionX + ball.size >= canvas.width ||
-    ball.positionX - ball.size <= 0
-  ) {
+  if (ball.positionX + ball.size >= canvas.width || ball.positionX - ball.size <= 0) {
     reset(ball, canvas);
     return;
   }
@@ -151,23 +193,8 @@ function Score(ctx, canvas, right, left) {
 
 function gameLoop(canvas, ctx, ball, paddle1, paddle2) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  window.requestAnimationFrame(() =>
-    gameLoop(canvas, ctx, ball, paddle1, paddle2),
-  );
-  ball.update();
-  paddle1.update(true);
-  paddle2.update(false);
-  ballCollision(canvas, ball);
-  paddleCollision(canvas, paddle1);
-  paddleCollision(canvas, paddle2);
-  BallPaddleCollision(ball, paddle1);
-  BallPaddleCollision(ball, paddle2);
   ball.render(canvas, ctx);
   paddle1.render(canvas, ctx);
   paddle2.render(canvas, ctx);
-  Score(ctx, canvas, right, left);
-  if (ball.speedX > 0) ball.speedX += 0.01;
-  else ball.speedX -= 0.01;
-  if (ball.speedY > 0) ball.speedY += 0.01;
-  else ball.speedY -= 0.01;
+  Score(ctx, canvas, paddle2.score, paddle1.score);
 }

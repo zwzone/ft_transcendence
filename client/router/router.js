@@ -1,37 +1,46 @@
+import fetching from "../utilities/fetching.js";
+
 const routes = {
-  "/": "home-page",
-  "/game": "game-page",
-  "/home": "home-page",
-  "/login": "login-page",
-  "/profile": "profile-page",
-  "/setting": "setting-page",
-  "/tournament": "tournament-page",
+  "/game/": "game-page",
+  "/home/": "home-page",
+  "/login/": "login-page",
+  "/twofa/": "twofa-page",
+  "/profile/": "profile-page",
+  "/setting/": "setting-page",
+  "/tournament/": "tournament-page",
 };
 
 const router = {
   init: () => {
     window.addEventListener("popstate", (event) => {
-      router.go(event.state.route);
+      router.go(event.state.route, "navigation");
     });
     // check if the player is logged in
-    // const xfetch = new XMLHttpRequest();
-    // xfetch.open("GET", "http://localhost:8000/auth/islogged");
-    // xfetch.withCredentials = true;
-    // xfetch.responseType = "json";
-    // xfetch.send();
-    // if (xfetch.statusCode == 401 || xfetch.statusCode == 403) {
-    //   location.pathname = "/login";
-    // } else if (xfetch.statusCode == 200) {
-    //   if (location.pathname == "/login") location.pathname = "/home";
-    // }
-    router.go(location.pathname, "replace");
+    let pathname = window.location.pathname;
+    if (pathname == "/") pathname = "/home/";
+    fetching(`https://${window.ft_transcendence_host}/authentication/isloggedin/`).then((res) => {
+      if (res.statusCode == 200) {
+        if (pathname == "/login/" || pathname == "/twofa/") pathname = "/home/";
+      } else {
+        if (
+          pathname == "/game/" ||
+          pathname == "/home/" ||
+          pathname == "/profile/" ||
+          pathname == "/setting/" ||
+          pathname == "/tournament/"
+        )
+          pathname = "/login/";
+      }
+      router.go(pathname, "replace");
+    });
   },
 
-  go: (route, state = "") => {
-    if (state == "add") history.pushState({ route }, "", route);
-    if (state == "replace") history.replaceState({ route }, "", route);
+  go: (route, state) => {
+    if (state == "add" && window.location.pathname != route)
+      history.pushState({ route }, "", route);
+    if (state == "replace") history.replaceState({ route }, "", route + window.location.search);
     let pageElement;
-    if (Object.hasOwn(routes, route)) {
+    if (routes.hasOwnProperty(route)) {
       pageElement = document.createElement(routes[route]);
     } else {
       pageElement = document.createElement("notfound-page");
