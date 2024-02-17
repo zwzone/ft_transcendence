@@ -80,6 +80,26 @@ services:
             - ft_transcendence
         restart: on-failure
 
+    postgres:
+        image: postgres:16.2-bullseye
+        container_name: postgres
+        env_file:
+            - .env
+        networks:
+            - ft_transcendence
+        restart: on-failure
+
+    pgadmin:
+        image: dpage/pgadmin4
+        container_name: pgadmin4
+        env_file:
+            - .env
+        ports:
+        - 8080:80
+        networks:
+        - ft_transcendence
+        restart: on-failure
+
 networks:
     ft_transcendence:
         name: ft_transcendence
