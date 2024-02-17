@@ -80,6 +80,15 @@ services:
             - ft_transcendence
         restart: on-failure
 
+    postgres:
+        image: postgres:16.2-bullseye
+        container_name: postgres
+        env_file:
+            - .env
+        networks:
+            - ft_transcendence
+        restart: on-failure
+
 networks:
     ft_transcendence:
         name: ft_transcendence

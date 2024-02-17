@@ -9,4 +9,4 @@ echo    "GRANT ALL PRIVILEGES ON DATABASE ft_transcendence TO $POSTGRES_USER;" >
 
 sudo    -u postgres psql < postgres.sql
 
-sleep 1000000
+
