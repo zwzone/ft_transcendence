@@ -35,11 +35,17 @@
 
   <!-- GAME PAGE -->
   <template id="game-template">
+    <div class="d-flex flex-wrap justify-content-between align-items-center p-5">
+      <h1 class="game-header display-1 fw-bold m-0"></h1>
+      <h1 class="game-mode fw-bold m-0"></h1>
+      <a class="btn btn-lg fw-bold" href="/home/">Back</a>
+    </div>
     <main class="container-fluid my-5">
       <div class="d-flex justify-content-center align-items-center">
         <canvas id="canvas-pong"></canvas>
       </div>
     </main>
+    <my-footer></my-footer>
   </template>
 
   <!-- HOME PAGE -->
@@ -47,8 +53,8 @@
     <my-navbar></my-navbar>
     <main class="container-fluid d-flex flex-column gap-5 my-5">
       <section class="d-flex gap-2 flex-wrap justify-content-center align-items-center gap-5 w-100" id="playing">
-        <play-card headText="PING PONG"></play-card>
-        <play-card headText="TIC TAC TOE"></play-card>
+        <play-card game="PG"></play-card>
+        <play-card game="TTT"></play-card>
       </section>
     </main>
     <my-footer></my-footer>
@@ -288,11 +294,10 @@
   <template id="play-card">
     <h1 class="text-center fw-bold m-0 display-1"></h1>
     <div class="d-flex flex-column justify-content-center align-items-center gap-1">
-      <button class="btn btn-lg fw-bold">Play Online 1v1</button>
-      <button class="btn btn-lg fw-bold">Play Online 1v1v1v1</button>
-      <button class="btn btn-lg fw-bold">Play Online 2v2</button>
-      <button class="btn btn-lg fw-bold">Play With AI</button>
-      <button class="btn btn-lg fw-bold">Play CO-OP</button>
+      <a class="play-two btn btn-lg fw-bold">Play Online &#40;2 Players&#41;</a>
+      <a class="play-four btn btn-lg fw-bold">Play Online &#40;4 Players&#41;</a>
+      <a class="play-ai btn btn-lg fw-bold">Play With AI</a>
+      <a class="play-coop btn btn-lg fw-bold">Play CO-OP</a>
     </div>
   </template>
 

@@ -6,12 +6,12 @@ play-card h1 {
   color: var(--color-primary-100);
 }
 
-play-card button.btn {
+play-card a.btn {
   background-color: var(--color-primary-100);
   color: var(--color-primary-400);
 }
 
-play-card button.btn:hover {
+play-card a.btn:hover {
   background-color: var(--color-primary-200);
   color: var(--color-primary-400);
 }
