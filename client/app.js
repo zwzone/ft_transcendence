@@ -7,6 +7,7 @@ import Footer from "./components/Footer.js";
 import PlayCard from "./components/PlayCard.js";
 import FriendsList from "./components/FriendsList.js";
 import FriendCard from "./components/FriendCard.js";
+import FriendCardPopup from "./components/FriendCardPopup.js";
 import MatchCard from "./components/MatchCard.js";
 import LoginButton from "./components/LoginButton.js";
 import TwofaInput from "./components/TwofaInput.js";

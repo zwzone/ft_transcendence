@@ -21,6 +21,7 @@ export default class SettingPage extends HTMLElement {
     const button_last_name = this.querySelector(".button-last-name");
     const checkbox_twofa = this.querySelector(".setting-twofa input[type=checkbox]");
     const popup_twofa = this.querySelector(".popup-twofa");
+    const popup_twofa_qrcode = this.querySelector(".popup-twofa-qrcode");
     const popup_twofa_close = this.querySelector(".popup-twofa-close");
 
     fetching(`https://${window.ft_transcendence_host}/player/`).then((res) => {
@@ -80,7 +81,7 @@ export default class SettingPage extends HTMLElement {
       img.src = url;
       img.onload = () => {
         popup_twofa.style.display = "flex";
-        popup_twofa.appendChild(img);
+        popup_twofa_qrcode.appendChild(img);
       };
     }
   }

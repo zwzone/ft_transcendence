@@ -111,7 +111,7 @@
           </div>
         </div>
       </div>
-      <div class="player-data-related d-flex justify-content-around align-items-start flex-wrap gap-2 p-3 rounded-5">
+      <div class="player-data-related d-flex flex-column justify-content-around gap-2 p-3 rounded-5">
         <div class="match-history d-flex flex-column justify-content-center gap-2 p-3 rounded-5 flex-grow-1">
           <h2 class="text-center m-0 px-3 py-1 rounded-5">Match History</h2>
           <div class="match-cards d-flex flex-column justify-content-center gap-1">
@@ -177,9 +177,12 @@
             <span class="slider round rounded-5"></span>
           </label>
           <div class="popup-twofa flex-column justify-content-center align-items-center">
-            <button class="popup-twofa-close btn-close"></button>
-            <div class="d-flex justify-content-center align-items-center">
-              <twofa-input></twofa-input>
+            <div class="d-flex flex-column justify-content-center align-items-center rounded-5 gap-5 p-5">
+              <button class="popup-twofa-close btn-close align-self-end"></button>
+              <div class="popup-twofa-qrcode d-flex justify-content-center align-items-center"></div>
+              <div class="d-flex justify-content-center align-items-center">
+                <twofa-input></twofa-input>
+              </div>
             </div>
           </div>
         </div>
@@ -219,7 +222,7 @@
   <!-- 2FA BUTTON -->
   <template id="twofa-input">
     <input type="number">
-    <button>Send</button>
+    <button class="btn btn-lg p-2 rounded-4">SEND</button>
   </template>
 
   <!-- NAVBAR -->
@@ -268,7 +271,7 @@
   <!-- FRIENDS LIST -->
   <template id="friends-list">
     <nav class="friends-tabs">
-      <ul class="d-flex justify-content-center align-items-center p-0 m-0 gap-1">
+      <ul class="d-flex justify-content-center align-items-center flex-wrap p-0 m-0 gap-1">
         <li>
           <button class="btn friends-btn">Friends</button>
         </li>
@@ -285,8 +288,23 @@
 
   <!-- FRIEND CARD -->
   <template id="friend-card">
-    <img class="avatar rounded-4 border border-1 border-white" src="/public/leaf1.png" alt="avatar">
-    <h6 class="text-center m-0">Zakaria Wina</h6>
+    <img class="avatar rounded-4 border border-1 border-white" alt="avatar">
+    <h6 class="text-center m-0"></h6>
+  </template>
+
+  <!-- FRIEND CARD POPUP -->
+  <template id="friend-card-popup">
+    <div class="d-flex flex-column justify-content-center align-items-center rounded-5 gap-5 p-5">
+      <button class="popup-close btn-close align-self-end"></button>
+      <h1 class="popup-header"></h1>
+      <img class="avatar border border-1 border-white rounded-4" alt="avatar">
+      <h2>zwina</h2>
+      <h1>ZAKARIA WINA</h1>
+      <div class="buttons">
+        <button class="green-button btn btn-success btn-lg fw-bold"></button>
+        <button class="red-button btn btn-danger btn-lg fw-bold"></button>
+      </div>
+    </div>
   </template>
 
   <!-- MATCH CARD -->

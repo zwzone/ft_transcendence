@@ -5,6 +5,8 @@
 @import "./Navbar.css";
 @import "./pong.css";
 @import "./FriendsList.css";
+@import "./FriendCard.css";
+@import "./FriendCardPopup.css";
 
 /* Pages */
 @import "./LoginPage.css";
