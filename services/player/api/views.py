@@ -131,8 +131,15 @@ class PlayerFriendship(APIView):
                     for friendship in friendships:
                         friend = friendship.sender
                         friend_data = {
+                            "id": friend.id,
+                            "first_name": friend.first_name,
+                            "last_name": friend.last_name,
                             "username": friend.username,
+                            "status": friend.status,
+                            "tournament_name": friend.tournament_name,
+                            "two_factor": friend.two_factor,
                             "avatar": friend.avatar
+                            
                         }
                         friendship_data.append(friend_data)
                     return Response({
@@ -161,7 +168,10 @@ class PlayerFriendship(APIView):
                                 "username": receiver_username,
                                 "first_name": friendship.receiver.first_name,
                                 "last_name": friendship.receiver.last_name,
-                                "avatar": friendship.receiver.avatar
+                                "avatar": friendship.receiver.avatar,
+                                "status": friendship.recevier.status,
+                                "tounament_name": friendship.receiver.tournament_name,
+                                "two_factor": friendship.receiver.two_factor
                             }
                             friendship_data.append(friend_data)
                             encountered_usernames.append(receiver_username)
@@ -176,8 +186,14 @@ class PlayerFriendship(APIView):
                     for friendship in friendships:
                         friend = friendship.receiver
                         friend_data = {
+                            "id": friend.id,
                             "username": friend.username,
-                            "avatar": friend.avatar
+                            "first_name": friend.first_name,
+                            "last_name": friend.last_name,
+                            "status": friend.status,
+                            "tournament_name": friend.tournament_name,
+                            "avatar": friend.avatar,
+                            "two_factor": friend.two_factor
                         }
                         friendship_data.append(friend_data)
                     return Response({
