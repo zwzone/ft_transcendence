@@ -6,7 +6,7 @@ from django.utils.decorators import method_decorator
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import PlayerSerializer
+from .serializers import PlayerInfoSerializer
 from .models import Player, Friendship
 from .decorators import jwt_cookie_required
 import urllib.parse
@@ -19,7 +19,7 @@ class PlayerInfo(APIView):
     def get(self, request):
         try:
             player = Player.objects.get(id=request.decoded_token['id'])
-            serializer = PlayerSerializer(player)
+            serializer = (player)
             return Response({
                 "status": 200,
                 "player": serializer.data
@@ -157,7 +157,10 @@ class PlayerFriendship(APIView):
                         
                         if receiver_username not in encountered_usernames:
                             friend_data = {
+                                "id": friendship.receiver.id,
                                 "username": receiver_username,
+                                "first_name": friendship.receiver.first_name,
+                                "last_name": friendship.receiver.last_name,
                                 "avatar": friendship.receiver.avatar
                             }
                             friendship_data.append(friend_data)
