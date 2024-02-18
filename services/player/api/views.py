@@ -125,7 +125,7 @@ class PlayerFriendship(APIView):
             id = request.decoded_token['id']
             try:
                 get_type = request.query_params.get('target')
-                if get_type == 'invitations':
+                if get_type == 'invites':
                     friendships = Friendship.objects.filter(receiver=id, status='PN')
                     friendship_data = []
                     for friendship in friendships:
