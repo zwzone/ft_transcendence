@@ -1,6 +1,6 @@
 let ws;
 
-export function runGame(canvas, ctx) {
+export default function runPongTwoGame(canvas, ctx) {
   ws = new WebSocket(`wss://${window.ft_transcendence_host}/ws/matchmaking/2/`);
   canvas.width = 1920;
   canvas.height = 1080;
@@ -29,7 +29,7 @@ export function runGame(canvas, ctx) {
       ctx.fillText("ALREADY IN GAME", canvas.width / 2, canvas.height / 2);
       console.log("Closed");
       ws.close();
-      return ;
+      return;
     }
     ws = new WebSocket(`wss://${window.ft_transcendence_host}/ws/pong/${e.data}/2/`);
     ws.onmessage = function (e) {
