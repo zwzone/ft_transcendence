@@ -6,11 +6,11 @@ from .settings import COMPETITORS
 
 
 class Player(AbstractBaseUser):
+
     class Status(Enum):
         ONLINE = 'ON'
         OFFLINE = 'OF'
         INGAME = 'IG'
-
     STATUS_CHOICES = [
         (Status.ONLINE.value, 'ONLINE'),
         (Status.OFFLINE.value, 'OFFLINE'),
@@ -35,10 +35,10 @@ class Player(AbstractBaseUser):
 
 
 class Friendship(models.Model):
+
     class Status(Enum):
         ACCEPTED = 'AC'
         PENDING = 'PN'
-
     STATUS_CHOICES = [
         (Status.ACCEPTED.value, 'ACCEPTED'),
         (Status.PENDING.value, 'PENDING'),
@@ -54,6 +54,7 @@ class Friendship(models.Model):
 
 
 class Match(models.Model):
+
     class Game(Enum):
         PONG = "PO"
         TICTACTOE = "TC"
@@ -62,32 +63,46 @@ class Match(models.Model):
     def choices(cls):
         return [(choice.value, choice.name) for choice in cls]
 
-    game = models.CharField(max_length=2, choices=Game.choices())
-    tournament = models.ForeignKey('Tournament', on_delete=models.CASCADE, null=True, blank=True)
-    player1 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="player1", blank=True, null=True)
-    player2 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="player2", blank=True, null=True)
-    qualified = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="qualified", blank=True, null=True)
-    round = models.IntegerField(default=1)
+    game = models.CharField(max_length=2, choices=Game.choices(), null=False, blank=False)
+    tournament = models.ForeignKey('Tournament', on_delete=models.CASCADE, null=True, blank=False)
+    round = models.IntegerField(default=1) #fiha ni9ach
+
+
+
+class PlayerMatch(models.Model):
+
+    class Language(Enum):
+        C = 'CC'
+        CPP = 'CP'
+
+    @classmethod
+    def choices(cls):
+        return [(choice.value, choice.name) for choice in cls]
+
+    match_id = models.ForeignKey(Match, on_delete=models.CASCADE, null=False, blank=False)
+    player_id = models.ForeignKey(Player, on_delete=models.CASCADE,  null=False, blank=False)
+    score = models.IntegerField(default=0 ,null=False, blank=False)
+    language = models.CharField(max_length=2, choices=Language.choices(), null=True, blank=False)
+    executable_path = models.CharField(max_length=255, null=True, blank=False)
+    won = models.BooleanField(default=False, null=False, blank=False)
 
     def __str__(self):
-        return self.player1.name + " vs " + self.player2.name
+        return f"{self.versus.username} - {self.match.game} - Score: {self.score}"
 
 
 class Tournament(models.Model):
     class StatusChoices(Enum):
-        PENDING = 'PE'
-        IN_PROGRESS = 'IP'
-        FINISHED = 'FI'
+        PENDING = 'PN'
+        PROGRESS = 'PR'
+        FINISHED = 'FN'
 
         @classmethod
         def choices(cls):
             return [(choice.value, choice.name) for choice in cls]
 
-    players = models.ManyToManyField(Player, blank=True)
-    ongoing_round = models.IntegerField(default=1)
-    matches = models.ManyToManyField(Match, blank=True)
-    status = models.CharField(max_length=20, choices=StatusChoices.choices(), default=StatusChoices.PENDING.value)
-    over = models.BooleanField(default=False)
+    ongoing_round = models.IntegerField(default=1) #fiha ni9ach
+    status = models.CharField(max_length=2, choices=StatusChoices.choices(), default=StatusChoices.PENDING.value, null=False, blank=False)
+    players = models.ManyToManyField(Player, blank=False, null=True)
 
     def clean(self):
         if self.players.count() > COMPETITORS:

@@ -123,4 +123,4 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 COMPETITORS = 8
-ROUNDS = 4
+ROUNDS = 3
