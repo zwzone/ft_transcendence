@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar.js";
 import Footer from "./components/Footer.js";
 import PlayCard from "./components/PlayCard.js";
 import FriendsList from "./components/FriendsList.js";
+import SearchList from "./components/SearchList.js";
 import FriendCard from "./components/FriendCard.js";
 import FriendCardPopup from "./components/FriendCardPopup.js";
 import MatchCard from "./components/MatchCard.js";

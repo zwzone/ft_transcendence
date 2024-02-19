@@ -19,13 +19,9 @@ export default class FriendCard extends HTMLElement {
 
     const username = this.attributes["username"].value;
     const avatar = this.attributes["avatar"].value;
-    console.log("-> username:", username);
-    console.log("-> avatar:", avatar);
 
     this.querySelector("h6").textContent = username;
     this.querySelector("img").src = avatar;
-    console.log("-> h6", this.querySelector("h6"));
-    console.log("-> img", this.querySelector("img"));
 
     this.addEventListener("click", () => {
       const friend_card_popup = document.createElement("friend-card-popup");

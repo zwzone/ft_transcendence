@@ -15,8 +15,8 @@ export default class FriendsList extends HTMLElement {
     const friends_btn = nav.querySelector(".friends-btn");
     const requests_btn = nav.querySelector(".requests-btn");
     const invites_btn = nav.querySelector(".invites-btn");
+    const search_btn = this.querySelector(".search-btn");
     const friend_cards = this.querySelector(".friend-cards");
-    const friend_card_popup = this.querySelector("friend-card-popup");
 
     this.showCards("friends");
 
@@ -30,21 +30,28 @@ export default class FriendsList extends HTMLElement {
     invites_btn.addEventListener("click", () => {
       this.showCards("invites");
     });
+    search_btn.addEventListener("click", () => {
+      this.showCards("search");
+    });
   }
 
   showCards(friend_card_type) {
     const friend_cards = this.querySelector(".friend-cards");
+    friend_cards.innerHTML = "";
+
+    if (friend_card_type === "search") {
+      friend_cards.appendChild(document.createElement("search-list"));
+      return;
+    }
 
     fetching(
       `https://${window.ft_transcendence_host}/player/friendship/?target=${friend_card_type}`,
     ).then((req) => {
       const arr = req.friendships;
-      console.log("FRIENDS:", arr);
-      friend_cards.innerHTML = "";
       for (let i = 0; i < arr.length; i++) {
         const friend_card_elem = document.createElement("friend-card");
         friend_card_elem.setAttribute("friend-card-type", friend_card_type);
-        friend_card_elem.setAttribute("id", arr[i].id);
+        friend_card_elem.setAttribute("player-id", arr[i].id);
         friend_card_elem.setAttribute("avatar", arr[i].avatar);
         friend_card_elem.setAttribute("username", arr[i].username);
         friend_cards.appendChild(friend_card_elem);

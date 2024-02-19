@@ -31,41 +31,34 @@ export default class FriendCardPopup extends HTMLElement {
     } else if (this.attributes["friend-card-type"].value === "invites") {
       green_button.textContent = "Accept";
       red_button.textContent = "Decline";
+    } else if (this.attributes["friend-card-type"].value === "search") {
+      green_button.textContent = "Send Friend Request";
+      red_button.style.display = "none";
     }
 
     popup_header.textContent = this.attributes["friend-card-type"].value.toUpperCase().slice(0, -1);
+    if (this.attributes["friend-card-type"].value === "search") popup_header.textContent += "H";
 
     close_button.addEventListener("click", (event) => {
       this.parentElement.removeChild(this);
     });
 
     green_button.addEventListener("click", (event) => {
-      if (this.attributes["friend-card-type"].value === "invites") {
-        fetching(
-          `https://${window.ft_transcendence_host}/player/friendship/accept/?target=${this.attributes["username"].value}`,
-          "POST",
-          {
-            id: this.attributes["id"].value,
-          },
-        ).then((req) => {
-          console.log(req);
-        });
-      }
+      friendship_ation("POST", this.attributes["player-id"].value);
     });
 
-    green_button.addEventListener("click", (event) => {
-      if (this.attributes["friend-card-type"].value === "invites") {
-        fetching(
-          `https://${window.ft_transcendence_host}/player/friendship/accept/?target=${this.attributes["username"].value}`,
-          "DELETE",
-          {
-            id: this.attributes["id"].value,
-          },
-        ).then((req) => {
-          console.log(req);
-        });
-      }
+    red_button.addEventListener("click", (event) => {
+      friendship_ation("DELETE", this.attributes["player-id"].value);
     });
+
+    function friendship_ation(action, player_id) {
+      const json = JSON.stringify({
+        target_id: Number(player_id),
+      });
+      fetching(`https://${window.ft_transcendence_host}/player/friendship/`, action, json, {
+        "Content-Type": "application/json",
+      }).then((req) => {});
+    }
   }
 }
 
