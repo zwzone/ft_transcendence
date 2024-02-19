@@ -153,15 +153,19 @@ class PlayerFriendship(APIView):
                     for friendship in friendships:
                         sender_username = friendship.sender.username
                         receiver_username = friendship.receiver.username
-                        
                         if sender_username not in encountered_usernames:
                             friend_data = {
+                                "id": friendship.sender.id,
                                 "username": sender_username,
-                                "avatar": friendship.sender.avatar
+                                "first_name": friendship.sender.first_name,
+                                "last_name": friendship.sender.last_name,
+                                "avatar": friendship.sender.avatar,
+                                "status": friendship.sender.status,
+                                "tournament_name": friendship.sender.tournament_name,
+                                "two_factor": friendship.sender.two_factor,
                             }
                             friendship_data.append(friend_data)
                             encountered_usernames.append(sender_username)
-                        
                         if receiver_username not in encountered_usernames:
                             friend_data = {
                                 "id": friendship.receiver.id,
@@ -175,8 +179,7 @@ class PlayerFriendship(APIView):
                             }
                             friendship_data.append(friend_data)
                             encountered_usernames.append(receiver_username)
-
-                            return Response({
+                    return Response({
                                 "status": 200,
                                 "friendships": friendship_data
                             })
