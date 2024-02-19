@@ -25,7 +25,7 @@ SERVICES_DIR = Path(__file__).resolve().parent.parent.parent
 SECRET_KEY = getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = getenv("DEBUG") == "True"
+DEBUG = getenv("STAGE") == "Development"
 
 ALLOWED_HOSTS = [
     "authentication",
@@ -44,13 +44,14 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "api.middleware.JWTRevocationMiddleware",
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'api.urls'
@@ -130,6 +131,9 @@ STATIC_ROOT = AUTH_DIR / 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Add Player model to AUTH_USER_MODEL
+AUTH_USER_MODEL = "api.Player"
 
 # ft_transcendence hostname
 FT_TRANSCENDENCE_HOST=getenv("FT_TRANSCENDENCE_HOST")

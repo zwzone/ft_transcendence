@@ -37,8 +37,7 @@ profile-page .player-data-related>div {
   color: var(--color-secondary-100);
 }
 
-profile-page .match-cards>match-card,
-profile-page .friend-cards>friend-card {
+profile-page .match-cards>match-card {
   background-color: var(--color-primary-200);
 }
 
