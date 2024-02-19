@@ -1,0 +1,4 @@
+game-page a.btn {
+  background-color: var(--color-primary-400);
+  color: var(--color-primary-100)
+}
