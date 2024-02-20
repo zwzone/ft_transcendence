@@ -144,8 +144,10 @@ function reset(ball, canvas, ctx, paddle1, paddle2) {
   paddle2.positionY = canvas.height / 2 - 100;
   if (ball.speedX < 0) {
     left += 1;
+    ball.speedX = -10;
   } else {
     right += 1;
+    ball.speedX = 10;
   }
   if (left === 7 || right === 7) {
     window.cancelAnimationFrame(loopId);
@@ -160,8 +162,6 @@ function reset(ball, canvas, ctx, paddle1, paddle2) {
     }
     return true;
   }
-  if (Math.floor(Math.random() * 2)) ball.speedX = 10;
-  else ball.speedX = -10;
   if (Math.floor(Math.random() * 2)) ball.speedY = 10;
   else ball.speedY = -10;
   return false;
