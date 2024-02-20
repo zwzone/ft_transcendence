@@ -25,7 +25,7 @@ SERVICES_DIR = Path(__file__).resolve().parent.parent.parent
 SECRET_KEY = getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = getenv("DEBUG") == "True"
+DEBUG = getenv("STAGE") == "Development"
 
 ALLOWED_HOSTS = [
     "player",
@@ -44,13 +44,13 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
 ROOT_URLCONF = 'api.urls'
@@ -79,8 +79,12 @@ WSGI_APPLICATION = 'api.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': PLAYER_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': getenv("POSTGRES_DB"),
+        'USER': getenv("POSTGRES_USER"),
+        'PASSWORD': getenv("POSTGRES_PASSWORD"),
+        'HOST': getenv("POSTGRES_HOST"),
+        'PORT': getenv("POSTGRES_PORT"),
     }
 }
 

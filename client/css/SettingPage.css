@@ -66,6 +66,10 @@ setting-page main {
   background-color: rgba(0, 0, 0, 0.4);
 }
 
+.popup-twofa>div {
+  background-color: var(--color-primary-300);
+}
+
 /* The switch - the box around the slider */
 .switch {
   position: relative;

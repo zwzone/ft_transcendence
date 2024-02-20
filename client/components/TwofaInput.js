@@ -9,7 +9,13 @@ export default class TwofaInput extends HTMLElement {
     const template = document.getElementById("twofa-input");
     const component = template.content.cloneNode(true);
     this.appendChild(component);
-    this.classList.add("d-flex", "align-items-center", "justify-content-center");
+    this.classList.add(
+      "d-flex",
+      "flex-column",
+      "align-items-center",
+      "justify-content-center",
+      "gap-2",
+    );
 
     const input = this.querySelector("input");
     const button = this.querySelector("button");
