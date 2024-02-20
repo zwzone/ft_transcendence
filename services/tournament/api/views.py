@@ -41,11 +41,9 @@ def update_tournament(tournament_id):
     lobby.save()
 
 
-
 @api_view(['POST'])
-@jwt_cookie_required
 def create_tournament(request):
-    player_id = request.decoded_token['id']
+    player_id = 1  # request.decoded_token)['id']
     player = Player.objects.get(id=player_id)
     if Tournament.objects.filter(players=player, status=Tournament.StatusChoices.PENDING.value).exists():
         return Response({"status": 400, "message": "Already in a Tournament"})
@@ -61,7 +59,7 @@ def join_tournament(tournament_id, request):
     lobby = Tournament.objects.get(id=tournament_id)
     if lobby.players.count() >= COMPETITORS or lobby.status != Tournament.StatusChoices.PENDING.value:
         return Response({"status": 400, "message": "Tournament is full"})
-    player = Player.objects.get(id = request.decode_token['id'])
+    player = Player.objects.get(id=request.decode_token['id'])
     lobby.players.add(player)
     lobby.save()
     return Response({"status": 200, "message": "successfully joined tournament"})
@@ -123,7 +121,7 @@ def start_tournament(request, tournament_id):
 def leave_tournament(tournament_id, request):
     lobby = Tournament.objects.get(id=tournament_id)
     if lobby.status == Tournament.StatusChoices.PENDING.value:
-        player = Player.objects.get(id = request.decode_token['id'])
+        player = Player.objects.get(id=request.decode_token['id'])
         lobby.players.get(player)
         lobby.players.remove(player)
         return Response({"status": 200, "message": "player removed"})

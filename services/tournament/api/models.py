@@ -59,9 +59,9 @@ class Match(models.Model):
         PONG = "PO"
         TICTACTOE = "TC"
 
-    @classmethod
-    def choices(cls):
-        return [(choice.value, choice.name) for choice in cls]
+        @classmethod
+        def choices(cls):
+            return [(choice.value, choice.name) for choice in cls]
 
     game = models.CharField(max_length=2, choices=Game.choices(), null=False, blank=False)
     tournament = models.ForeignKey('Tournament', on_delete=models.CASCADE, null=True, blank=False)
@@ -75,9 +75,9 @@ class PlayerMatch(models.Model):
         C = 'CC'
         CPP = 'CP'
 
-    @classmethod
-    def choices(cls):
-        return [(choice.value, choice.name) for choice in cls]
+        @classmethod
+        def choices(cls):
+            return [(choice.value, choice.name) for choice in cls]
 
     match_id = models.ForeignKey(Match, on_delete=models.CASCADE, null=False, blank=False)
     player_id = models.ForeignKey(Player, on_delete=models.CASCADE,  null=False, blank=False)
@@ -87,7 +87,7 @@ class PlayerMatch(models.Model):
     won = models.BooleanField(default=False, null=False, blank=False)
 
     def __str__(self):
-        return f"{self.versus.username} - {self.match.game} - Score: {self.score}"
+        return f"Score: {self.score}"
 
 
 class Tournament(models.Model):
@@ -102,7 +102,7 @@ class Tournament(models.Model):
 
     ongoing_round = models.IntegerField(default=1) #fiha ni9ach
     status = models.CharField(max_length=2, choices=StatusChoices.choices(), default=StatusChoices.PENDING.value, null=False, blank=False)
-    players = models.ManyToManyField(Player, blank=False, null=True)
+    players = models.ManyToManyField(Player, blank=False)
 
     def clean(self):
         if self.players.count() > COMPETITORS:
