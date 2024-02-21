@@ -20,8 +20,10 @@ class PlayerInfo(APIView):
         try:
             username = request.query_params.get('username')
             if username:
-                player = Player.objects.get(username=username)
-                serializer = PlayerInfoSerializer(player)
+                player = Player.objects.filter(username=username)
+                if not player.exists():
+                    raise Player.DoesNotExist
+                serializer = PlayerInfoSerializer(player, many=True)
                 return Response({
                     "status": 200,
                     "players": serializer.data,
