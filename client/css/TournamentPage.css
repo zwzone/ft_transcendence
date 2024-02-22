@@ -2,6 +2,28 @@ tournament-page main {
   max-width: 1080px;
 }
 
+.tournament-actions {
+  background-color: var(--color-primary-400);
+  max-width: 1080px;
+}
+
+.tournament-create,
+.tournament-join,
+.tournament-current {
+  background-color: var(--color-primary-300);
+  color: var(--color-secondary-100);
+}
+
+.tournament-create button,
+.tournament-join button {
+  background-color: var(--color-primary-200);
+  color: var(--color-secondary-100);
+}
+
+.tournament-current h1 {
+  background-color: var(--color-primary-100);
+}
+
 tournament-player-card div,
 tournament-player-card h3 {
   background-color: var(--color-primary-300);

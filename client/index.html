@@ -140,7 +140,7 @@
   <!-- SETTING PAGE -->
   <template id="setting-template">
     <my-navbar></my-navbar>
-    <main class="container-fluid d-flex flex-column justify-content-center gap-5 my-5 p-5 rounded-5">
+    <main class="container-fluid d-flex flex-column justify-content-center gap-5 my-5 p-5">
       <h1 class="setting-header p-5 rounded-5 text-center display-1 fw-bold">
         SETTINGS
       </h1>
@@ -200,19 +200,20 @@
   <!-- TOURNAMENT PAGE -->
   <template id="tournament-template">
     <my-navbar></my-navbar>
-    <main class="container-fluid d-flex justify-content-around align-items-stretch gap-3 my-5">
-      <section class="tournament-quarterfinal d-flex flex-column justify-content-around align-items-center gap-3">
-        <tournament-match-card></tournament-match-card>
-        <tournament-match-card></tournament-match-card>
-        <tournament-match-card></tournament-match-card>
-        <tournament-match-card></tournament-match-card>
+    <main class="container-fluid d-flex flex-column justify-content-around align-items-stretch gap-3 my-5">
+      <section class="tournament-actions d-flex flex-column justify-content-center align-items-center py-5 px-4 rounded-5 gap-5">
+        <div class="tournament-create d-flex flex-column justify-content-center align-items-center p-4 rounded-5 gap-4">
+          <h1 class="text-center m-0">CREATE A TOURNAMENT</h1>
+          <button class="btn btn-lg fw-bold">CREATE</button>
+        </div>
+        <div class="tournament-join d-flex flex-column justify-content-center align-items-center p-4 rounded-5 gap-4">
+          <h1 class="text-center m-0">JOIN A TOURNAMENT</h1>
+          <button class="btn btn-lg fw-bold">JOIN</button>
+        </div>
       </section>
-      <section class="tournament-semifinal d-flex flex-column justify-content-around align-items-center gap-3">
-        <tournament-match-card></tournament-match-card>
-        <tournament-match-card></tournament-match-card>
-      </section>
-      <section class="tournament-final d-flex flex-column justify-content-around align-items-center gap-3">
-        <tournament-match-card></tournament-match-card>
+      <section class="tournament-current p-5 rounded-5">
+        <h1 class="text-center rounded-5 py-5 mb-5">CURRENT TOURNAMENT</h1>
+        <tournament-matches></tournament-matches>
       </section>
     </main>
     <my-footer></my-footer>
@@ -331,6 +332,23 @@
     <h6 class="text-center m-0">vs</h6>
     <h6 class="text-center m-0">5</h6>
     <h6 class="text-center m-0">Zakaria</h6>
+  </template>
+
+  <!-- TOURNAMENT MATCHES -->
+  <template id="tournament-matches">
+    <section class="tournament-quarterfinal d-flex flex-column justify-content-around align-items-center gap-3">
+      <tournament-match-card></tournament-match-card>
+      <tournament-match-card></tournament-match-card>
+      <tournament-match-card></tournament-match-card>
+      <tournament-match-card></tournament-match-card>
+    </section>
+    <section class="tournament-semifinal d-flex flex-column justify-content-around align-items-center gap-3">
+      <tournament-match-card></tournament-match-card>
+      <tournament-match-card></tournament-match-card>
+    </section>
+    <section class="tournament-final d-flex flex-column justify-content-around align-items-center gap-3">
+      <tournament-match-card></tournament-match-card>
+    </section>
   </template>
 
   <!-- TOURNAMENT MATCH CARD -->
