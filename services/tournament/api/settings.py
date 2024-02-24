@@ -134,6 +134,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # ft_transcendence hostname
 FT_TRANSCENDENCE_HOST=getenv("FT_TRANSCENDENCE_HOST")
 
+# Add Player model to AUTH_USER_MODEL
+AUTH_USER_MODEL = "api.Player"
+
 # Public URLs
 PUBLIC_TOURNAMENT_URL=getenv("PUBLIC_TOURNAMENT_URL")
 
