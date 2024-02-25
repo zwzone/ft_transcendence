@@ -12,6 +12,7 @@ import FriendCardPopup from "./components/FriendCardPopup.js";
 import MatchCard from "./components/MatchCard.js";
 import LoginButton from "./components/LoginButton.js";
 import TwofaInput from "./components/TwofaInput.js";
+import TournamentPopup from "./components/TournamentPopup.js";
 import TournamentMatches from "./components/TournamentMatches.js";
 import TournamentMatchCard from "./components/TournamentMatchCard.js";
 import TournamentPlayerCard from "./components/TournamentPlayerCard.js";

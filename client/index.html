@@ -201,17 +201,17 @@
   <template id="tournament-template">
     <my-navbar></my-navbar>
     <main class="container-fluid d-flex flex-column justify-content-around align-items-stretch gap-3 my-5">
-      <section class="tournament-actions d-flex flex-column justify-content-center align-items-center py-5 px-4 rounded-5 gap-5">
+      <section class="tournament-actions d-none flex-column justify-content-center align-items-center py-5 px-4 rounded-5 gap-5">
         <div class="tournament-create d-flex flex-column justify-content-center align-items-center p-4 rounded-5 gap-4">
           <h1 class="text-center m-0">CREATE A TOURNAMENT</h1>
           <button class="btn btn-lg fw-bold">CREATE</button>
         </div>
         <div class="tournament-join d-flex flex-column justify-content-center align-items-center p-4 rounded-5 gap-4">
           <h1 class="text-center m-0">JOIN A TOURNAMENT</h1>
-          <button class="btn btn-lg fw-bold">JOIN</button>
+          <div class="tournament-list"></div>
         </div>
       </section>
-      <section class="tournament-current p-5 rounded-5">
+      <section class="tournament-current d-none p-5 rounded-5">
         <h1 class="text-center rounded-5 py-5 mb-5">CURRENT TOURNAMENT</h1>
         <tournament-matches></tournament-matches>
       </section>
@@ -349,6 +349,17 @@
     <section class="tournament-final d-flex flex-column justify-content-around align-items-center gap-3">
       <tournament-match-card></tournament-match-card>
     </section>
+  </template>
+
+  <!-- TOURNAMENT POPUP -->
+  <template id="tournament-popup">
+    <div class="d-flex flex-column justify-content-center align-items-center rounded-5 gap-5 p-5">
+      <button class="popup-close btn-close align-self-end"></button>
+      <h1 class="popup-header fw-bold"></h1>
+      <input type="text" class="popup-input">
+      <h2 class="popup-name"></h2>
+      <button class="popup-btn btn btn-primary"></button>
+    </div>
   </template>
 
   <!-- TOURNAMENT MATCH CARD -->
