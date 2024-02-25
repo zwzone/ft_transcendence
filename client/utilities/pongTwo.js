@@ -51,7 +51,7 @@ export default function runPongTwoGame(canvas, ctx) {
   });
 }
 
-const keys = {
+export const keys = {
   38: "up",
   40: "down",
   87: "w",
@@ -59,7 +59,7 @@ const keys = {
 };
 
 
-class Paddle {
+export  class Paddle {
   constructor(position, size) {
     this.positionX = position[0];
     this.positionY = position[1];
@@ -77,7 +77,7 @@ class Paddle {
   }
 }
 
-class Ball {
+export class Ball {
   constructor(position, size) {
     this.positionX = position[0];
     this.positionY = position[1];
