@@ -1,71 +1,13 @@
-import json
-from channels.generic.websocket import AsyncJsonWebsocketConsumer
+import                                      json
+from    channels.generic.websocket  import  AsyncJsonWebsocketConsumer
+from    src.Player                  import  Player
+from    src.Move                    import  Move
+from    src.Match                   import  Match
 
-#Macro-Begin
 SIMULATE    = "simulate"
 EXIT        = "exit"
-#Macro-End
 
-#Data-Begin
-game        = Game()
-
-
-class Player():
-    def __init__( self ):
-        __sub_board   = [] #sub_board
-        __board       = [] #board
-
-        __bot_path    = "" #bot_path
-        __mode        = "" #mode ( manual, bot, ai )
-
-    def __str__( self ):
-        return  "sub_board   : " +  __sub_board + "\n"
-              + "board       : " +  __board     + "\n"
-              + "bot_path    : " +  __bot_path  + "\n"
-              + "mode        : " +  __mode
-
-
-    def __move_sub_board( move ):
-        pass
-
-    def __move_board( move ):
-        pass
-
-    def __play( move ):
-        pass
-
-    def __win( ):
-        pass
-
-    def simulate( move_s ):
-        move = [ int( _move_s[0] ), int( _move_s[1] ) ]
-
-        __play( move )
-
-        match 
-
-
-class Game():
-
-    def __init__( self ):
-        __id        = ""
-        __player_x  = Player() #player_x
-        __player_o  = Player() #player_o
-        __moves     = [ ] #moves
-
-    def __str__( self ):
-        return  "id         : " + __id          + "\n"
-              + "player_x   : " + __player_x    + "\n"
-              + "player_o   : " + __player_o    + "\n"
-              + "moves      : " + __moves
-
-
-    def simulate( move_s, player_type ):
-        match player_type:
-            case "x":
-
-
-
+Matches     = {}
 
 class TicTacToeConsumer( AsyncJsonWebsocketConsumer ):
 
@@ -83,10 +25,10 @@ class TicTacToeConsumer( AsyncJsonWebsocketConsumer ):
 
         match data_type:
 
-            case "simulate":
+            case SIMULATE:
                 simulate( data )
 
-            case "exit":
+            case EXIT:
                 exit_game( data )
 
 
