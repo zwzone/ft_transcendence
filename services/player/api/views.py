@@ -9,6 +9,7 @@ from .models import Player, Friendship
 from .decorators import jwt_cookie_required
 import urllib.parse
 import os
+from django.db.models import Q
 
 
 class PlayerInfo(APIView):
@@ -146,7 +147,7 @@ class PlayerFriendship(APIView):
                         "friendships": friendship_data
                     })
                 elif get_type == 'friends':
-                    friendships = Friendship.objects.filter(status='AC')
+                    friendships = Friendship.objects.filter(Q(sender=id) | Q(receiver=id),status="AC")
                     friendship_data = []
                     for friendship in friendships:
                         friend = friendship.sender if friendship.sender.id != id else friendship.receiver
