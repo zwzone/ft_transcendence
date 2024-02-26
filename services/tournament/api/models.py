@@ -4,11 +4,11 @@ from enum import Enum
 
 
 class Player(AbstractBaseUser):
-
     class Status(Enum):
         ONLINE = 'ON'
         OFFLINE = 'OF'
         INGAME = 'IG'
+
     STATUS_CHOICES = [
         (Status.ONLINE.value, 'ONLINE'),
         (Status.OFFLINE.value, 'OFFLINE'),
@@ -33,10 +33,10 @@ class Player(AbstractBaseUser):
 
 
 class Friendship(models.Model):
-
     class Status(Enum):
         ACCEPTED = 'AC'
         PENDING = 'PN'
+
     STATUS_CHOICES = [
         (Status.ACCEPTED.value, 'ACCEPTED'),
         (Status.PENDING.value, 'PENDING'),
@@ -84,10 +84,17 @@ class PlayerTournament(models.Model):
 
 
 class Match(models.Model):
-
     class Game(Enum):
         PONG = "PO"
         TICTACTOE = "TC"
+
+        @classmethod
+        def choices(cls):
+            return [(choice.value, choice.name) for choice in cls]
+
+    class State(Enum):
+        PLAYED = "PLY"
+        UNPLAYED = "UPL"
 
         @classmethod
         def choices(cls):
@@ -97,6 +104,7 @@ class Match(models.Model):
     game = models.CharField(max_length=2, choices=Game.choices(), null=False, blank=False)
     tournament = models.ForeignKey('Tournament', on_delete=models.CASCADE, null=True, blank=False)
     round = models.IntegerField(default=1)
+    state = models.CharField(max_length=3, choices=State.choices(), null=False, blank=False, default=State.UNPLAYED)
 
 
 class Tournament(models.Model):
@@ -110,7 +118,7 @@ class Tournament(models.Model):
             return [(choice.value, choice.name) for choice in cls]
 
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=20, null=False, blank=False)
+    name = models.CharField(max_length=20, blank=False, null=False, unique=False)
     round = models.IntegerField(default=1)
     status = models.CharField(max_length=2,
                               choices=StatusChoices.choices(),
