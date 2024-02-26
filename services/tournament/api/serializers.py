@@ -25,13 +25,11 @@ class PlayerMatchSerializer(serializers.ModelSerializer):
 
 
 class TournamentSerializer(serializers.ModelSerializer):
-    players = serializers.SerializerMethodField()
-    players_count = serializers.SerializerMethodField()
     matches = serializers.SerializerMethodField()
 
     class Meta:
         model = Tournament
-        fields = ('id', 'status', 'round', 'matches', 'players')
+        fields = ('id', 'name', 'status', 'round', 'matches')
 
     def get_matches(self, tournament):
         matches = Match.objects.filter(tournament=tournament)
@@ -39,22 +37,29 @@ class TournamentSerializer(serializers.ModelSerializer):
         return serializer.data
 
     def get_players(self, tournament):
+        tournament_data = {
+            'id': tournament.id,
+            'name': tournament.name,
+            'status': tournament.status,
+        }
         players_tournaments = PlayerTournament.objects.filter(tournament_id=tournament)
         serializer = PlayerTournamentSerializer(instance=players_tournaments, many=True)
-        return serializer.data
+        players_data = serializer.data
+        players_data.append(tournament_data)
+        return players_data
 
     def get_players_count(self, tournament):
         players_tournaments = PlayerTournament.objects.filter(tournament_id=tournament)
-        serializer = len(players_tournaments)
+        serializer = players_tournaments.count()
         return serializer
 
-    def is_player_in_pending_tournament(self, player):
-        pending_tournaments = Tournament.objects.filter(
+    def is_player_in_tournament(self, player):
+        tournament = Tournament.objects.filter(
             Q(playertournament__player_id=player) &
-            Q(status=Tournament.StatusChoices.PENDING.value) &
-            Q(status=Tournament.StatusChoices.PROGRESS.value)
-        ).exists()
-        return pending_tournaments
+            (Q(status=Tournament.StatusChoices.PENDING.value) |
+            Q(status=Tournament.StatusChoices.PROGRESS.value))
+        ).first()
+        return tournament
 
 
 class MatchSerializer(serializers.ModelSerializer):

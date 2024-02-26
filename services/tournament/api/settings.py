@@ -22,15 +22,13 @@ SERVICES_DIR = Path(__file__).resolve().parent.parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "TAHA howa lwa3er f team"
+SECRET_KEY = getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = "True"
+DEBUG = getenv("STAGE") == "Development"
 
 ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    "tournament",
+    "tournaments",
 ]
 
 # Application definition
@@ -81,8 +79,12 @@ WSGI_APPLICATION = 'api.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': TOURNAMENT_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': getenv("POSTGRES_DB"),
+        'USER': getenv("POSTGRES_USER"),
+        'PASSWORD': getenv("POSTGRES_PASSWORD"),
+        'HOST': getenv("POSTGRES_HOST"),
+        'PORT': getenv("POSTGRES_PORT"),
     }
 }
 
@@ -131,17 +133,12 @@ MEDIA_ROOT = TOURNAMENT_DIR / 'assets/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ft_transcendence hostname
-FT_TRANSCENDENCE_HOST=getenv("FT_TRANSCENDENCE_HOST")
-
 # Add Player model to AUTH_USER_MODEL
 AUTH_USER_MODEL = "api.Player"
 
-# Public URLs
-PUBLIC_TOURNAMENT_URL=getenv("PUBLIC_TOURNAMENT_URL")
+# ft_transcendence hostname
+FT_TRANSCENDENCE_HOST=getenv("FT_TRANSCENDENCE_HOST")
 
-# Private URLs
-PRIVATE_TOURNAMENT_URL=getenv("PRIVATE_TOURNAMENT_URL")
 
 COMPETITORS = 8
 ROUNDS = 3
