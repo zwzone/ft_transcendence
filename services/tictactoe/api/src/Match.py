@@ -19,22 +19,15 @@ class Match():
               + "player_o   : " + __player_o    + "\n"
               + "moves      : " + __moves
 
-    def simulate( move_s, player_type ):
-        move    = [ int( move_s[0] ),
-                    int( move_s[1] ),
-                    int( move_s[2] ), ]
+    def simulate( move_s, type_player ):
+        move    = Move( type_player,
+                        int( move_s[2] ),
+                        int( move_s[3] ),
+                        int( move_s[0] ),
+                        int( move_s[1] ) )
 
         match player_type:
             case "x":
-                match __player_x.simulate( move ):
-                    case PENDING:
-                        #Pending
-
-                    case WIN:
-                        #WIN
-                    
-                    case DRAW:
-                        #Annonce the Draw
-
-                    
-Software Enginner | Competitive Programmer | Fullstack | C/C++ Proficient
+                return __player_x.simulate( move )
+            case "o":
+                return __player_o.simulate( move )
