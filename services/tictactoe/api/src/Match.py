@@ -8,26 +8,26 @@ WIN         = 2
 class Match():
 
     def __init__( self ):
-        __id        = ""
-        __player_x  = Player() #player_x
-        __player_o  = Player() #player_o
-        __moves     = [ ] #moves
+        self.__id        = ""
+        self.__player_x  = Player() #player_x
+        self.__player_o  = Player() #player_o
+        self.__moves     = [ ] #moves
 
     def __str__( self ):
-        return  "id         : " + __id          + "\n"
-              + "player_x   : " + __player_x    + "\n"
-              + "player_o   : " + __player_o    + "\n"
-              + "moves      : " + __moves
+        return  "id         : " + self.__id          + "\n"  \
+              + "player_x   : " + self.__player_x    + "\n"  \
+              + "player_o   : " + self.__player_o    + "\n"  \
+              + "moves      : " + self.__moves
 
-    def simulate( move_s, type_player ):
+    def simulate( self, move_s, type_player ):
         move    = Move( type_player,
                         int( move_s[2] ),
                         int( move_s[3] ),
                         int( move_s[0] ),
                         int( move_s[1] ) )
 
-        match player_type:
+        match move.type_player:
             case "x":
-                return __player_x.simulate( move )
+                return self.__player_x.simulate( move )
             case "o":
-                return __player_o.simulate( move )
+                return self.__player_o.simulate( move )
