@@ -1,16 +1,15 @@
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
-from django.db import IntegrityError
 from django.utils.decorators import method_decorator
-from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import PlayerSerializer
+from .serializers import PlayerInfoSerializer
 from .models import Player, Friendship
 from .decorators import jwt_cookie_required
 import urllib.parse
 import os
+from django.db.models import Q
 
 
 class PlayerInfo(APIView):
@@ -18,8 +17,19 @@ class PlayerInfo(APIView):
     @method_decorator(jwt_cookie_required)
     def get(self, request):
         try:
+            username = request.query_params.get('username')
+            if username:
+                player = Player.objects.filter(username=username)
+                if not player.exists():
+                    raise Player.DoesNotExist
+                serializer = PlayerInfoSerializer(player, many=True)
+                return Response({
+                    "status": 200,
+                    "players": serializer.data,
+                    "message": "User found successfully"
+                })
             player = Player.objects.get(id=request.decoded_token['id'])
-            serializer = PlayerSerializer(player)
+            serializer = PlayerInfoSerializer(player)
             return Response({
                 "status": 200,
                 "player": serializer.data
@@ -130,24 +140,18 @@ class PlayerFriendship(APIView):
                     friendship_data = []
                     for friendship in friendships:
                         friend = friendship.sender
-                        friend_data = {
-                            "username": friend.username,
-                            "avatar": friend.avatar
-                        }
+                        friend_data = PlayerInfoSerializer(friend).data
                         friendship_data.append(friend_data)
                     return Response({
                         "status": 200,
                         "friendships": friendship_data
                     })
                 elif get_type == 'friends':
-                    friendships = Friendship.objects.filter(sender=id, status='AC')
+                    friendships = Friendship.objects.filter(Q(sender=id) | Q(receiver=id),status="AC")
                     friendship_data = []
                     for friendship in friendships:
-                        friend = friendship.receiver
-                        friend_data = {
-                            "username": friend.username,
-                            "avatar": friend.avatar
-                        }
+                        friend = friendship.sender if friendship.sender.id != id else friendship.receiver
+                        friend_data = PlayerInfoSerializer(friend).data
                         friendship_data.append(friend_data)
                     return Response({
                         "status": 200,
@@ -158,10 +162,7 @@ class PlayerFriendship(APIView):
                     friendship_data = []
                     for friendship in friendships:
                         friend = friendship.receiver
-                        friend_data = {
-                            "username": friend.username,
-                            "avatar": friend.avatar
-                        }
+                        friend_data = PlayerInfoSerializer(friend).data
                         friendship_data.append(friend_data)
                     return Response({
                         "status": 200,
@@ -190,15 +191,19 @@ class PlayerFriendship(APIView):
                         "message": "You can't send a friend request to yourself",
                     })
                 receiver = Player.objects.get(id=receiver_id)
-                if Player.objects.filter(id=receiver_id).exists():
-                    if Friendship.objects.filter(sender=sender, receiver=receiver).exists():
-                        friendship = Friendship.objects.get(sender=sender, receiver=receiver)
-                        friendship.status = 'AC'
-                        friendship.save()
-                        return Response({
-                                "status": 200,
-                                "message": "Friend request accepted successfully"
-                            })
+                if Friendship.objects.filter(sender=sender, receiver=receiver).exists():
+                    return Response({
+                        "status": 400,
+                        "message": "Friend request already sent",
+                    })
+                elif Friendship.objects.filter(sender=receiver, receiver=sender).exists():
+                    friendships = Friendship.objects.filter(sender=receiver, receiver=sender)
+                    friendships.update(status='AC')
+                    return Response({
+                    "status": 200,
+                    "message": "Friend requests accepted successfully"
+                    })
+                else:
                     friendship = Friendship.objects.create(sender=sender, receiver=receiver, status='PN')
                     friendship.save()
                     return Response({
@@ -223,22 +228,26 @@ class PlayerFriendship(APIView):
 
         @method_decorator(jwt_cookie_required)
         def delete(self, request):
-            try :
-                id = request.decoded_token['id']
-                sender = Player.objects.get(id=id)
+            try:
+                sender_id = request.decoded_token['id']
                 receiver_id = request.data.get('target_id')
+                sender = Player.objects.get(id=sender_id)
                 receiver = Player.objects.get(id=receiver_id)
-                friendship = Friendship.objects.get(sender=sender, receiver=receiver)
-                friendship.delete()
-                return Response({
-                    "status": 200,
-                    "message": 'Friendship deleted successfully'
-                })
-            except Friendship.DoesNotExist:
-                return Response({
-                    "status": 404,
-                    "message": "Friend request not found",
-                })
+                try:
+                    friendship = Friendship.objects.get(sender=sender, receiver=receiver)
+                except Friendship.DoesNotExist:
+                    friendship = Friendship.objects.get(sender=receiver, receiver=sender)
+                if friendship:
+                    friendship.delete()
+                    return Response({
+                        "status": 204,
+                        "message": 'Friendship deleted successfully'
+                    })
+                else:
+                    return Response({
+                        "status": 404,
+                        "message": "Friend request not found",
+                    })
             except Exception as e:
                 return Response({
                     "status": 500,
