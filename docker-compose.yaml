@@ -25,6 +25,9 @@ services:
             - .env
         networks:
             - ft_transcendence
+        depends_on:
+            postgres:
+                condition: service_healthy
         restart: on-failure
 
     player:
@@ -39,6 +42,9 @@ services:
             - .env 
         networks:
             - ft_transcendence
+        depends_on:
+            postgres:
+                condition: service_healthy
         restart: on-failure
 
     matchmaking:
@@ -53,6 +59,9 @@ services:
             - .env 
         networks:
             - ft_transcendence
+        depends_on:
+            postgres:
+                condition: service_healthy
         restart: on-failure
 
     pong:
@@ -67,6 +76,26 @@ services:
             - .env 
         networks:
             - ft_transcendence
+        depends_on:
+            postgres:
+                condition: service_healthy
+        restart: on-failure
+
+    tournament:
+        build:
+            context: ./services/tournament/
+            dockerfile: Dockerfile
+        image: tournament:deploy
+        container_name:  tournament
+        environment:
+            - STAGE=Deployment
+        env_file:
+            - .env 
+        networks:
+            - ft_transcendence
+        depends_on:
+            postgres:
+                condition: service_healthy
         restart: on-failure
 
     postgres:
@@ -77,6 +106,11 @@ services:
         networks:
             - ft_transcendence
         restart: on-failure
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
 
 networks:
     ft_transcendence:
