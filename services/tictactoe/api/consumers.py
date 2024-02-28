@@ -12,10 +12,19 @@ Matches     = {}
 class TicTacToeConsumer( AsyncJsonWebsocketConsumer ):
 
     async def connect( self ):
-        pass
+        await self.channel_layer.group_add(
+            "test",
+            self.channel_name
+        )
+        await self.accept()
+        print("Connected")
 
     async def disconnect( self, close_code ):
-            pass
+        await self.channel_layer.group_discard(
+            "test",
+            self.channel_name
+        )
+        print("disconnected")
 
     async def receive( self, data ):
         
@@ -42,7 +51,6 @@ class TicTacToeConsumer( AsyncJsonWebsocketConsumer ):
                 # Check Ai bot
                 # Send the new result to player
                 pass
-                
 
             case 'bot':
                 # Check bot
