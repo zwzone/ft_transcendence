@@ -48,7 +48,7 @@ class Matchmaking(WebsocketConsumer):
         print(text_data)
 
     def chat_message(self, event):
-        print(self.scope['client'], "     ", self.scope['user'])
+        print(self.scope['client'], "     ", self.scope['user'], flush=True)
         self.send(text_data=event["text"])
 
     def connect(self):
@@ -57,6 +57,7 @@ class Matchmaking(WebsocketConsumer):
             self.send("error")
             return
         r = get_room(self.scope['payload']['id'], self.scope['url_route']['kwargs']['capacity'], self.channel_name)
+        print(rooms, flush=True)
         if not r:
             return
         async_to_sync(self.channel_layer.group_add)(r['id'], self.channel_name)
