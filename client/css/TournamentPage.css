@@ -24,6 +24,14 @@ tournament-page main {
   background-color: var(--color-primary-100);
 }
 
+tournament-card {
+  background-color: var(--color-primary-200);
+}
+
+tournament-player-card {
+  background-color: var(--color-primary-200);
+}
+
 tournament-player-card div,
 tournament-player-card h3 {
   background-color: var(--color-primary-300);
@@ -43,6 +51,11 @@ tournament-player-card div h6 {
 tournament-match-card {
   background-color: var(--color-primary-100);
   box-shadow: 5px 5px 10px 0px var(--color-primary-200);
+}
+
+tournament-match-card button {
+  background-color: var(--color-primary-400) !important;
+  color: var(--color-secondary-100) !important;
 }
 
 tournament-popup {

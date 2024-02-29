@@ -1,7 +1,9 @@
 let ws;
 
-export default function runPongTwoGame(canvas, ctx) {
-  ws = new WebSocket(`wss://${window.ft_transcendence_host}/ws/matchmaking/2/`);
+export default function runPongTwoGame(canvas, ctx, match_id) {
+  ws = new WebSocket(
+    `wss://${window.ft_transcendence_host}/ws/matchmaking/2/${!match_id ? "" : match_id + "/"}`,
+  );
   canvas.width = 1920;
   canvas.height = 1080;
   const ball = new Ball([canvas.width / 2, canvas.height / 2], 20);
@@ -27,7 +29,7 @@ export default function runPongTwoGame(canvas, ctx) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.fillText("ALREADY IN GAME", canvas.width / 2, canvas.height / 2);
       ws.close();
-      return ;
+      return;
     }
     ws = new WebSocket(`wss://${window.ft_transcendence_host}/ws/pong/${e.data}/2/`);
     ws.onmessage = function (e) {
@@ -44,9 +46,9 @@ export default function runPongTwoGame(canvas, ctx) {
   window.addEventListener("keydown", function (e) {
     if (e.keyCode in keys) ws.send(keys[e.keyCode]);
   });
-  window.addEventListener("keydown", function(e) {
-    if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
-        e.preventDefault();
+  window.addEventListener("keydown", function (e) {
+    if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(e.code) > -1) {
+      e.preventDefault();
     }
   });
 }
@@ -57,7 +59,6 @@ const keys = {
   87: "w",
   83: "s",
 };
-
 
 class Paddle {
   constructor(position, size) {

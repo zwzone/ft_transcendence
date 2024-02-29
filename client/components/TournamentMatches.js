@@ -7,7 +7,7 @@ export default class TournamentMatches extends HTMLElement {
     const template = document.getElementById("tournament-matches");
     const component = template.content.cloneNode(true);
     this.appendChild(component);
-    this.classList.add("d-flex", "justify-content-center", "gap-3");
+    this.classList.add("d-none", "justify-content-center", "gap-3");
   }
 }
 

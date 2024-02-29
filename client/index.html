@@ -208,11 +208,12 @@
         </div>
         <div class="tournament-join d-flex flex-column justify-content-center align-items-center p-4 rounded-5 gap-4">
           <h1 class="text-center m-0">JOIN A TOURNAMENT</h1>
-          <div class="tournament-list"></div>
+          <div class="tournament-list d-flex flex-wrap justify-content-center align-items-center gap-1"></div>
         </div>
       </section>
-      <section class="tournament-current d-none p-5 rounded-5">
+      <section class="tournament-current d-none flex-column p-5 rounded-5">
         <h1 class="text-center rounded-5 py-5 mb-5">CURRENT TOURNAMENT</h1>
+        <tournament-players></tournament-players>
         <tournament-matches></tournament-matches>
       </section>
     </main>
@@ -243,7 +244,7 @@
     <nav class="nav-bar d-flex justify-content-center align-items-center">
       <ul class="d-flex justify-content-center align-items-center p-0 m-0 gap-1">
         <li>
-          <a class="link btn rounded-5 fs-5 px-4 py-0" href="/tournament/">Tournament</a>
+          <a class="link btn rounded-5 fs-5 px-4 py-0" href="/tournaments/">Tournament</a>
         </li>
         <li>
           <a class="link btn rounded-5 fs-5 px-4 py-0" href="/profile/">Profile</a>
@@ -334,6 +335,19 @@
     <h6 class="text-center m-0">Zakaria</h6>
   </template>
 
+  <!-- TOURNAMENT CARD -->
+  <template id="tournament-card">
+    <h3 class="tournament-name"></h1>
+    <h4 class="size">8 / 1</h2>
+  </template>
+
+  <!-- TOURNAMENT PLAYERS -->
+  <template id="tournament-players">
+    <section class="tournament-players-list d-flex flex-wrap gap-1"></section>
+    <button class="start btn">START</button>
+    <button class="leave btn">LEAVE</button>
+  </template>
+
   <!-- TOURNAMENT MATCHES -->
   <template id="tournament-matches">
     <section class="tournament-quarterfinal d-flex flex-column justify-content-around align-items-center gap-3">
@@ -356,26 +370,35 @@
     <div class="d-flex flex-column justify-content-center align-items-center rounded-5 gap-5 p-5">
       <button class="popup-close btn-close align-self-end"></button>
       <h1 class="popup-header fw-bold"></h1>
-      <input type="text" class="popup-input">
-      <h2 class="popup-name"></h2>
+      <div class="alias-name">
+        <h4>Your alias name</h4>
+        <input type="text" class="popup-input">
+      </div>
+      <div class="tournament-name">
+        <h4>Name of tournament</h4>
+        <input type="text" class="popup-input">
+      </div>
+      <h2 class="popup-tournament-name"></h2>
       <button class="popup-btn btn btn-primary"></button>
     </div>
   </template>
 
   <!-- TOURNAMENT MATCH CARD -->
   <template id="tournament-match-card">
-    <tournament-player-card></tournament-player-card>
-    <tournament-player-card></tournament-player-card>
+    <div class="d-flex justify-content-center align-items-center flex-wrap">
+      <tournament-player-card class="player1"></tournament-player-card>
+      <tournament-player-card class="player2"></tournament-player-card>
+    </div>
+    <button class="d-none btn">Play</button>
   </template>
 
   <!-- TOURNAMENT PLAYER CARD -->
   <template id="tournament-player-card">
     <div class="d-flex flex-column justify-content-center align-items-center m-0 p-1 gap-1 rounded-4">
-      <img class="avatar border border-1 border-white rounded-4" src="/public/leaf1.png" alt="avatar" referrerpolicy="no-referrer">
-      <h6 class="text-center m-0 py-1 px-2 rounded-4 fw-bold">Zakaria Wina</h6>
+      <img class="avatar border border-1 border-white rounded-4" alt="avatar" referrerpolicy="no-referrer">
+      <h6 class="tournament-name text-center m-0 py-1 px-2 rounded-4 fw-bold"></h6>
     </div>
-    <h3 class="fw-bold text-center m-0 p-1 rounded-bottom-4">
-      10
+    <h3 class="score fw-bold text-center m-0 p-1 rounded-bottom-4">-</h3>
     </div>
   </template>
 
