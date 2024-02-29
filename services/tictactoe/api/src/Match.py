@@ -9,8 +9,8 @@ class MatchC():
 
     def __init__( self ):
         self.__id        = ""
-        self.__player_x  = PlayerC() #player_x
-        self.__player_o  = PlayerC() #player_o
+        self.__player_x  = PlayerC("/home/ychaaibi/Desktop/ft_transcendence/services/tictactoe/api/bin/blue") #player_x blue
+        self.__player_o  = PlayerC("/home/ychaaibi/Desktop/ft_transcendence/services/tictactoe/api/bin/red") #player_o red
         self.__moves     = [ ] #moves
 
     def __str__( self ):

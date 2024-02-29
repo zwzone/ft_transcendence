@@ -193,11 +193,17 @@
         else
         {
             console.log("come");
-            // alert( data["message"] );
+            console.log(data["status"]);
+
             let elem = document.getElementById(data["index"]);
             console.log(elem);
             elem.classList.add(data["color"]);
             elem.removeEventListener("click", click);
+            if ( data["status"] == "WIN" )
+            {
+                alert("Sala Ter7 " + data["color"]);
+            }
+            // alert( data["message"] );
         }
     }
 

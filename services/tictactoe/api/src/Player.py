@@ -1,7 +1,7 @@
 # from    .Match   import  PENDING, DRAW, WIN
 
 class PlayerC():
-    def __init__( self ):
+    def __init__( self, bot_path ):
         self.__board             = [ [ [ [ 0 for _ in range( 3 ) ]
                                              for _ in range( 3 ) ]
                                              for _ in range( 3 ) ]
@@ -18,7 +18,7 @@ class PlayerC():
                                         "column"    : [0 for _ in range( 3 ) ],
                                         "diagonal"  : [0 for _ in range( 6 ) ]  }
 
-        self.__bot_path          = "" #bot_path
+        self.__bot_path          = bot_path #bot_path
         self.__mode              = "" #mode ( manual, bot, ai )
 
     def __str__( self ):
@@ -106,17 +106,18 @@ class PlayerC():
             self.__board_stats[  "column" ] \
                          [ move.sub_board_column ] += 1
             self.__board_stats[ "diagonal" ] \
-                         [ move.sub_board_column + move.sub_board_row ] += 1 * ( move.column + move.row == 2 )
+                         [ move.sub_board_column + move.sub_board_row ] += 1 * ( move.sub_board_column +  move.sub_board_row == 2 )
             self.__board_stats[ "diagonal" ]  \
-                              [ abs( move.sub_board_column - move.sub_board_row ) ] += 1 * ( move.column == move.row )
+                              [ abs( move.sub_board_column - move.sub_board_row ) ] += 1 * ( move.sub_board_column == move.sub_board_row )
             self.__sub_board_stats[ move.sub_board_row ]      \
                                   [ move.sub_board_column ]   \
                                   [ "stats" ] = move.type_player # Update Sub-Board stat to move.player_type ( X, O ) [ WIN ]
                         
     def __play( self, move ):
+        print(str(move))
+        print(self.__board_stats)
         self.__move_sub_board( move )
         self.__move_board    ( move )
-
     def __stat( self, move ):
         if  self.__board_stats[   "row"   ]             \
                          [ move.sub_board_row ] == 3  \
@@ -130,7 +131,6 @@ class PlayerC():
             self.__board_stats[ "diagonal" ]  \
                          [ 2 ] == 3:
             print("WIN ALL", flush=True)
-
             return  "WIN"
         #Check Draw
         #else Then
@@ -140,7 +140,7 @@ class PlayerC():
         print("Enter here", flush=True)
         self.__play( move )
         # pass
-        self.__stat( move )
+        return self.__stat( move )
 
 
 # 0000 0001 0002     0100 0101 0102     0200 0201 0202

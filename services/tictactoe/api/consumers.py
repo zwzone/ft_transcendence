@@ -49,6 +49,7 @@ class TicTacToeConsumer( AsyncWebsocketConsumer ):
     async def simulate_game( self, data ):
         print("simu\n", flush=True)
         print(str(Matches["test"]), flush=True)
+
         # await self.close()
         # _mode       = ""
         # _type       = data.get("type")
@@ -78,14 +79,33 @@ class TicTacToeConsumer( AsyncWebsocketConsumer ):
 
         # global Matches
         if data["color"] == "red":
-            Matches["test"].simulate( data["index"], "x" )
-        else:
-            Matches["test"].simulate( data["index"], "o" )
+            
+            match Matches["test"].simulate( data["index"], "x" ):
+                case "WIN":
+                    print("Nod dga3d", flush=True)
+                    status = "WIN"
+                case "PENDING":
+                    print("Ba9i", flush=True)
+                    status = "PENDING"
 
+        else:
+            match Matches["test"].simulate( data["index"], "o" ):
+                case "WIN":
+                    print("Nod dga3d", flush=True)
+                    Matches["test"] = MatchC()
+
+                    status = "WIN"
+                case "PENDING":
+                    print("Ba9i", flush=True)
+                    status = "PENDING"
+
+
+        print(status, flush=True)
         await self.channel_layer.group_send("test", {
                 'type': 'send_message',
                 'index': data["index"],
                 'color': data["color"],
+                'status': status,
         })
     
     async def send_message( self, data ):
@@ -93,6 +113,7 @@ class TicTacToeConsumer( AsyncWebsocketConsumer ):
         await self.send(text_data=json.dumps({
             "index": data["index"],
             "color": data["color"],
+            "status": data["status"],
         }))
 
     async def receive( self, text_data=None ):

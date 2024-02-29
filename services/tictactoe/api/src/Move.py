@@ -11,6 +11,11 @@ class MoveC( ):
         self.__sub_board_column = sub_board_column_
         self.__type_player      = type_player_
   
+    def __str__( self ):
+        return  "row    :   "   + str( self.__row )                 + "\n"  + \
+                "column :   "   + str( self.__column )              + "\n"  + \
+                "_sub_r :   "   + str( self.__sub_board_row )       + "\n"  + \
+                "_sub_c :   "   + str( self.__sub_board_column )    + "\n"
 
     @property
     def type_player( self ):
