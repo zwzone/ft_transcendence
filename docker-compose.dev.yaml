@@ -30,6 +30,9 @@ services:
             - ./services/authentication/:/microservice/authentication/:rw
         networks:
             - ft_transcendence
+        depends_on:
+            postgres:
+                condition: service_healthy
         restart: on-failure
 
     player:
@@ -46,6 +49,9 @@ services:
             - ./services/player/:/microservice/player/:rw
         networks:
             - ft_transcendence
+        depends_on:
+            postgres:
+                condition: service_healthy
         restart: on-failure
 
     matchmaking:
@@ -62,6 +68,9 @@ services:
             - ./services/matchmaking/:/microservice/matchmaking/:rw
         networks:
             - ft_transcendence
+        depends_on:
+            postgres:
+                condition: service_healthy
         restart: on-failure
 
     pong:
@@ -78,6 +87,28 @@ services:
             - ./services/pong/:/microservice/pong/:rw
         networks:
             - ft_transcendence
+        depends_on:
+            postgres:
+                condition: service_healthy
+        restart: on-failure
+
+    tournament:
+        build:
+            context: ./services/tournament/
+            dockerfile: Dockerfile.dev
+        image: tournament:develop
+        container_name:  tournament
+        environment:
+            - STAGE=Development
+        env_file:
+            - .env
+        volumes:
+            - ./services/tournament/:/microservice/tournament/:rw
+        networks:
+            - ft_transcendence
+        depends_on:
+            postgres:
+                condition: service_healthy
         restart: on-failure
 
     postgres:
@@ -88,6 +119,11 @@ services:
         networks:
             - ft_transcendence
         restart: on-failure
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
 
     pgadmin:
         image: dpage/pgadmin4
