@@ -65,7 +65,7 @@ class PlayerMatch(models.Model):
     match_id = models.ForeignKey('Match', on_delete=models.CASCADE, null=False, blank=False)
     player_id = models.ForeignKey(Player, on_delete=models.CASCADE, null=False, blank=False)
     score = models.IntegerField(default=0, null=False, blank=False)
-    language = models.CharField(max_length=2, choices=Language.choices(), null=True, blank=False)
+    language = models.CharField(max_length=2, choices=Language.choices(), null=True, blank=False, default=Language.C.value)
     executable_path = models.CharField(max_length=255, null=True, blank=False)
     won = models.BooleanField(default=False, null=False, blank=False)
 
@@ -101,10 +101,10 @@ class Match(models.Model):
             return [(choice.value, choice.name) for choice in cls]
 
     id = models.AutoField(primary_key=True)
-    game = models.CharField(max_length=2, choices=Game.choices(), null=False, blank=False)
+    game = models.CharField(max_length=2, choices=Game.choices(), null=False, blank=False, default=Game.PONG.value)
     tournament = models.ForeignKey('Tournament', on_delete=models.CASCADE, null=True, blank=False)
     round = models.IntegerField(default=1)
-    state = models.CharField(max_length=3, choices=State.choices(), null=False, blank=False, default=State.UNPLAYED)
+    state = models.CharField(max_length=3, choices=State.choices(), null=False, blank=False, default=State.UNPLAYED.value)
 
 
 class Tournament(models.Model):

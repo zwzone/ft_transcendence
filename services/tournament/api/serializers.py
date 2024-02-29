@@ -6,22 +6,20 @@ from django.db.models import Q
 class PlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
-        fields = ('id', 'email', 'tournament_name')
-
-
-class PlayerTournamentSerializer(serializers.ModelSerializer):
-    player_id = PlayerSerializer()
-
-    class Meta:
-        model = PlayerTournament
-        fields = ('player_id', 'creator', 'tournament_id')
+        fields = ('avatar', 'tournament_name')
 
 
 class PlayerMatchSerializer(serializers.ModelSerializer):
-    player_id = PlayerSerializer()
+    player = serializers.SerializerMethodField()
+
     class Meta:
         model = PlayerMatch
-        fields = ('player_id', 'match_id', 'score')
+        fields = ('player', 'score')
+    
+    def get_player(self, player_id):
+        player = Player.objects.get(id=player_id.id)
+        serializer = PlayerSerializer(player)
+        return serializer.data
 
 
 class TournamentSerializer(serializers.ModelSerializer):
@@ -37,21 +35,16 @@ class TournamentSerializer(serializers.ModelSerializer):
         return serializer.data
 
     def get_players(self, tournament):
-        tournament_data = {
-            'id': tournament.id,
-            'name': tournament.name,
-            'status': tournament.status,
-        }
         players_tournaments = PlayerTournament.objects.filter(tournament_id=tournament)
-        serializer = PlayerTournamentSerializer(instance=players_tournaments, many=True)
-        players_data = serializer.data
-        players_data.append(tournament_data)
-        return players_data
+        players = []
+        for player_tournament in players_tournaments:
+            players.append(Player.objects.get(id=player_tournament.player_id.id))
+        player_data = PlayerSerializer(instance=players, many=True)
+        return player_data.data
 
     def get_players_count(self, tournament):
         players_tournaments = PlayerTournament.objects.filter(tournament_id=tournament)
-        serializer = players_tournaments.count()
-        return serializer
+        return players_tournaments.count()
 
     def is_player_in_tournament(self, player):
         tournament = Tournament.objects.filter(
@@ -61,15 +54,18 @@ class TournamentSerializer(serializers.ModelSerializer):
         ).first()
         return tournament
 
+    def get_creator(self, tournament, player):
+        creator = PlayerTournament.objects.filter(tournament_id=tournament, player_id=player, creator=True).first()
+        return creator
 
 class MatchSerializer(serializers.ModelSerializer):
-    player_matches = serializers.SerializerMethodField()
+    matches = serializers.SerializerMethodField()
 
     class Meta:
         model = Match
-        fields = ('id', 'game', 'tournament', 'round', 'player_matches')
+        fields = ('id', 'game', 'state', 'round', 'matches')
 
-    def get_player_matches(self, match):
+    def get_matches(self, match):
         player_matches = PlayerMatch.objects.filter(match_id=match.id)[:2]
         serializer = PlayerMatchSerializer(instance=player_matches, many=True)
         return serializer.data
