@@ -35,7 +35,7 @@ int main()
 
         // Write an action using cout. DON'T FORGET THE "<< endl"
         // To debug: cerr << "Debug messages..." << endl;
-
+        cerr << "waiting" << endl;
         bool    found = false;
 
         for ( int i=0; i<3 and !found; i++ )
@@ -49,7 +49,7 @@ int main()
                         if ( board[i][j][k][l] != 0 )
                         {
                             found = true;
-                            cout << i << " " << j << " " << k << " " << l << endl;
+                            cout << i << j << k << l << endl;
                             board[i][j][k][l] = true;
                             break ;
                         }

@@ -153,10 +153,13 @@
     let but = document.getElementById('test');
     let btns_move = document.getElementsByClassName('but_move');
     let color = "blue";
+    let turn  = "red";
 
     // console.log( btn)
     function click(event)
     {
+        if ( turn != color ) return ;
+
         const index = event.target.getAttribute("id");
         console.log("clicked elemt");
         Socket.send( JSON.stringify({"index" : index, "color" : color}) );
@@ -180,15 +183,21 @@
     //     console.log("hello");
     // }
 
-    Socket.onmessage = function (e)
+    Socket.onmessage = async function (e)
     {
         let data = JSON.parse(e.data);
-
-        console.log("connected");
+    
+        console.log(data);
         if ( data["type"] == "welcome" )
         {
             color = data["color"];
             console.log(color);
+            
+            // if ( turn == color )
+            // {
+            // //  await sleep(50);
+            //     Socket.send( JSON.stringify({"index" : "bot", "color":color}))
+            // }
         }
         else
         {
@@ -199,10 +208,23 @@
             console.log(elem);
             elem.classList.add(data["color"]);
             elem.removeEventListener("click", click);
+            turn = data["next-turn"];
+            console.log(turn);
             if ( data["status"] == "WIN" )
             {
                 alert("Sala Ter7 " + data["color"]);
             }
+            // if ( turn == color )
+            // {
+            //     try{
+            //         await asyncio.sleep(3);
+            //     }
+            //     catch(e)
+            //     {
+            //         console.log(e);
+            //     }
+            //     Socket.send( JSON.stringify({"mode" : "bot", "color":color}))
+            // }
             // alert( data["message"] );
         }
     }

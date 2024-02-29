@@ -1,19 +1,25 @@
 import                                      json
+import                                      subprocess
 from    channels.generic.websocket  import  AsyncWebsocketConsumer
 # from    .src.Player                  import  PlayerC
 # from    .src.Move                    import  Move
-from    .src.Match                   import  MatchC
+from    .src.Match                   import MatchC
 
 SIMULATE    = "simulate"
 EXIT        = "exit"
 
 Matches     = { "test":MatchC() }
 num         = 0
+moves       = []
+
+red_proc    = None
+blue_proc   = None
 
 class TicTacToeConsumer( AsyncWebsocketConsumer ):
 
     async def connect( self ):
-        print("Connected", flush=True)
+        self.__proc = None
+        # print("Connected", flush=True)
         await self.channel_layer.group_add(
             "test",
             self.channel_name
@@ -29,6 +35,17 @@ class TicTacToeConsumer( AsyncWebsocketConsumer ):
                 "color":"red" if ( num % 2 == 0 ) else "blue",
             })
         )
+        # print("end", flush=True)
+
+        if num % 2 == 0: #Red O 
+            red_proc = subprocess.Popen( "/home/ychaaibi/Desktop/ft_transcendence/services/tictactoe/api/bin/red",
+                                            subprocess.stdin.PIPE,
+                                            subprocess.stdout.PIPE,
+                                            subprocess.stderr.PIPE,
+                                            text=True )
+        else: #Blue X
+            pass
+
         num += 1
 
     async def disconnect( self, close_code ):
@@ -39,45 +56,7 @@ class TicTacToeConsumer( AsyncWebsocketConsumer ):
         )
 
     async def welcome( self, data ):
-        await self.send(
-            text_data=json.dumps({
-                "type":data["type"],
-                "color":data["color"],
-            })
-        )
-
-    async def simulate_game( self, data ):
-        print("simu\n", flush=True)
-        print(str(Matches["test"]), flush=True)
-
-        # await self.close()
-        # _mode       = ""
-        # _type       = data.get("type")
-        # _message    = data.get("message")
-
-
-        # match _mode:
-        #     case 'ai':
-        #         # Check Ai bot
-        #         # Send the new result to player
-        #         pass
-
-        #     case 'bot':
-        #         # Check bot
-        #         # Send the new result to players ( Player didn't provide a valid move )
-        #         pass
-
-        #     case 'manual':
-        #         # Check data.move
-        #         pass
-
-        #     case 'match-exit':
-        #         # send the new result to players ( Player abort the match ... )
-        #         pass
-        
-        #     case 'test':
-
-        # global Matches
+        #Updata data["index"] = Program
         if data["color"] == "red":
             
             match Matches["test"].simulate( data["index"], "x" ):
@@ -99,6 +78,8 @@ class TicTacToeConsumer( AsyncWebsocketConsumer ):
                     print("Ba9i", flush=True)
                     status = "PENDING"
 
+        moves.append( data["index"] )
+
 
         print(status, flush=True)
         await self.channel_layer.group_send("test", {
@@ -113,6 +94,7 @@ class TicTacToeConsumer( AsyncWebsocketConsumer ):
         await self.send(text_data=json.dumps({
             "index": data["index"],
             "color": data["color"],
+            'next-turn': "red" if data["color"] == "blue" else "blue",
             "status": data["status"],
         }))
 
