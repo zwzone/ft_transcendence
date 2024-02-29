@@ -1,26 +1,26 @@
-from    Player  import   Player
-from    Move    import   Move
+from    .Player  import   PlayerC
+from    .Move    import   MoveC
 
 PENDING     = 0
 DRAW        = 1
-WIN         = 2
+WIN         = 3
 
-class Match():
+class MatchC():
 
     def __init__( self ):
         self.__id        = ""
-        self.__player_x  = Player() #player_x
-        self.__player_o  = Player() #player_o
+        self.__player_x  = PlayerC() #player_x
+        self.__player_o  = PlayerC() #player_o
         self.__moves     = [ ] #moves
 
     def __str__( self ):
-        return  "id         : " + self.__id          + "\n"  \
-              + "player_x   : " + self.__player_x    + "\n"  \
-              + "player_o   : " + self.__player_o    + "\n"  \
-              + "moves      : " + self.__moves
+        return  "id         : " + str(self.__id)          + "\n"  \
+              + "moves      : " + str(self.__moves)
+            #   + "player_x   : " + self.__player_x    + "\n"  \ 
+            #   + "player_o   : " + self.__player_o    + "\n"  \
 
     def simulate( self, move_s, type_player ):
-        move    = Move( type_player,
+        move    = MoveC( type_player,
                         int( move_s[2] ),
                         int( move_s[3] ),
                         int( move_s[0] ),

@@ -1,4 +1,4 @@
-class Move( ):
+class MoveC( ):
     def __init__( self, type_player_        = -1,
                         row_                = -1,
                         column_             = -1,
@@ -35,14 +35,14 @@ class Move( ):
 
     @property
     def sub_board_row( self ):
-        return  self.__sub_board
+        return  self.__sub_board_row
     @sub_board_row.setter
     def sub_board_row( self, sub_board_row_ ):
         self.__sub_board_row = sub_board_row_
 
     @property
     def sub_board_column( self ):
-        return  self.__sub_board
-    @sub_board_column_.setter
+        return  self.__sub_board_column
+    @sub_board_column.setter
     def sub_board_column( self, sub_board_column_ ):
         self.__sub_board_column = sub_board_column_

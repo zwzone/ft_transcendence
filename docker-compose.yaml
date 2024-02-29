@@ -1,82 +1,98 @@
 services:
-    ft-transcendence:
+    # ft-transcendence:
+    #     build:
+    #         context: ./client/
+    #         dockerfile: Dockerfile
+    #     image: ft-transcendence:deploy
+    #     container_name: ft-transcendence
+    #     environment:
+    #         - STAGE=Deployment
+    #     ports:
+    #         - 443:443
+    #     networks:
+    #         - ft_transcendence
+    #     restart: on-failure
+
+    # authentication:
+    #     build:
+    #         context: ./services/authentication/
+    #         dockerfile: Dockerfile
+    #     image: authentication:deploy
+    #     container_name: authentication
+    #     environment:
+    #         - STAGE=Deployment
+    #     env_file:
+    #         - .env
+    #     networks:
+    #         - ft_transcendence
+    #     restart: on-failure
+
+    # player:
+    #     build:
+    #         context: ./services/player/
+    #         dockerfile: Dockerfile
+    #     image: player:deploy
+    #     container_name:  player
+    #     environment:
+    #         - STAGE=Deployment
+    #     env_file:
+    #         - .env 
+    #     networks:
+    #         - ft_transcendence
+    #     restart: on-failure
+
+    # matchmaking:
+    #     build:
+    #         context: ./services/matchmaking/
+    #         dockerfile: Dockerfile
+    #     image: matchmaking:deploy
+    #     container_name:  matchmaking
+    #     environment:
+    #         - STAGE=Deployment
+    #     env_file:
+    #         - .env 
+    #     networks:
+    #         - ft_transcendence
+    #     restart: on-failure
+
+    # pong:
+    #     build:
+    #         context: ./services/pong/
+    #         dockerfile: Dockerfile
+    #     image: pong:deploy
+    #     container_name:  pong
+    #     environment:
+    #         - STAGE=Deployment
+    #     env_file:
+    #         - .env 
+    #     networks:
+    #         - ft_transcendence
+    #     restart: on-failure
+
+    tictactoe:
         build:
-            context: ./client/
+            context: ./services/tictactoe/
             dockerfile: Dockerfile
-        image: ft-transcendence:deploy
-        container_name: ft-transcendence
+        image: tictactoe:deploy
+        container_name:  tictactoe
         environment:
             - STAGE=Deployment
+        env_file:
+            - .env
         ports:
-            - 443:443
+            - 8000:8000
         networks:
             - ft_transcendence
         restart: on-failure
 
-    authentication:
-        build:
-            context: ./services/authentication/
-            dockerfile: Dockerfile
-        image: authentication:deploy
-        container_name: authentication
-        environment:
-            - STAGE=Deployment
-        env_file:
-            - .env
-        networks:
-            - ft_transcendence
-        restart: on-failure
-
-    player:
-        build:
-            context: ./services/player/
-            dockerfile: Dockerfile
-        image: player:deploy
-        container_name:  player
-        environment:
-            - STAGE=Deployment
-        env_file:
-            - .env 
-        networks:
-            - ft_transcendence
-        restart: on-failure
-
-    matchmaking:
-        build:
-            context: ./services/matchmaking/
-            dockerfile: Dockerfile
-        image: matchmaking:deploy
-        container_name:  matchmaking
-        environment:
-            - STAGE=Deployment
-        env_file:
-            - .env 
-        networks:
-            - ft_transcendence
-        restart: on-failure
-
-    pong:
-        build:
-            context: ./services/pong/
-            dockerfile: Dockerfile
-        image: pong:deploy
-        container_name:  pong
-        environment:
-            - STAGE=Deployment
-        env_file:
-            - .env 
-        networks:
-            - ft_transcendence
-        restart: on-failure
-
-    postgres:
-        image: postgres:16.2-bullseye
-        container_name: postgres
-        env_file:
-            - .env
-        networks:
-            - ft_transcendence
-        restart: on-failure
+    # postgres:
+    #     image: postgres:16.2-bullseye
+    #     container_name: postgres
+    #     env_file:
+    #         - .env
+    #     networks:
+    #         - ft_transcendence
+    #     restart: on-failure
 
 networks:
     ft_transcendence:

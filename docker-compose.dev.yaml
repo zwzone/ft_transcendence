@@ -1,104 +1,122 @@
 services:
-    ft-transcendence:
-        build:
-            context: ./client/
-            dockerfile: Dockerfile.dev
-        image: ft-transcendence:develop
-        container_name: ft-transcendence
-        environment:
-            - STAGE=Development
-        volumes:
-            - ./client:/var/www/ft_transcendence/:ro
-            - ./client/conf/:/etc/nginx/sites-enabled/:ro
-        ports:
-            - 443:443
-        networks:
-            - ft_transcendence
-        restart: on-failure
+    # ft-transcendence:
+    #     build:
+    #         context: ./client/
+    #         dockerfile: Dockerfile.dev
+    #     image: ft-transcendence:develop
+    #     container_name: ft-transcendence
+    #     environment:
+    #         - STAGE=Development
+    #     volumes:
+    #         - ./client:/var/www/ft_transcendence/:ro
+    #         - ./client/conf/:/etc/nginx/sites-enabled/:ro
+    #     ports:
+    #         - 443:443
+    #     networks:
+    #         - ft_transcendence
+    #     restart: on-failure
     
-    authentication:
+    # authentication:
+    #     build:
+    #         context: ./services/authentication/
+    #         dockerfile: Dockerfile.dev
+    #     image: authentication:develop
+    #     container_name: authentication
+    #     environment:
+    #         - STAGE=Development
+    #     env_file:
+    #         - .env
+    #     volumes:
+    #         - ./services/authentication/:/microservice/authentication/:rw
+    #     networks:
+    #         - ft_transcendence
+    #     restart: on-failure
+
+    # player:
+    #     build:
+    #         context: ./services/player/
+    #         dockerfile: Dockerfile.dev
+    #     image: player:develop
+    #     container_name:  player
+    #     environment:
+    #         - STAGE=Development
+    #     env_file:
+    #         - .env
+    #     volumes:
+    #         - ./services/player/:/microservice/player/:rw
+    #     networks:
+    #         - ft_transcendence
+    #     restart: on-failure
+
+    # matchmaking:
+    #     build:
+    #         context: ./services/matchmaking/
+    #         dockerfile: Dockerfile.dev
+    #     image: matchmaking:develop
+    #     container_name:  matchmaking
+    #     environment:
+    #         - STAGE=Development
+    #     env_file:
+    #         - .env
+    #     volumes:
+    #         - ./services/matchmaking/:/microservice/matchmaking/:rw
+    #     networks:
+    #         - ft_transcendence
+    #     restart: on-failure
+
+    # pong:
+    #     build:
+    #         context: ./services/pong/
+    #         dockerfile: Dockerfile.dev
+    #     image: pong:develop
+    #     container_name:  pong
+    #     environment:
+    #         - STAGE=Development
+    #     env_file:
+    #         - .env
+    #     volumes:
+    #         - ./services/pong/:/microservice/pong/:rw
+    #     networks:
+    #         - ft_transcendence
+    #     restart: on-failure
+
+    tictactoe:
         build:
-            context: ./services/authentication/
+            context: ./services/tictactoe/
             dockerfile: Dockerfile.dev
-        image: authentication:develop
-        container_name: authentication
+        image: tictactoe:develop
+        container_name:  tictactoe
         environment:
             - STAGE=Development
         env_file:
             - .env
         volumes:
-            - ./services/authentication/:/microservice/authentication/:rw
+            - ./services/tictactoe/:/microservice/tictactoe/:rw
         networks:
             - ft_transcendence
-        restart: on-failure
-
-    player:
-        build:
-            context: ./services/player/
-            dockerfile: Dockerfile.dev
-        image: player:develop
-        container_name:  player
-        environment:
-            - STAGE=Development
-        env_file:
-            - .env
-        volumes:
-            - ./services/player/:/microservice/player/:rw
-        networks:
-            - ft_transcendence
-        restart: on-failure
-
-    matchmaking:
-        build:
-            context: ./services/matchmaking/
-            dockerfile: Dockerfile.dev
-        image: matchmaking:develop
-        container_name:  matchmaking
-        environment:
-            - STAGE=Development
-        env_file:
-            - .env
-        volumes:
-            - ./services/matchmaking/:/microservice/matchmaking/:rw
-        networks:
-            - ft_transcendence
-        restart: on-failure
-
-    pong:
-        build:
-            context: ./services/pong/
-            dockerfile: Dockerfile.dev
-        image: pong:develop
-        container_name:  pong
-        environment:
-            - STAGE=Development
-        env_file:
-            - .env
-        volumes:
-            - ./services/pong/:/microservice/pong/:rw
-        networks:
-            - ft_transcendence
-        restart: on-failure
-
-    postgres:
-        image: postgres:16.2-bullseye
-        container_name: postgres
-        env_file:
-            - .env
-        networks:
-            - ft_transcendence
-        restart: on-failure
-
-    pgadmin:
-        image: dpage/pgadmin4
-        container_name: pgadmin4
-        env_file:
-            - .env
         ports:
-        - 8080:80
-        networks:
-        - ft_transcendence
+            - 8000:8000
         restart: on-failure
+
+    # postgres:
+    #     image: postgres:16.2-bullseye
+    #     container_name: postgres
+    #     env_file:
+    #         - .env
+    #     networks:
+    #         - ft_transcendence
+    #     restart: on-failure
+
+    # pgadmin:
+    #     image: dpage/pgadmin4
+    #     container_name: pgadmin4
+    #     env_file:
+    #         - .env
+    #     ports:
+    #     - 8080:80
+    #     networks:
+    #     - ft_transcendence
+    #     restart: on-failure
 
 networks:
     ft_transcendence:

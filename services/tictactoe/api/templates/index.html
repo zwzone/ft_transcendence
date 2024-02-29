@@ -5,11 +5,211 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tic Tac Toe</title>
 </head>
+<style>
+    .but_move
+    {
+        background-color: rgb(125, 125, 125);
+        padding: 20px;
+        border: 1px solid white;
+        font-size: 30px;
+    }
+
+    #big-Board
+    {
+        display: grid;
+        grid-template-columns: auto auto auto;
+        padding: 10px;
+        background-color: black;
+        width:600px;
+        height:600px;
+    }
+    
+    #board
+    {
+        display: grid;
+        grid-template-columns: auto auto auto;
+        padding: 10px;
+        background-color: white;
+    }
+
+    .blue
+    {
+        background-color: blue;
+    }
+
+    .red
+    {
+        background-color: red;
+    }
+
+</style>
 <body>
 
 <h1>Connected</h1>
+<div id="big-Board">
+<div id="board">
+    <div class="but_move active" id="0000"></div>
+    <div class="but_move" id="0001"></div>
+    <div class="but_move" id="0002"></div>
+    <div class="but_move" id="0010"></div>
+    <div class="but_move" id="0011"></div>
+    <div class="but_move" id="0012"></div>
+    <div class="but_move" id="0020"></div>
+    <div class="but_move" id="0021"></div>
+    <div class="but_move" id="0022"></div>
+</div>
+<div id="board">
+    <div class="but_move" id="0100"></div>
+    <div class="but_move" id="0101"></div>
+    <div class="but_move" id="0102"></div>
+    <div class="but_move" id="0110"></div>
+    <div class="but_move" id="0111"></div>
+    <div class="but_move" id="0112"></div>
+    <div class="but_move" id="0120"></div>
+    <div class="but_move" id="0121"></div>
+    <div class="but_move" id="0122"></div>
+</div>
+<div id="board">
+    <div class="but_move" id="0200"></div>
+    <div class="but_move" id="0201"></div>
+    <div class="but_move" id="0202"></div>
+    <div class="but_move" id="0210"></div>
+    <div class="but_move" id="0211"></div>
+    <div class="but_move" id="0212"></div>
+    <div class="but_move" id="0220"></div>
+    <div class="but_move" id="0221"></div>
+    <div class="but_move" id="0222"></div>
+</div>
+<div id="board">
+    <div class="but_move" id="1000"></div>
+    <div class="but_move" id="1001"></div>
+    <div class="but_move" id="1002"></div>
+    <div class="but_move" id="1010"></div>
+    <div class="but_move" id="1011"></div>
+    <div class="but_move" id="1012"></div>
+    <div class="but_move" id="1020"></div>
+    <div class="but_move" id="1021"></div>
+    <div class="but_move" id="1022"></div>
+</div>
+<div id="board">
+    <div class="but_move" id="1100"></div>
+    <div class="but_move" id="1101"></div>
+    <div class="but_move" id="1102"></div>
+    <div class="but_move" id="1110"></div>
+    <div class="but_move" id="1111"></div>
+    <div class="but_move" id="1112"></div>
+    <div class="but_move" id="1120"></div>
+    <div class="but_move" id="1121"></div>
+    <div class="but_move" id="1122"></div>
+</div>
+<div id="board">
+    <div class="but_move" id="1200"></div>
+    <div class="but_move" id="1201"></div>
+    <div class="but_move" id="1202"></div>
+    <div class="but_move" id="1210"></div>
+    <div class="but_move" id="1211"></div>
+    <div class="but_move" id="1212"></div>
+    <div class="but_move" id="1220"></div>
+    <div class="but_move" id="1221"></div>
+    <div class="but_move" id="1222"></div>
+</div><div id="board">
+    <div class="but_move" id="2000"></div>
+    <div class="but_move" id="2001"></div>
+    <div class="but_move" id="2002"></div>
+    <div class="but_move" id="2010"></div>
+    <div class="but_move" id="2011"></div>
+    <div class="but_move" id="2012"></div>
+    <div class="but_move" id="2020"></div>
+    <div class="but_move" id="2021"></div>
+    <div class="but_move" id="2022"></div>
+</div>
+<div id="board">
+    <div class="but_move" id="2100"></div>
+    <div class="but_move" id="2101"></div>
+    <div class="but_move" id="2102"></div>
+    <div class="but_move" id="2110"></div>
+    <div class="but_move" id="2111"></div>
+    <div class="but_move" id="2112"></div>
+    <div class="but_move" id="2120"></div>
+    <div class="but_move" id="2121"></div>
+    <div class="but_move" id="2122"></div>
+</div>
+<div id="board">
+    <div class="but_move" id="2200"></div>
+    <div class="but_move" id="2201"></div>
+    <div class="but_move" id="2202"></div>
+    <div class="but_move" id="2210"></div>
+    <div class="but_move" id="2211"></div>
+    <div class="but_move" id="2212"></div>
+    <div class="but_move" id="2220"></div>
+    <div class="but_move" id="2221"></div>
+    <div class="but_move" id="2222"></div>
+</div>
+</div>
+
+<div id="test" style="background-color: black; width: 10px; height: 10px;"></div>
 <script>
-    var Socket = new WebSocket( "ws://" + window.location.host + '/ws/play/' )
+    var Socket = new WebSocket( "ws://" + window.location.host + '/ws/match/' )
+    let but = document.getElementById('test');
+    let btns_move = document.getElementsByClassName('but_move');
+    let color = "blue";
+
+    // console.log( btn)
+    function click(event)
+    {
+        const index = event.target.getAttribute("id");
+        console.log("clicked elemt");
+        Socket.send( JSON.stringify({"index" : index, "color" : color}) );
+    }
+    
+    for ( var i=0; i<btns_move.length; i++ )
+    {
+        btns_move[i].addEventListener("click", click );
+    }
+
+    but.addEventListener("click", event=>{
+        console.log("clicked");
+        Socket.send("click");
+    });
+
+    // Socket.onopen = function open() {
+
+    //     // let data = JSON.parse(e.data);
+
+    //     // color = data["color"];
+    //     console.log("hello");
+    // }
+
+    Socket.onmessage = function (e)
+    {
+        let data = JSON.parse(e.data);
+
+        console.log("connected");
+        if ( data["type"] == "welcome" )
+        {
+            color = data["color"];
+            console.log(color);
+        }
+        else
+        {
+            console.log("come");
+            // alert( data["message"] );
+            let elem = document.getElementById(data["index"]);
+            console.log(elem);
+            elem.classList.add(data["color"]);
+            elem.removeEventListener("click", click);
+        }
+    }
+
+    Socket.onerror = function (e)
+    {
+        console.log("errror");
+        console.log(e);
+    }
+
+
+
+    console.log( but );
 </script>
 
 
