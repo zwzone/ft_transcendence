@@ -10,33 +10,35 @@ from itertools import cycle
 
 def update_tournament(tournament_id):
     tournament = Tournament.objects.get(id=tournament_id)
-    if tournament.status == Tournament.StatusChoices.FINISHED.value:
+    if tournament.status == Tournament.StatusChoices.FINISHED.value or tournament.round == 3:
         return
-    for round_num in range(1, ROUNDS + 1):
-        current_round_matches = Match.objects.filter(tournament=tournament, round=round_num)
-        if all(match.state == Match.State.PLAYED.value for match in current_round_matches):
-            for match in current_round_matches:
-                winning_player_matches = PlayerMatch.objects.filter(match=match, won=True)
-                tournament.round += 1
-                while winning_player_matches:
-                    player1_match = winning_player_matches.first()
-                    winning_player_matches = winning_player_matches.exclude(player_id=player1_match.player_id)
-                    if winning_player_matches:
-                        player2_match = winning_player_matches.first()
-                        winning_player_matches = winning_player_matches.exclude(player_id=player2_match.player_id)
-                        tournament_match = Match.objects.create(
-                            tournament=tournament,
-                            game=Match.Game.PONG.value,
-                            round=tournament.round
-                        )
-                        PlayerMatch.objects.create(
-                            match_id=tournament_match,
-                            player_id=player1_match.player_id
-                        )
-                        PlayerMatch.objects.create(
-                            match_id=tournament_match,
-                            player_id=player2_match.player_id
-                        )
+    current_round = tournament.round
+    current_round_matches = Match.objects.filter(tournament=tournament, round=current_round)
+    if all(match.state == Match.State.PLAYED.value for match in current_round_matches):
+        if current_round < 3:
+            tournament.round += 1
+            tournament.save()
+        else:
+            tournament.status = Tournament.StatusChoices.FINISHED.value
+            tournament.save()
+        winning_players = PlayerMatch.objects.filter(match__in=current_round_matches, won=True).values_list(
+            'player_id', flat=True)
+        while len(winning_players) >= 2:
+            player1_id = winning_players.pop(0)
+            player2_id = winning_players.pop(0)
+            tournament_match = Match.objects.create(
+                tournament=tournament,
+                game=Match.Game.PONG.value,
+                round=current_round + 1  # Incremented round
+            )
+            PlayerMatch.objects.create(
+                match=tournament_match,
+                player_id=player1_id
+            )
+            PlayerMatch.objects.create(
+                match=tournament_match,
+                player_id=player2_id
+            )
 
 
 class TournamentView(APIView):
