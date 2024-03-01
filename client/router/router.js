@@ -7,7 +7,7 @@ const routes = {
   "/twofa/": "twofa-page",
   "/profile/": "profile-page",
   "/setting/": "setting-page",
-  "/tournament/": "tournament-page",
+  "/tournaments/": "tournament-page",
 };
 
 const router = {
@@ -27,7 +27,7 @@ const router = {
           pathname == "/home/" ||
           pathname == "/profile/" ||
           pathname == "/setting/" ||
-          pathname == "/tournament/"
+          pathname == "/tournaments/"
         )
           pathname = "/login/";
       }

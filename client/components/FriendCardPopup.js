@@ -43,6 +43,21 @@ export default class FriendCardPopup extends HTMLElement {
       this.parentElement.removeChild(this);
     });
 
+    const friendship_ation = (action, player_id) => {
+      const json = JSON.stringify({
+        target_id: Number(player_id),
+      });
+      fetching(`https://${window.ft_transcendence_host}/player/friendship/`, action, json, {
+        "Content-Type": "application/json",
+      }).then((req) => {
+        const friend_list = document.querySelector(".friend-list");
+        const friends_list = friend_list.querySelector("friends-list");
+        this.parentElement.removeChild(this);
+        friend_list.removeChild(friends_list);
+        friend_list.appendChild(document.createElement("friends-list"));
+      });
+    };
+
     green_button.addEventListener("click", (event) => {
       friendship_ation("POST", this.attributes["player-id"].value);
     });
@@ -50,15 +65,6 @@ export default class FriendCardPopup extends HTMLElement {
     red_button.addEventListener("click", (event) => {
       friendship_ation("DELETE", this.attributes["player-id"].value);
     });
-
-    function friendship_ation(action, player_id) {
-      const json = JSON.stringify({
-        target_id: Number(player_id),
-      });
-      fetching(`https://${window.ft_transcendence_host}/player/friendship/`, action, json, {
-        "Content-Type": "application/json",
-      }).then((req) => {});
-    }
   }
 }
 
