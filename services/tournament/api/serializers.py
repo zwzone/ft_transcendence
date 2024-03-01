@@ -6,7 +6,7 @@ from django.db.models import Q
 class PlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
-        fields = ('avatar', 'tournament_name')
+        fields = ('id', 'avatar', 'tournament_name')
 
 
 class PlayerMatchSerializer(serializers.ModelSerializer):
@@ -16,8 +16,8 @@ class PlayerMatchSerializer(serializers.ModelSerializer):
         model = PlayerMatch
         fields = ('player', 'score')
     
-    def get_player(self, player_id):
-        player = Player.objects.get(id=player_id.id)
+    def get_player(self, player_match):
+        player = Player.objects.get(id=player_match.player_id.id)
         serializer = PlayerSerializer(player)
         return serializer.data
 
@@ -31,7 +31,7 @@ class TournamentSerializer(serializers.ModelSerializer):
 
     def get_matches(self, tournament):
         matches = Match.objects.filter(tournament=tournament)
-        serializer = MatchSerializer(matches, many=True)
+        serializer = MatchSerializer(matches, context={"player": self.context.get("player")}, many=True)
         return serializer.data
 
     def get_players(self, tournament):
@@ -59,13 +59,21 @@ class TournamentSerializer(serializers.ModelSerializer):
         return creator
 
 class MatchSerializer(serializers.ModelSerializer):
-    matches = serializers.SerializerMethodField()
+    players = serializers.SerializerMethodField()
+    current = serializers.SerializerMethodField()
 
     class Meta:
         model = Match
-        fields = ('id', 'game', 'state', 'round', 'matches')
+        fields = ('id', 'game', 'state', 'round', 'current', 'players')
 
-    def get_matches(self, match):
-        player_matches = PlayerMatch.objects.filter(match_id=match.id)[:2]
-        serializer = PlayerMatchSerializer(instance=player_matches, many=True)
+    def get_current(self, match):
+        player = self.context.get("player")
+        if match.state == Match.State.PLAYED.value:
+            return False
+        current_bool = PlayerMatch.objects.filter(match_id=match, player_id=player).exists()
+        return current_bool
+
+    def get_players(self, match):
+        player_matches = PlayerMatch.objects.filter(match_id=match.id)
+        serializer = PlayerMatchSerializer(player_matches, many=True)
         return serializer.data

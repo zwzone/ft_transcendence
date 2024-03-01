@@ -51,7 +51,7 @@ class TournamentView(APIView):
         if serializer.is_player_in_tournament(player):
             try:
                 tournament = serializer.is_player_in_tournament(player)
-                serializer = TournamentSerializer(tournament)
+                serializer = TournamentSerializer(tournament, context={"player": player})
                 if tournament.status == Tournament.StatusChoices.PENDING.value:
                     return Response({"status": 200, "current_tournament": serializer.data, "players": serializer.get_players(tournament)})
                 update_tournament(tournament.id)
@@ -76,14 +76,14 @@ class TournamentView(APIView):
     def post(self, request):
         action = request.data.get('action')
         tournament_id = request.data.get('tournament_id')
+        name = request.data.get('tournament_name')
+        alias = request.data.get('alias_name')
         player_id = request.decoded_token['id']
         try:
             player = Player.objects.get(id=player_id)
         except Player.DoesNotExist:
             return Response({"status": 400, "message": "Player does not exist"})
         if "create" in action:
-            name = request.data.get('tournament_name')
-            alias = request.data.get('alias_name')
             if name is None or len(name) == 0 or alias is None or len(alias) == 0:
                 return Response({"status": 400, "message": "Invalid Tournament name"})
             serializer = TournamentSerializer()
@@ -101,7 +101,6 @@ class TournamentView(APIView):
         except Tournament.DoesNotExist:
             return Response({"status": 404, "message": "Not found"})
         if "join" in action:
-            alias = request.data.get('alias_name')
             if tournament_id is None or len(tournament_id) == 0 or alias is None or len(alias) == 0:
                 return Response({"status": 400, "message": "Missing Tournament id"})
             if tournament.status == 'PN' and serializer.get_players_count(tournament) < COMPETITORS:
