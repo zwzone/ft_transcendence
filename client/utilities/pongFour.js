@@ -39,9 +39,13 @@ export default function runPongFourGame(canvas, ctx) {
       ball.positionX = tmp["ball"].positionX;
       ball.positionY = tmp["ball"].positionY;
       paddle1.positionY = tmp["padd_left"]["info"].positionY;
+      paddle1.eliminated = tmp["padd_left"]["info"]["eliminated"];
       paddle2.positionY = tmp["padd_right"]["info"].positionY;
+      paddle2.eliminated = tmp["padd_right"]["info"]["eliminated"];
       paddle3.positionX = tmp["padd_up"]["info"].positionX;
+      paddle3.eliminated = tmp["padd_up"]["info"]["eliminated"];
       paddle4.positionX = tmp["padd_down"]["info"].positionX;
+      paddle4.eliminated = tmp["padd_down"]["info"]["eliminated"];
       paddle1.score = tmp["padd_left"]["info"]["score"];
       paddle2.score = tmp["padd_right"]["info"]["score"];
       paddle3.score = tmp["padd_up"]["info"]["score"];
@@ -54,7 +58,7 @@ export default function runPongFourGame(canvas, ctx) {
   keys[37] = 'left';
   keys[39] = 'right';
   window.addEventListener("keydown", function (e) {
-    if (e.keyCode in keys) ws.send(keys[e.keyCode]);
+    if (e.keyCode in keys && ws.readyState !== WebSocket.CLOSED) ws.send(keys[e.keyCode]);
   });
   window.addEventListener("keydown", function(e) {
     if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
@@ -66,8 +70,25 @@ export default function runPongFourGame(canvas, ctx) {
 function gameLoop(canvas, ctx, ball, paddle1, paddle2, paddle3, paddle4) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ball.render(ctx);
-    paddle1.render(ctx);
-    paddle2.render(ctx);
-    paddle3.render(ctx);
-    paddle4.render(ctx);
+    let count = 0;
+    if (paddle1.eliminated === false) {
+      paddle1.render(ctx);
+      count++;
+    }
+    if (paddle2.eliminated === false) {
+      paddle2.render(ctx);
+      count++;
+    }
+    if (paddle3.eliminated === false) {
+      paddle3.render(ctx);
+      count++;
+    }
+    if (paddle4.eliminated === false) {
+      paddle4.render(ctx);
+      count++;
+    }
+    if (count <= 1) {
+      console.log("Game Over");
+      ws.close();
+    }
 }

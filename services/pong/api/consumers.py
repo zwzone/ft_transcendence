@@ -9,6 +9,7 @@ padd_left = {
     'positionY': 0,
     'sizeX': 40,
     'sizeY': 200,
+    'eliminated': False,
 }
 padd_right = {
     'speed': 30,
@@ -16,6 +17,7 @@ padd_right = {
     'positionY': 0,
     'sizeX': 40,
     'sizeY': 200,
+    'eliminated': False,
 }
 padd_up = {
     'speed': 30,
@@ -23,6 +25,7 @@ padd_up = {
     'positionY': 0,
     'sizeX': 200,
     'sizeY': 40,
+    'eliminated': False,
 }
 padd_down = {
     'speed': 30,
@@ -30,6 +33,7 @@ padd_down = {
     'positionY': 0,
     'sizeX': 200,
     'sizeY': 40,
+    'eliminated': False,
 }
 
 
@@ -126,7 +130,6 @@ class Pong(AsyncWebsocketConsumer):
         self.init_game(room_id)
         rooms[room_id]['ball']['positionX'] += rooms[room_id]['ball']['speedX']
         rooms[room_id]['ball']['positionY'] += rooms[room_id]['ball']['speedY']
-        print(self.channel_layer.groups.get(room_id, {}).items(), flush=True)
         await self.channel_layer.group_send(
             room_id,
             {
@@ -135,7 +138,7 @@ class Pong(AsyncWebsocketConsumer):
             }
         )
         if room_id in rooms:
-            await asyncio.create_task(self.game_loop(room_id))
+            asyncio.create_task(self.game_loop(room_id))
 
     def init_game(self, room_id):
         rooms[room_id]['padd_left']['info']['score'] = 0
@@ -158,22 +161,36 @@ class Pong(AsyncWebsocketConsumer):
         rooms[room_id]['padd_right']['info']['positionY'] = rooms[room_id]['canvas_height'] / 2 - 100
         rooms[room_id]['ball'] = {
             'speedX': ball_direction(),
-            'speedY': ball_direction(),
+            'speedY': ball_direction() if self.capacity != 4 else ball_direction() + 2,
             'positionX': rooms[room_id]['canvas_width'] / 2,
             'positionY': rooms[room_id]['canvas_height'] / 2,
             'size': 20,
         }
 
-    def reset_game(self, room_id):
-        if rooms[room_id]['ball']['speedX'] > 0:
-            rooms[room_id]['padd_right']['info']['score'] += 1
+    def reset_game(self, room_id, x):
+        if x and rooms[room_id]['ball']['speedX'] > 0:
+            if self.capacity == 4:
+                rooms[room_id]['padd_right']['info']['eliminated'] = True
+            else:
+                rooms[room_id]['padd_right']['info']['score'] += 1
             rooms[room_id]['ball']['speedX'] = 10
-        else:
-            rooms[room_id]['padd_left']['info']['score'] += 1
+        elif x:
+            if self.capacity == 4:
+                rooms[room_id]['padd_left']['info']['eliminated'] = True
+            else:
+                rooms[room_id]['padd_left']['info']['score'] += 1
             rooms[room_id]['ball']['speedX'] = -10
+        elif not x:
+            if rooms[room_id]['ball']['speedY'] > 0:
+                rooms[room_id]['padd_down']['info']['eliminated'] = True
+            else:
+                rooms[room_id]['padd_up']['info']['eliminated'] = True
+            rooms[room_id]['ball']['speedY'] = 12
         rooms[room_id]['ball']['positionX'] = rooms[room_id]['canvas_width'] / 2
         rooms[room_id]['ball']['positionY'] = rooms[room_id]['canvas_height'] / 2
         rooms[room_id]['ball']['speedY'] = ball_direction()
+        if self.capacity == 4:
+            rooms[room_id]['ball']['speedY'] += 2
         rooms[room_id]['padd_left']['info']['positionY'] = rooms[room_id]['canvas_height'] / 2 - 100
         rooms[room_id]['padd_right']['info']['positionY'] = rooms[room_id]['canvas_height'] / 2 - 100
         if self.capacity == 4:
@@ -181,16 +198,27 @@ class Pong(AsyncWebsocketConsumer):
             rooms[room_id]['padd_down']['info']['positionX'] = rooms[room_id]['canvas_width'] / 2 - 100
 
     def BallCollision(self, room_id):
-        if ((rooms[room_id]['ball']['positionX'] +
-             rooms[room_id]['ball']['size'] >= rooms[room_id]['canvas_width']) or
-                (rooms[room_id]['ball']['positionX'] -
-                 rooms[room_id]['ball']['size'] <= 0)):
-            self.reset_game(room_id)
-        if ((rooms[room_id]['ball']['positionY'] +
-            rooms[room_id]['ball']['size'] >= rooms[room_id]['canvas_height'])
-                or (rooms[room_id]['ball']['positionY'] - rooms[room_id]['ball']['size'] <= 0)):
-            if self.capacity == 4:
-                self.reset_game(room_id)
+        if (rooms[room_id]['ball']['positionX'] +
+                rooms[room_id]['ball']['size'] >= rooms[room_id]['canvas_width']):
+            if rooms[room_id]['padd_right']['info']['eliminated']:
+                rooms[room_id]['ball']['speedX'] *= -1
+            else:
+                self.reset_game(room_id, True)
+        if (rooms[room_id]['ball']['positionX'] -
+                rooms[room_id]['ball']['size'] <= 0):
+            if rooms[room_id]['padd_left']['info']['eliminated']:
+                rooms[room_id]['ball']['speedX'] *= -1
+            else:
+                self.reset_game(room_id, True)
+        if (rooms[room_id]['ball']['positionY'] +
+                rooms[room_id]['ball']['size'] >= rooms[room_id]['canvas_height']):
+            if self.capacity == 4 and not rooms[room_id]['padd_down']['info']['eliminated']:
+                self.reset_game(room_id, False)
+            else:
+                rooms[room_id]['ball']['speedY'] *= -1
+        if rooms[room_id]['ball']['positionY'] - rooms[room_id]['ball']['size'] <= 0:
+            if self.capacity == 4 and not rooms[room_id]['padd_up']['info']['eliminated']:
+                self.reset_game(room_id, False)
             else:
                 rooms[room_id]['ball']['speedY'] *= -1
 
@@ -228,16 +256,18 @@ class Pong(AsyncWebsocketConsumer):
         left_dy = abs(rooms[room_id]['ball']['positionY'] - leftY_center)
         right_dx = abs(rooms[room_id]['ball']['positionX'] - rightX_center)
         right_dy = abs(rooms[room_id]['ball']['positionY'] - rightY_center)
-        if (left_dx <= rooms[room_id]['ball']['size'] + sizeX / 2 and
-                left_dy <= rooms[room_id]['ball']['size'] + sizeY / 2):
+        if (not rooms[room_id]['padd_left']['info']['eliminated'] and
+                (left_dx <= rooms[room_id]['ball']['size'] + sizeX / 2 and
+                    left_dy <= rooms[room_id]['ball']['size'] + sizeY / 2)):
             if (rooms[room_id]['ball']['positionX'] >=
                 leftX_center and rooms[room_id]['ball']['speedX'] > 0) or (
                     rooms[room_id]['ball']['positionX'] <=
                     leftX_center and rooms[room_id]['ball']['speedX'] < 0):
                 return
             rooms[room_id]['ball']['speedX'] *= -1
-        elif (right_dx <= rooms[room_id]['ball']['size'] + sizeX / 2 and
-              right_dy <= rooms[room_id]['ball']['size'] + sizeY / 2):
+        elif (not rooms[room_id]['padd_right']['info']['eliminated'] and
+              (right_dx <= rooms[room_id]['ball']['size'] + sizeX / 2 and
+                right_dy <= rooms[room_id]['ball']['size'] + sizeY / 2)):
             if (rooms[room_id]['ball']['positionX'] >=
                 rightX_center and rooms[room_id]['ball']['speedX'] > 0) or (
                     rooms[room_id]['ball']['positionX'] <=
@@ -256,16 +286,18 @@ class Pong(AsyncWebsocketConsumer):
             up_dy = abs(rooms[room_id]['ball']['positionY'] - upY_center)
             down_dx = abs(rooms[room_id]['ball']['positionX'] - downX_center)
             down_dy = abs(rooms[room_id]['ball']['positionY'] - downY_center)
-            if up_dx <= rooms[room_id]['ball']['size'] + sizeX / 2 and \
-                    up_dy <= rooms[room_id]['ball']['size'] + sizeY / 2:
+            if (not rooms[room_id]['padd_up']['info']['eliminated'] and
+                (up_dx <= rooms[room_id]['ball']['size'] + sizeX / 2 and
+                    up_dy <= rooms[room_id]['ball']['size'] + sizeY / 2)):
                 if (rooms[room_id]['ball']['positionY'] >=
                     upY_center and rooms[room_id]['ball']['speedY'] > 0) or (
                         rooms[room_id]['ball']['positionY'] <=
                         upY_center and rooms[room_id]['ball']['speedY'] < 0):
                     return
                 rooms[room_id]['ball']['speedY'] *= -1
-            elif down_dx <= rooms[room_id]['ball']['size'] + sizeX / 2 and \
-                    down_dy <= rooms[room_id]['ball']['size'] + sizeY / 2:
+            elif (not rooms[room_id]['padd_down']['info']['eliminated'] and
+                  (down_dx <= rooms[room_id]['ball']['size'] + sizeX / 2 and
+                    down_dy <= rooms[room_id]['ball']['size'] + sizeY / 2)):
                 if (rooms[room_id]['ball']['positionY'] >=
                     downY_center and rooms[room_id]['ball']['speedY'] > 0) or (
                         rooms[room_id]['ball']['positionY'] <=
@@ -277,30 +309,34 @@ class Pong(AsyncWebsocketConsumer):
         size = rooms[room_id]['padd_right']['info']['sizeY']
         pos_right = rooms[room_id]['padd_right']['info']['positionY']
         pos_left = rooms[room_id]['padd_left']['info']['positionY']
-        if pos_right + size >= rooms[room_id]['canvas_height']:
-            rooms[room_id]['padd_right']['info']['positionY'] \
-                = rooms[room_id]['canvas_height'] - size
-        elif pos_right <= 0:
-            rooms[room_id]['padd_right']['info']['positionY'] = 0
-        if pos_left + size >= rooms[room_id]['canvas_height']:
-            rooms[room_id]['padd_left']['info']['positionY'] \
-                = rooms[room_id]['canvas_height'] - size
-        elif pos_left <= 0:
-            rooms[room_id]['padd_left']['info']['positionY'] = 0
+        if not rooms[room_id]['padd_right']['info']['eliminated']:
+            if pos_right + size >= rooms[room_id]['canvas_height']:
+                rooms[room_id]['padd_right']['info']['positionY'] \
+                    = rooms[room_id]['canvas_height'] - size
+            elif pos_right <= 0:
+                rooms[room_id]['padd_right']['info']['positionY'] = 0
+        if not rooms[room_id]['padd_left']['info']['eliminated']:
+            if pos_left + size >= rooms[room_id]['canvas_height']:
+                rooms[room_id]['padd_left']['info']['positionY'] \
+                    = rooms[room_id]['canvas_height'] - size
+            elif pos_left <= 0:
+                rooms[room_id]['padd_left']['info']['positionY'] = 0
         if self.capacity == 4:
             size = rooms[room_id]['padd_up']['info']['sizeX']
             pos_up = rooms[room_id]['padd_up']['info']['positionX']
             pos_down = rooms[room_id]['padd_down']['info']['positionX']
-            if pos_up + size >= rooms[room_id]['canvas_width']:
-                rooms[room_id]['padd_up']['info']['positionX'] \
-                    = rooms[room_id]['canvas_width'] - size
-            elif pos_up <= 0:
-                rooms[room_id]['padd_up']['info']['positionX'] = 0
-            if pos_down + size >= rooms[room_id]['canvas_width']:
-                rooms[room_id]['padd_down']['info']['positionX'] \
-                    = rooms[room_id]['canvas_width'] - size
-            elif pos_down <= 0:
-                rooms[room_id]['padd_down']['info']['positionX'] = 0
+            if not rooms[room_id]['padd_up']['info']['eliminated']:
+                if pos_up + size >= rooms[room_id]['canvas_width']:
+                    rooms[room_id]['padd_up']['info']['positionX'] \
+                        = rooms[room_id]['canvas_width'] - size
+                elif pos_up <= 0:
+                    rooms[room_id]['padd_up']['info']['positionX'] = 0
+            if not rooms[room_id]['padd_down']['info']['eliminated']:
+                if pos_down + size >= rooms[room_id]['canvas_width']:
+                    rooms[room_id]['padd_down']['info']['positionX'] \
+                        = rooms[room_id]['canvas_width'] - size
+                elif pos_down <= 0:
+                    rooms[room_id]['padd_down']['info']['positionX'] = 0
 
     async def game_loop(self, room_id):
         while True:
@@ -315,7 +351,7 @@ class Pong(AsyncWebsocketConsumer):
             await self.channel_layer.group_send(
                 room_id,
                 {
-                    'type': 'pong_message',
+                    'type': 'pong.message',
                     'message': 'ball',
                 }
             )
