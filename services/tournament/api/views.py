@@ -38,8 +38,8 @@ def update_tournament(tournament_id):
                 match_id=tournament_match,
                 player_id=player2
             )
-            tournament.round += 1
-            tournament.save()
+        tournament.round += 1
+        tournament.save()
 
 
 class TournamentView(APIView):
