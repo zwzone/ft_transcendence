@@ -10,35 +10,36 @@ from itertools import cycle
 
 def update_tournament(tournament_id):
     tournament = Tournament.objects.get(id=tournament_id)
-    if tournament.status == Tournament.StatusChoices.FINISHED.value or tournament.round == 3:
+    if tournament.status == Tournament.StatusChoices.FINISHED.value:
         return
     current_round = tournament.round
     current_round_matches = Match.objects.filter(tournament=tournament, round=current_round)
     if all(match.state == Match.State.PLAYED.value for match in current_round_matches):
-        if current_round < 3:
-            tournament.round += 1
-            tournament.save()
-        else:
+        if tournament.round == 3:
             tournament.status = Tournament.StatusChoices.FINISHED.value
             tournament.save()
-        winning_players = PlayerMatch.objects.filter(match__in=current_round_matches, won=True).values_list(
-            'player_id', flat=True)
+            return
+        winning_players = list(PlayerMatch.objects.filter(match_id__in=current_round_matches, won=True))
         while len(winning_players) >= 2:
-            player1_id = winning_players.pop(0)
-            player2_id = winning_players.pop(0)
+            player1_match = winning_players.pop(0)
+            player2_match = winning_players.pop(0)
+            player1 = player1_match.player_id
+            player2 = player2_match.player_id
             tournament_match = Match.objects.create(
                 tournament=tournament,
                 game=Match.Game.PONG.value,
-                round=current_round + 1  # Incremented round
+                round=current_round + 1
             )
             PlayerMatch.objects.create(
-                match=tournament_match,
-                player_id=player1_id
+                match_id=tournament_match,
+                player_id=player1
             )
             PlayerMatch.objects.create(
-                match=tournament_match,
-                player_id=player2_id
+                match_id=tournament_match,
+                player_id=player2
             )
+            tournament.round += 1
+            tournament.save()
 
 
 class TournamentView(APIView):
