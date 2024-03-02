@@ -27,13 +27,23 @@ export default function runPongTwoGame(canvas, ctx, match_id) {
     clearInterval(intervalId);
     if (e.data === "error") {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "white";
+      ctx.font = "100px monospace";
+      ctx.textAlign = "center";
       ctx.fillText("ALREADY IN GAME", canvas.width / 2, canvas.height / 2);
       ws.close();
       return;
     }
-    ws = new WebSocket(`wss://${window.ft_transcendence_host}/ws/pong/${e.data}/2/`);
+    ws = new WebSocket(`wss://${window.ft_transcendence_host}/ws/pong/${e.data}/2/${!match_id ? "" : match_id + "/"}`);
     ws.onmessage = function (e) {
       let tmp = JSON.parse(e.data);
+      if (typeof tmp === "string") {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillText(tmp, canvas.width / 2, canvas.height / 2);
+        ws.close();
+        return;
+      }
       ball.positionX = tmp["ball"].positionX;
       ball.positionY = tmp["ball"].positionY;
       paddle1.positionY = tmp["padd_left"]["info"].positionY;
