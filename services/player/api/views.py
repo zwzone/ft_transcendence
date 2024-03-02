@@ -254,13 +254,13 @@ class PlayerFriendship(APIView):
                     "message": str(e),
                 })
 
-class PlayerHistory(APIView):
+class MatchesHistory(APIView):
 
     @method_decorator(jwt_cookie_required)
     def get(self, request):
         try:
             player = Player.objects.get(id=request.decoded_token['id'])
-            matches = PlayerMatch.objects.filter(player_id=player).order_by('-match_id__id')[:8]
+            matches = PlayerMatch.objects.filter(player_id=player.id, match_id__game='played').order_by('-match_id__id')[:8]
             matches_data = []
             for match in matches:
                 matches_data.append({
@@ -268,6 +268,13 @@ class PlayerHistory(APIView):
                     "game": match.match_id.game,
                     "score": match.score,
                     "won": match.won,
+                    "players": [
+                        {
+                            "id": player.id,
+                            "username": player.username,
+                            "avatar": player.avatar
+                        } for player in match.match_id.players.all()
+                    ]
                 })
             return Response({
                 "status": 200,
