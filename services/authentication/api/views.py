@@ -140,8 +140,8 @@ def is_logged_in_auth(request):
 @api_view(["GET"])
 @jwt_cookie_required
 def logout_user(request):
-    if request.decoded_token is not None:
-        cache.set(request.decoded_token, True, timeout=None)
+    if request.token is not None:
+        cache.set(request.token, True, timeout=None)
         response = redirect(f"https://{settings.FT_TRANSCENDENCE_HOST}/login/", permanent=True)
         response.delete_cookie("jwt_token")
         return response
