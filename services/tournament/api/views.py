@@ -1,3 +1,4 @@
+from django.utils.decorators import method_decorator
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Tournament, Player, Match, PlayerMatch, PlayerTournament
@@ -11,57 +12,60 @@ def update_tournament(tournament_id):
     tournament = Tournament.objects.get(id=tournament_id)
     if tournament.status == Tournament.StatusChoices.FINISHED.value:
         return
-    for round_num in range(1, ROUNDS + 1):
-        current_round_matches = Match.objects.filter(tournament=tournament, round=round_num)
-        if all(match.state == Match.State.PLAYED.value for match in current_round_matches):
-            for match in current_round_matches:
-                winning_player_matches = PlayerMatch.objects.filter(match=match, won=True)
-                tournament.round += 1
-                while winning_player_matches:
-                    player1_match = winning_player_matches.first()
-                    winning_player_matches = winning_player_matches.exclude(player_id=player1_match.player_id)
-                    if winning_player_matches:
-                        player2_match = winning_player_matches.first()
-                        winning_player_matches = winning_player_matches.exclude(player_id=player2_match.player_id)
-                        tournament_match = Match.objects.create(
-                            tournament=tournament,
-                            game=Match.Game.PONG.value,
-                            round=tournament.round
-                        )
-                        PlayerMatch.objects.create(
-                            match_id=tournament_match,
-                            player_id=player1_match.player_id
-                        )
-                        PlayerMatch.objects.create(
-                            match_id=tournament_match,
-                            player_id=player2_match.player_id
-                        )
+    current_round = tournament.round
+    current_round_matches = Match.objects.filter(tournament=tournament, round=current_round)
+    if all(match.state == Match.State.PLAYED.value for match in current_round_matches):
+        if tournament.round == 3:
+            tournament.status = Tournament.StatusChoices.FINISHED.value
+            tournament.save()
+            return
+        winning_players = list(PlayerMatch.objects.filter(match_id__in=current_round_matches, won=True))
+        while len(winning_players) >= 2:
+            player1_match = winning_players.pop(0)
+            player2_match = winning_players.pop(0)
+            player1 = player1_match.player_id
+            player2 = player2_match.player_id
+            tournament_match = Match.objects.create(
+                tournament=tournament,
+                game=Match.Game.PONG.value,
+                round=current_round + 1
+            )
+            PlayerMatch.objects.create(
+                match_id=tournament_match,
+                player_id=player1
+            )
+            PlayerMatch.objects.create(
+                match_id=tournament_match,
+                player_id=player2
+            )
+        tournament.round += 1
+        tournament.save()
 
 
 class TournamentView(APIView):
 
-    @jwt_cookie_required
+    @method_decorator(jwt_cookie_required)
     def get(self, request):
-        player_id = request.decode_token['id']
+        player_id = request.decoded_token['id']
         serializer = TournamentSerializer()
         player = Player.objects.get(id=player_id)
         if serializer.is_player_in_tournament(player):
             try:
                 tournament = serializer.is_player_in_tournament(player)
-                serializer = TournamentSerializer(tournament)
+                serializer = TournamentSerializer(tournament, context={"player": player})
                 if tournament.status == Tournament.StatusChoices.PENDING.value:
-                    return Response({"status": 200, "tournament": serializer.get_players(tournament)})
+                    return Response({"status": 200, "current_tournament": serializer.data, "players": serializer.get_players(tournament)})
                 update_tournament(tournament.id)
-                return Response({"status": 200, "tournament": serializer.data})
+                return Response({"status": 200, "current_tournament": serializer.data})
             except Tournament.DoesNotExist:
                 return Response({"status": 404, "message": "Tournament not found"})
         tournaments = Tournament.objects.filter(status='PN')
         player_finished_tournament = PlayerTournament.objects.filter(player_id=player).order_by('-id').first()
-        finished_tournament = Tournament.objects.filter(id=player_finished_tournament.tournament_id.id).first()
         response_data = {}
-        if finished_tournament is not None:
+        if player_finished_tournament is not None:
+            finished_tournament = Tournament.objects.filter(id=player_finished_tournament.tournament_id.id).first()
             serializer_finished = TournamentSerializer(finished_tournament)
-            response_data["Finished Tournament"] = serializer_finished.data
+            response_data["current_tournament"] = serializer_finished.data
         if not tournaments:
             response_data.update({"status": 404, "message": "No Tournaments are available"})
             return Response(response_data)
@@ -69,18 +73,19 @@ class TournamentView(APIView):
         response_data.update({"status": 200, "tournaments": serializer_all.data})
         return Response(response_data)
 
-    @jwt_cookie_required
+    @method_decorator(jwt_cookie_required)
     def post(self, request):
         action = request.data.get('action')
         tournament_id = request.data.get('tournament_id')
-        player_id = request.decode_token['id']
+        name = request.data.get('tournament_name')
+        alias = request.data.get('alias_name')
+        player_id = request.decoded_token['id']
         try:
             player = Player.objects.get(id=player_id)
         except Player.DoesNotExist:
             return Response({"status": 400, "message": "Player does not exist"})
         if "create" in action:
-            name = request.data.get('name')
-            if name is None or len(name) == 0:
+            if name is None or len(name) == 0 or alias is None or len(alias) == 0:
                 return Response({"status": 400, "message": "Invalid Tournament name"})
             serializer = TournamentSerializer()
             if serializer.is_player_in_tournament(player):
@@ -88,6 +93,8 @@ class TournamentView(APIView):
             tournament = Tournament.objects.create(name=name)
             PlayerTournament.objects.create(player_id=player, tournament_id=tournament, creator=True)
             serializer = TournamentSerializer(tournament)
+            player.tournament_name = alias
+            player.save()
             return Response({"status": 201, "current_tournament": serializer.get_players(tournament)}, status=201)
         try:
             tournament = Tournament.objects.get(id=tournament_id)
@@ -95,11 +102,13 @@ class TournamentView(APIView):
         except Tournament.DoesNotExist:
             return Response({"status": 404, "message": "Not found"})
         if "join" in action:
-            if tournament_id is None or len(tournament_id) == 0:
+            if tournament_id is None or len(tournament_id) == 0 or alias is None or len(alias) == 0:
                 return Response({"status": 400, "message": "Missing Tournament id"})
-            if tournament.status == 'PN' or serializer.get_players_count(tournament) < COMPETITORS:
+            if tournament.status == 'PN' and serializer.get_players_count(tournament) < COMPETITORS:
                 if serializer.is_player_in_tournament(player):
                     return Response({"status": 400, "message": "Already in a Tournament"})
+                player.tournament_name = alias
+                player.save()
                 PlayerTournament.objects.create(player_id=player, tournament_id=tournament)
                 return Response({"status": 200, "message": "Successfully joined tournament"})
             return Response({"status": 400, "message": "Tournament is full"})
