@@ -254,11 +254,6 @@ class PlayerFriendship(APIView):
                     "message": str(e),
                 })
 
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from django.utils.decorators import method_decorator
-from .models import Player, PlayerMatch
-from .decorators import jwt_cookie_required
 
 class MatchesHistory(APIView):
 
@@ -268,24 +263,21 @@ class MatchesHistory(APIView):
             player = Player.objects.get(id=request.decoded_token['id'])
             matches = PlayerMatch.objects.filter(player_id=player.id, match_id__state='PLY').order_by('-match_id__id')[:8]
             matches_data = []
-
             for match in matches:
                 match_players = []
                 for player_match in match.match_id.playermatch_set.all():
                     match_players.append({
                         "id": player_match.player_id.id,
                         "username": player_match.player_id.username,
-                        "avatar": player_match.player_id.avatar
+                        "avatar": player_match.player_id.avatar,
+                        "score": player_match.score,
+                        "won": player_match.won,
                     })
-
                 matches_data.append({
                     "id": match.match_id.id,
                     "game": match.match_id.game,
-                    "score": match.score,
-                    "won": match.won,
-                    "players": match_players
+                    "players": match_players,
                 })
-
             return Response({
                 "status": 200,
                 "matches": matches_data
