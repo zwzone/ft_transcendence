@@ -42,6 +42,7 @@ def jwt_cookie_required(view_func):
         if cache.get(token) is not None:
             return Response({"statusCode": 401, "error": "Invalid token"})
         try:
+            request.token = token
             decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
             request.decoded_token = decoded_token
             return view_func(request)
