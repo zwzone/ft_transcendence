@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=Gluten:wght@100..900&family=Rubik+Mono+One&display=swap');
+
+*
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-align: center;
+
+    font-family: "Gluten", cursive;
+    font-optical-sizing: auto;
+    font-weight: 200;
+    font-style: normal;
+    font-size: 1.1em;
+}
+
+body
+{
+    /* height:100%; */
+    width:100%;
+    /* border: 3px solid blue; */
+    height: 100vh;
+}
+
+
+#ttt-landing-page::before{
+    content: "";
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    /* background-image: url("public/test2.png"); */
+    background-size: cover;
+    left: 0;
+    top: 0;
+    opacity: 0.9;
+}
+
+#ttt-landing-page
+{
+    height: 100%;
+    width: 100%;
+    /* border: 7px solid green; */
+    display: flex;
+    align-items: center;
+    /* justify-content: space-around; */
+    background-color: black;
+}
+
+#controls
+{
+    z-index: 2;
+    width: 50%;
+    /* border: 1px solid purple; */
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+
+}
+
+.control
+{
+    z-index: 2;
+    width: 40%;
+    margin: .4em 0.1em;
+    padding: 0.5em 0.5em;
+    justify-content: center;
+    background-color: transparent;
+    border-radius: 0.5em;
+    background-color: rgba(248,236,144, 0.1);
+    border-top: 1px solid rgba(248,236,144, 0.2);
+    border-bottom: 1px solid rgba(248,236,144, 0.2);
+    color: rgb(249,244,197);
+    text-align: center;
+    /* box-shadow: 1px 1px 1px 1px red; */
+    position: relative;
+    box-shadow: 0em 0.2em 0.25em rgba(248,236,144, 0.25);
+    overflow: hidden;
+    cursor: pointer;
+    transition: 0.5s;
+    transition-delay: 0.2s;
+}
+
+.control::before
+{
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 50%;
+    z-index: 2;
+    height: 100%;
+    /* background-color: aqua; */
+    border-radius: 0.5em 0em 0em 0.5em;
+    /* opacity: 0.5; */
+    background: linear-gradient(to left, rgba(248,236,144,0.15),transparent);
+    transform: skewX(45deg) translateX(0);
+    transition: 0.15s;
+}
+
+#match
+{
+    padding: 2em ;
+}
+
+.control.exit
+{
+    z-index: 2;
+    width: 100%;
+    margin: 0.8rem 5%;
+}
+
+.control.match
+{
+    z-index: 2;
+    width: 100%;
+    margin: 0.8rem 5%;
+}
+
+.control:hover{
+    letter-spacing: 3px;
+    background-color: rgba(248,236,144,0.8);
+    color: black;
+    box-shadow: 0 0.2em 0.4em rgba(248,236,144, 0.8);
+}
+
+.control:hover::before
+{
+    transform: skewX(45deg) translateX(120%);
+    /* background: linear-gradient(to left, rgba(248,236,144,1),transparent); */
+}
+
+#match:hover
+{
+    cle
+}
+
+img{
+    width: 25%;
+    z-index: 2;
+    opacity: 0.8;
+    height: 100%;
+    /* height: 30% */
+    /* border: 1px solid white; */
+}
+
+#naruto
+{
+    width: 25%;
+}
