@@ -260,7 +260,7 @@ class MatchesHistory(APIView):
     def get(self, request):
         try:
             player = Player.objects.get(id=request.decoded_token['id'])
-            matches = PlayerMatch.objects.filter(player_id=player.id, match_id__game='played').order_by('-match_id__id')[:8]
+            matches = PlayerMatch.objects.filter(player_id=player.id, match_id__state='PLY').order_by('-match_id__id')[:8]
             matches_data = []
             for match in matches:
                 matches_data.append({
