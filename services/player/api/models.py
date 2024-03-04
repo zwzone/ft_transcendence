@@ -45,6 +45,7 @@ class Friendship(models.Model):
         (Status.PENDING.value, 'PENDING'),
     ]
 
+    id = models.AutoField(primary_key=True)
     sender = models.ForeignKey('Player', on_delete=models.CASCADE, related_name='sent_friend_requests')
     receiver = models.ForeignKey('Player', on_delete=models.CASCADE, related_name='received_friend_requests')
     status = models.CharField(max_length=2, choices=STATUS_CHOICES, default=Status.PENDING.value)

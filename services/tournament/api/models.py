@@ -4,11 +4,11 @@ from enum import Enum
 
 
 class Player(AbstractBaseUser):
+
     class Status(Enum):
         ONLINE = 'ON'
         OFFLINE = 'OF'
         INGAME = 'IG'
-
     STATUS_CHOICES = [
         (Status.ONLINE.value, 'ONLINE'),
         (Status.OFFLINE.value, 'OFFLINE'),
@@ -22,6 +22,9 @@ class Player(AbstractBaseUser):
     last_name = models.CharField(max_length=20, blank=False, null=False)
     tournament_name = models.CharField(max_length=20, blank=False, null=True)
     avatar = models.URLField(blank=False, null=False)
+    champions = models.IntegerField(blank=False, null=False, default=0)
+    wins = models.IntegerField(blank=False, null=False, default=0)
+    losses = models.IntegerField(blank=False, null=False, default=0)
     two_factor = models.BooleanField(default=False)
     status = models.CharField(max_length=2, choices=STATUS_CHOICES, default=Status.ONLINE.value)
 
@@ -33,10 +36,10 @@ class Player(AbstractBaseUser):
 
 
 class Friendship(models.Model):
+
     class Status(Enum):
         ACCEPTED = 'AC'
         PENDING = 'PN'
-
     STATUS_CHOICES = [
         (Status.ACCEPTED.value, 'ACCEPTED'),
         (Status.PENDING.value, 'PENDING'),
@@ -45,12 +48,10 @@ class Friendship(models.Model):
     id = models.AutoField(primary_key=True)
     sender = models.ForeignKey('Player', on_delete=models.CASCADE, related_name='sent_friend_requests')
     receiver = models.ForeignKey('Player', on_delete=models.CASCADE, related_name='received_friend_requests')
-    created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=2, choices=STATUS_CHOICES, default=Status.PENDING.value)
 
     def __str__(self):
         return f'{self.sender.username} -> {self.receiver.username}'
-
 
 class PlayerMatch(models.Model):
     class Language(Enum):
