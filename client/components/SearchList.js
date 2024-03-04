@@ -29,7 +29,6 @@ export default class SearchList extends HTMLElement {
           return;
         }
         for (let i = 0; i < arr.length; i++) {
-          console.log("HHHHHHHHHHHHHHHHHHHHHHHHHHH ->", arr[i]);
           const player_card_elem = document.createElement("friend-card");
           player_card_elem.setAttribute("friend-card-type", "search");
           player_card_elem.setAttribute("player-id", arr[i].id);

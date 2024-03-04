@@ -21,7 +21,6 @@ export default class MatchHistory extends HTMLElement {
 
     fetching(`https://${window.ft_transcendence_host}/player/matches/`).then((data) => {
       const matches = data.matches;
-      console.log(matches);
       if (matches.length === 0) {
         this.textContent = "No matches found";
       }
