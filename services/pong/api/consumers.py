@@ -1,6 +1,7 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from .models import PlayerMatch, Match, Player
+from channels.layers import get_channel_layer
 import asyncio, random, json
 
 rooms = {}
@@ -39,18 +40,61 @@ padd_down = {
 
 
 @database_sync_to_async
+def walk_over(room_id, match_id, pos):
+    try:
+        player_left = rooms[room_id]['padd_left']
+        player_right = rooms[room_id]['padd_right']
+        player_left_db = Player.objects.get(id=player_left['user_id'])
+        player_right_db = Player.objects.get(id=player_right['user_id'])
+        match = get_match(match_id)
+        match pos:
+            case 'left':
+                PlayerMatch.objects.get_or_create(
+                    match_id=match,
+                    player_id=player_left_db,
+                    score=0,
+                    won=False
+                )
+                PlayerMatch.objects.get_or_create(
+                    match_id=match,
+                    player_id=player_right_db,
+                    score=2,
+                    won=True
+                )
+                return player_left_db.username + ' left you won'
+            case 'right':
+                PlayerMatch.objects.get_or_create(
+                    match_id=match,
+                    player_id=player_left_db,
+                    score=2,
+                    won=True
+                )
+                PlayerMatch.objects.get_or_create(
+                    match_id=match,
+                    player_id=player_right_db,
+                    score=0,
+                    won=False
+                )
+                return player_right_db.username + ' left you won'
+    except Exception as e:
+        print(e, flush=True)
+
+
+def get_match(match_id):
+    if not match_id:
+        return Match.objects.create(game='PO',
+                                    state='PLY')
+    return Match.objects.get(id=match_id)
+
+
+@database_sync_to_async
 def create_or_get_db(room_id, match_id):
     player_left = rooms[room_id]['padd_left']
     player_right = rooms[room_id]['padd_right']
     player_left_db = None
     player_right_db = None
-    match = None
+    match = get_match(match_id)
     try:
-        if not match_id:
-            match = Match.objects.create(game='PO',
-                                         state='PLY')
-        else:
-            match = Match.objects.get(id=match_id)
         player_left_db = Player.objects.get(id=player_left['user_id'])
         player_right_db = Player.objects.get(id=player_right['user_id'])
         PlayerMatch.objects.get_or_create(
@@ -68,8 +112,12 @@ def create_or_get_db(room_id, match_id):
     except Exception as e:
         print(e, flush=True)
     if player_left['info']['score'] == 7:
+        # player_left_db.wins += 1
+        # player_right_db.losses += 1
         return player_left_db.username + ' won'
     else:
+        # player_left_db.losses += 1
+        # player_right_db.wins += 1
         return player_right_db.username + ' won'
 
 
@@ -88,6 +136,7 @@ class Pong(AsyncWebsocketConsumer):
         room_id = self.scope['url_route']['kwargs']['room_id']
         self.capacity = self.scope['url_route']['kwargs']['capacity']
         self.match_id = self.scope['url_route']['kwargs'].get('match_id')
+        player_db = await database_sync_to_async(Player.objects.get)(id=self.scope['payload']['id'])
         await self.channel_layer.group_add(
             room_id,
             self.channel_name
@@ -97,7 +146,9 @@ class Pong(AsyncWebsocketConsumer):
                 'padd_left': {
                     'player': self.channel_name,
                     'user_id': self.scope['payload']['id'],
-                    'info': padd_left.copy()
+                    'info': padd_left.copy(),
+                    'username': player_db.username,
+                    'avatar': player_db.avatar
                 },
             }
         else:
@@ -105,19 +156,25 @@ class Pong(AsyncWebsocketConsumer):
                 rooms[room_id]['padd_right'] = {
                     'player': self.channel_name,
                     'user_id': self.scope['payload']['id'],
-                    'info': padd_right.copy()
+                    'info': padd_right.copy(),
+                    'username': player_db.username,
+                    'avatar': player_db.avatar
                 }
             elif rooms[room_id].get('padd_up') is None and self.capacity > 2:
                 rooms[room_id]['padd_up'] = {
                     'player': self.channel_name,
                     'user_id': self.scope['payload']['id'],
-                    'info': padd_up.copy()
+                    'info': padd_up.copy(),
+                    'username': player_db.username,
+                    'avatar': player_db.avatar
                 }
             elif rooms[room_id].get('padd_down') is None and self.capacity > 2:
                 rooms[room_id]['padd_down'] = {
                     'player': self.channel_name,
                     'user_id': self.scope['payload']['id'],
-                    'info': padd_down.copy()
+                    'info': padd_down.copy(),
+                    'username': player_db.username,
+                    'avatar': player_db.avatar
                 }
             if len(rooms[room_id]) == self.capacity:
                 await self.start_game(room_id)
@@ -139,11 +196,35 @@ class Pong(AsyncWebsocketConsumer):
             room_id,
             self.channel_name
         )
-        if (room_id in rooms
-                and ((self.channel_name in rooms[room_id]['padd_left']['player'])
-                     or (self.channel_name in rooms[room_id]['padd_right']['player'])
-                     or (self.channel_name in rooms[room_id]['padd_up']['player'])
-                     or (self.channel_name in rooms[room_id]['padd_down']['player']))):
+        if room_id in rooms:
+            match self.channel_name:
+                case player if player == rooms[room_id]['padd_left']['player']:
+                    if close_code is not None:
+                        message = await walk_over(room_id, self.match_id, 'left')
+                        await self.channel_layer.group_send(
+                            room_id,
+                            {
+                                'type': 'pong.message',
+                                'message': message
+                            }
+                        )
+                case player if player == rooms[room_id]['padd_right']['player']:
+                    if close_code is not None:
+                        message = await walk_over(room_id, self.match_id, 'right')
+                        print(message, flush=True)
+                        await self.channel_layer.group_send(
+                            room_id,
+                            {
+                                'type': 'pong.message',
+                                'message': message
+                            }
+                        )
+                case player if player == rooms[room_id]['padd_up']['player']:
+                    if close_code is not None:
+                        print('Up player disconnected', flush=True)
+                case player if player == rooms[room_id]['padd_down']['player']:
+                    if close_code is not None:
+                        print('Down player disconnected', flush=True)
             del rooms[room_id]
 
     async def receive(self, text_data=None, bytes_data=None):
@@ -217,8 +298,8 @@ class Pong(AsyncWebsocketConsumer):
             if self.capacity == 4:
                 rooms[room_id]['padd_right']['info']['eliminated'] = True
             else:
-                rooms[room_id]['padd_right']['info']['score'] += 1
-                if rooms[room_id]['padd_right']['info']['score'] == 7:
+                rooms[room_id]['padd_left']['info']['score'] += 1
+                if rooms[room_id]['padd_left']['info']['score'] == 7:
                     final_message = await create_or_get_db(room_id, self.match_id)
                     await self.channel_layer.group_send(
                         room_id,
@@ -232,8 +313,8 @@ class Pong(AsyncWebsocketConsumer):
             if self.capacity == 4:
                 rooms[room_id]['padd_left']['info']['eliminated'] = True
             else:
-                rooms[room_id]['padd_left']['info']['score'] += 1
-                if rooms[room_id]['padd_left']['info']['score'] == 7:
+                rooms[room_id]['padd_right']['info']['score'] += 1
+                if rooms[room_id]['padd_right']['info']['score'] == 7:
                     final_message = await create_or_get_db(room_id, self.match_id)
                     await self.channel_layer.group_send(
                         room_id,
