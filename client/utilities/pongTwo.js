@@ -1,4 +1,38 @@
 let ws;
+let alreadyInGame = false;
+
+function setPlayerData(data) {
+  const avatar_left = data["padd_left"]["avatar"];
+  const avatar_right = data["padd_right"]["avatar"];
+  const username_left = data["padd_left"]["username"];
+  const username_right = data["padd_right"]["username"];
+  const pong_players_elem = document.querySelector(".pong-players");
+  let player_elem;
+  player_elem = document.createElement("div");
+  player_elem.style.display = "flex";
+  player_elem.style.flexDirection = "column";
+  player_elem.style.justifyContent = "center";
+  player_elem.style.alignItems = "center";
+  player_elem.innerHTML = `
+    <img src="${avatar_left}" alt="avatar">
+    <h1>${username_left}</h1>
+  `;
+  player_elem.querySelector("img").style.width = "100px";
+  player_elem.querySelector("img").style.borderRadius = "50%";
+  pong_players_elem.append(player_elem);
+  player_elem = document.createElement("div");
+  player_elem.style.display = "flex";
+  player_elem.style.flexDirection = "column";
+  player_elem.style.justifyContent = "center";
+  player_elem.style.alignItems = "center";
+  player_elem.innerHTML = `
+    <img src="${avatar_right}" alt="avatar">
+    <h1>${username_right}</h1>
+  `;
+  player_elem.querySelector("img").style.width = "100px";
+  player_elem.querySelector("img").style.borderRadius = "50%";
+  pong_players_elem.appendChild(player_elem);
+}
 
 export default function runPongTwoGame(canvas, ctx, match_id) {
   ws = new WebSocket(
@@ -27,13 +61,27 @@ export default function runPongTwoGame(canvas, ctx, match_id) {
     clearInterval(intervalId);
     if (e.data === "error") {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "white";
+      ctx.font = "100px monospace";
+      ctx.textAlign = "center";
       ctx.fillText("ALREADY IN GAME", canvas.width / 2, canvas.height / 2);
       ws.close();
       return;
     }
-    ws = new WebSocket(`wss://${window.ft_transcendence_host}/ws/pong/${e.data}/2/`);
+    ws = new WebSocket(`wss://${window.ft_transcendence_host}/ws/pong/${e.data}/2/${!match_id ? "" : match_id + "/"}`);
     ws.onmessage = function (e) {
       let tmp = JSON.parse(e.data);
+      if (!alreadyInGame) {
+        setPlayerData(tmp);
+        alreadyInGame = true;
+      }
+      if (typeof tmp === "string") {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillText(tmp, canvas.width / 2, canvas.height / 2);
+        ws.close();
+        return;
+      }
       ball.positionX = tmp["ball"].positionX;
       ball.positionY = tmp["ball"].positionY;
       paddle1.positionY = tmp["padd_left"]["info"].positionY;
@@ -44,7 +92,7 @@ export default function runPongTwoGame(canvas, ctx, match_id) {
     };
   };
   window.addEventListener("keydown", function (e) {
-    if (e.keyCode in keys) ws.send(keys[e.keyCode]);
+    if (e.keyCode in keys && ws.readyState != WebSocket.CLOSED) ws.send(keys[e.keyCode]);
   });
   window.addEventListener("keydown", function (e) {
     if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(e.code) > -1) {
@@ -53,14 +101,15 @@ export default function runPongTwoGame(canvas, ctx, match_id) {
   });
 }
 
-const keys = {
+export const keys = {
   38: "up",
   40: "down",
   87: "w",
   83: "s",
 };
 
-class Paddle {
+
+export  class Paddle {
   constructor(position, size) {
     this.positionX = position[0];
     this.positionY = position[1];
@@ -78,7 +127,7 @@ class Paddle {
   }
 }
 
-class Ball {
+export class Ball {
   constructor(position, size) {
     this.positionX = position[0];
     this.positionY = position[1];
@@ -96,8 +145,8 @@ class Ball {
 function RenderScore(ctx, canvas, right, left) {
   ctx.fillStyle = "white";
   ctx.font = "bold 60px Arial";
-  ctx.fillText(right, canvas.width / 2 - 100, 120);
-  ctx.fillText(left, canvas.width / 2 + 100, 120);
+  ctx.fillText(left, canvas.width / 2 - 100, 120);
+  ctx.fillText(right, canvas.width / 2 + 100, 120);
 }
 
 function gameLoop(canvas, ctx, ball, paddle1, paddle2) {
