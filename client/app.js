@@ -9,7 +9,9 @@ import FriendsList from "./components/FriendsList.js";
 import SearchList from "./components/SearchList.js";
 import FriendCard from "./components/FriendCard.js";
 import FriendCardPopup from "./components/FriendCardPopup.js";
+import PlayerCard from "./components/PlayerCard.js";
 import MatchCard from "./components/MatchCard.js";
+import MatchHistory from "./components/MatchHistory.js";
 import LoginButton from "./components/LoginButton.js";
 import TwofaInput from "./components/TwofaInput.js";
 import TournamentCard from "./components/TournamentCard.js";
@@ -29,7 +31,7 @@ import SettingPage from "./pages/SettingPage.js";
 import TournamentPage from "./pages/TournamentPage.js";
 import NotfoundPage from "./pages/NotfoundPage.js";
 
-window.ft_transcendence_host = "localhost";
+window.ft_transcendence_host = "10.11.6.2";
 
 window.addEventListener("DOMContentLoaded", () => {
   router.init();

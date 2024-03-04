@@ -29,11 +29,14 @@ export default class SearchList extends HTMLElement {
           return;
         }
         for (let i = 0; i < arr.length; i++) {
+          console.log("HHHHHHHHHHHHHHHHHHHHHHHHHHH ->", arr[i]);
           const player_card_elem = document.createElement("friend-card");
           player_card_elem.setAttribute("friend-card-type", "search");
           player_card_elem.setAttribute("player-id", arr[i].id);
-          player_card_elem.setAttribute("avatar", arr[i].avatar);
           player_card_elem.setAttribute("username", arr[i].username);
+          player_card_elem.setAttribute("first-name", arr[i].first_name);
+          player_card_elem.setAttribute("last-name", arr[i].last_name);
+          player_card_elem.setAttribute("avatar", arr[i].avatar);
           search_results.appendChild(player_card_elem);
         }
       });

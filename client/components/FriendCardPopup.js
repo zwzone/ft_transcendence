@@ -19,6 +19,10 @@ export default class FriendCardPopup extends HTMLElement {
 
     const close_button = this.querySelector(".popup-close");
     const popup_header = this.querySelector(".popup-header");
+    const avatar = this.querySelector(".avatar");
+    const username = this.querySelector(".username");
+    const first_name = this.querySelector(".first-name");
+    const last_name = this.querySelector(".last-name");
     const green_button = this.querySelector(".green-button");
     const red_button = this.querySelector(".red-button");
 
@@ -38,6 +42,10 @@ export default class FriendCardPopup extends HTMLElement {
 
     popup_header.textContent = this.attributes["friend-card-type"].value.toUpperCase().slice(0, -1);
     if (this.attributes["friend-card-type"].value === "search") popup_header.textContent += "H";
+    avatar.src = this.attributes["avatar"].value;
+    username.textContent = this.attributes["username"].value;
+    first_name.textContent = this.attributes["first-name"].value;
+    last_name.textContent = this.attributes["last-name"].value;
 
     close_button.addEventListener("click", (event) => {
       this.parentElement.removeChild(this);

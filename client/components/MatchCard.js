@@ -9,13 +9,20 @@ export default class MatchCard extends HTMLElement {
     this.appendChild(component);
     this.classList.add(
       "d-flex",
-      "justify-content-center",
+      "justify-content-around",
       "align-items-center",
-      "gap-3",
-      "py-2",
-      "px-3",
       "rounded-5",
+      "p-2",
     );
+
+    const match = JSON.parse(this.getAttribute("match"));
+    for (const player of match.players) {
+      const player_card_elem = document.createElement("player-card");
+      player_card_elem.setAttribute("avatar", player.avatar);
+      player_card_elem.setAttribute("username", player.username);
+      player_card_elem.setAttribute("score", player.score);
+      this.appendChild(player_card_elem);
+    }
   }
 }
 
