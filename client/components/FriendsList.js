@@ -22,15 +22,31 @@ export default class FriendsList extends HTMLElement {
 
     friend_cards.classList.add("d-flex", "flex-wrap", "gap-1");
     friends_btn.addEventListener("click", () => {
+      friends_btn.classList.add("active");
+      requests_btn.classList.remove("active");
+      invites_btn.classList.remove("active");
+      search_btn.classList.remove("active");
       this.showCards("friends");
     });
     requests_btn.addEventListener("click", () => {
+      friends_btn.classList.remove("active");
+      requests_btn.classList.add("active");
+      invites_btn.classList.remove("active");
+      search_btn.classList.remove("active");
       this.showCards("requests");
     });
     invites_btn.addEventListener("click", () => {
+      friends_btn.classList.remove("active");
+      requests_btn.classList.remove("active");
+      invites_btn.classList.add("active");
+      search_btn.classList.remove("active");
       this.showCards("invites");
     });
     search_btn.addEventListener("click", () => {
+      friends_btn.classList.remove("active");
+      requests_btn.classList.remove("active");
+      invites_btn.classList.remove("active");
+      search_btn.classList.add("active");
       this.showCards("search");
     });
   }
@@ -52,8 +68,10 @@ export default class FriendsList extends HTMLElement {
         const friend_card_elem = document.createElement("friend-card");
         friend_card_elem.setAttribute("friend-card-type", friend_card_type);
         friend_card_elem.setAttribute("player-id", arr[i].id);
-        friend_card_elem.setAttribute("avatar", arr[i].avatar);
+        friend_card_elem.setAttribute("first-name", arr[i].first_name);
+        friend_card_elem.setAttribute("last-name", arr[i].last_name);
         friend_card_elem.setAttribute("username", arr[i].username);
+        friend_card_elem.setAttribute("avatar", arr[i].avatar);
         friend_cards.appendChild(friend_card_elem);
       }
     });

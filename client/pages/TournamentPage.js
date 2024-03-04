@@ -22,7 +22,7 @@ export default class TournamentPage extends HTMLElement {
     const tournament_list = this.querySelector(".tournament-list");
 
     fetching(`https://${window.ft_transcendence_host}/tournament/`).then((data) => {
-      if (!data.current_tournament || data.tournaments) {
+      if (!data.current_tournament || data.current_tournament.status === "FN") {
         tournament_actions.classList.remove("d-none");
         tournament_actions.classList.add("d-flex");
         if (data.tournaments) {
@@ -78,10 +78,10 @@ export default class TournamentPage extends HTMLElement {
               JSON.stringify({ action: "leave", tournament_id: data.current_tournament.id }),
               { "Content-Type": "application/json" },
             ).then((data) => {
-              // window.location.reload();
+              window.location.reload();
             });
           });
-        } else if (data.current_tournament.status === "PR") {
+        } else {
           tournament_matches.classList.remove("d-none");
           tournament_matches.classList.add("d-flex");
           const match_elems = this.querySelectorAll("tournament-match-card");

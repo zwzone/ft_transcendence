@@ -60,7 +60,7 @@ export default class SettingPage extends HTMLElement {
 
     popup_twofa_close.onclick = (event) => {
       checkbox_twofa.checked = !checkbox_twofa.checked;
-      popup_twofa.removeChild(popup_twofa.lastChild);
+      popup_twofa_qrcode.innerHTML = "";
       popup_twofa.style.display = "none";
     };
 

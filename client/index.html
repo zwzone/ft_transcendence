@@ -69,7 +69,7 @@
       <h1 class="display-1 text-center fw-bold m-0">PING PONG</h1>
     </div>
     <div class="d-flex flex-column justify-content-center align-items-center gap-3">
-      <login-button color="success" link="https://localhost/authentication/intra/" text="Intra 42"></login-button>
+    <login-button color="success" link="https://localhost/authentication/intra/" text="Intra 42"></login-button>
       <login-button color="primary" link="https://localhost/authentication/google/" text="Google"></login-button>
     </div>
     <my-footer></my-footer>
@@ -111,24 +111,18 @@
         <div class="data-section d-flex flex-column gap-2 p-2 rounded-5">
           <div class="d-flex justify-content-center align-items-center rounded-top-5">
             <h2 class="m-0 p-3">Wins :</h2>
-            <h2 class="m-0 p-3">10</h2>
+            <h2 class="wins m-0 p-3">10</h2>
           </div>
           <div class="d-flex justify-content-center align-items-center rounded-bottom-5">
             <h2 class="m-0 p-3">Losses :</h2>
-            <h2 class="m-0 p-3">10</h2>
+            <h2 class="losses m-0 p-3">10</h2>
           </div>
         </div>
       </div>
       <div class="player-data-related d-flex flex-column justify-content-around gap-2 p-3 rounded-5">
         <div class="match-history d-flex flex-column justify-content-center gap-2 p-3 rounded-5 flex-grow-1">
           <h2 class="text-center m-0 px-3 py-1 rounded-5">Match History</h2>
-          <div class="match-cards d-flex flex-column justify-content-center gap-1">
-            <match-card></match-card>
-            <match-card></match-card>
-            <match-card></match-card>
-            <match-card></match-card>
-            <match-card></match-card>
-          </div>
+          <match-history></match-history>
         </div>
         <div class="friend-list d-flex flex-column justify-content-center gap-2 p-3 rounded-5 flex-grow-1">
           <h2 class="text-center m-0 px-3 py-1 rounded-5">My Friends</h2>
@@ -301,7 +295,7 @@
   <!-- SEARCH LIST -->
   <template id="search-list">
     <div class="d-flex flex-wrap justify-content-center align-items-center p-0 m-0 gap-1">
-      <input class="search-input" type="text">
+      <input class="search-input px-2 py-1 rounded-3" type="text">
       <button class="search-btn btn btn-lg fw-bold">SEARCH</button>
     </div>
     <div class="search-results d-flex flex-wrap gap-1"></div>
@@ -319,8 +313,8 @@
       <button class="popup-close btn-close align-self-end"></button>
       <h1 class="popup-header"></h1>
       <img class="avatar border border-1 border-white rounded-4" alt="avatar" referrerpolicy="no-referrer">
-      <h2>zwina</h2>
-      <h1>ZAKARIA WINA</h1>
+      <h2 class="username"></h2>
+      <h1><span class="first-name"></span> <span class="last-name"></span></h1>
       <div class="buttons">
         <button class="green-button btn btn-success btn-lg fw-bold"></button>
         <button class="red-button btn btn-danger btn-lg fw-bold"></button>
@@ -328,13 +322,22 @@
     </div>
   </template>
 
+  <!-- PLAYER CARD -->
+  <template id="player-card">
+    <div class="d-flex flex-column justify-content-center align-items-center m-0 p-1 gap-1 rounded-4">
+      <img class="avatar border border-1 border-white rounded-4" alt="avatar" referrerpolicy="no-referrer">
+      <h6 class="username text-center m-0 py-1 px-2 rounded-4 fw-bold">ana</h6>
+    </div>
+    <h3 class="score fw-bold text-center m-0 p-1 rounded-bottom-4">10</h3>
+    </div>
+  </template>
+
   <!-- MATCH CARD -->
   <template id="match-card">
-    <h6 class="text-center m-0">Wina</h6>
-    <h6 class="text-center m-0">10</h6>
-    <h6 class="text-center m-0">vs</h6>
-    <h6 class="text-center m-0">5</h6>
-    <h6 class="text-center m-0">Zakaria</h6>
+  </template>
+
+  <!-- MATCH HISTORY -->
+  <template id="match-history">
   </template>
 
   <!-- TOURNAMENT CARD -->
