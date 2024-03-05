@@ -77,7 +77,6 @@ export default function runPongTwoGame(canvas, ctx, match_id) {
       }
       if (typeof tmp === "string") {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
         ctx.fillText(tmp, canvas.width / 2, canvas.height / 2);
         ws.close();
         return;
