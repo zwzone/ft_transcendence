@@ -353,7 +353,7 @@ body
 
 }
 
-.player.yel .info .player-name
+.player.yel .info .player-name 
 {
     background-color: rgba(248,236,144, 0.7);
     color: rgb(248,243,203);
@@ -391,6 +391,17 @@ body
     /* border: 1px solid green; */
     background-color: white;
     border-radius: 0.5em;
+    
+}
+
+.player.yel .player-img
+{
+    color: rgb(248,243,203);
+}
+
+.player.ble .player-img
+{
+    color: rgba(211, 236, 255, 1);
 }
 
 .player.yel .player-img{
