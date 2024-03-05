@@ -47,7 +47,7 @@ body
     align-items: start;
     justify-content: center;
     background-color: black;
-    border: 2px solid purple;
+    /* border: 2px solid purple; */
     position: relative;
 
 }
@@ -60,7 +60,7 @@ body
     width: 100%;
     height: 100%;
     z-index: 1;
-    border: 3px solid green;
+    /* border: 3px solid green; */
 }
 
 #stars {
@@ -195,7 +195,7 @@ body
     width: 42vw;
     height: 42vw;
     padding: 20px;
-    margin-top: 20vh;
+    margin-top: 22.5vh;
     position: fixed;
 }
 
@@ -244,23 +244,23 @@ body
 .status
 {
     width: 100vw;
-    border: 1px solid saddlebrown;
+    /* border: 1px solid saddlebrown; */
     display: grid;
     grid-template-columns: auto auto;
     justify-content: space-between;
-    align-content: flex-start;
+    /* align-content: flex-start; */
     /* grid-template-columns: 1fr; */
 }
 
 .player
 {
-    border: 1px solid white;
-    width: fit-content;
+    /* border: 1px solid white; */
+    /* width: fit-content; */
     display: grid;
     height: fit-content;
     justify-content: space-between;
     align-content: space-between;
-    grid-template-columns: 1fr;
+    /* grid-template-columns: 1fr; */
     /* height: 30; */
     border-radius:10px;
     /* display: flex; */
@@ -276,7 +276,11 @@ body
 
 .player.ble
 {
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 1fr 4fr;
+}
+
+.player.yel{
+    grid-template-columns: 4fr 1fr;
 }
 
 
@@ -335,20 +339,25 @@ body
 
 .info .player-name
 {
+    justify-content: center;
     text-align: center;
     color: red;
+    height: 3em;
 }
 
 .player.ble .info .player-name
 {
     color: rgba(211, 236, 255, 1);
     background-color: rgba(42,163,225, 0.75);
+    height: 3em;
 
 }
 
 .player.yel .info .player-name
 {
-    color: rgba(red, green, blue, alpha);
+    background-color: rgba(248,236,144, 0.7);
+    color: rgb(248,243,203);
+    height: 3em;
 }
 
 /* rgb(42,163,225) */
@@ -377,9 +386,15 @@ body
     height: 20px; */
     /* overflow-wrap: wrap; */
     /* width: ; */
-    width: 4em;
-    height: 4em;
-    border: 1px solid green;
+    width: 2.5em;
+    height: 2.5em;
+    /* border: 1px solid green; */
+    background-color: white;
+    border-radius: 0.5em;
+}
+
+.player.yel .player-img{
+    margin-left: 0.2em;
 }
 
 .player-img img
@@ -387,4 +402,5 @@ body
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: 0.5em; 
 }
