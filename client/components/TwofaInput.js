@@ -23,20 +23,22 @@ export default class TwofaInput extends HTMLElement {
     button.addEventListener("click", (event) => {
       const code = this.querySelector("input").value;
       if (code.length === 6) {
-        const query = new URLSearchParams(window.location.search);
         fetching(
           `https://${window.ft_transcendence_host}/authentication/2FA/verify/`,
           "POST",
-          JSON.stringify({ id: query.get("id"), code: input.value }),
+          JSON.stringify({ code: input.value }),
           { "Content-Type": "application/json" },
         ).then((res) => {
+          input.value = "";
           if (res.statusCode === 200) {
             if (res.redirected)
               window.location.href = `https://${window.ft_transcendence_host}/home/`;
             else {
               const popup_twofa = document.querySelector(".popup-twofa");
+              const popup_twofa_qrcode = document.querySelector(".popup-twofa-qrcode");
               if (popup_twofa) {
                 popup_twofa.removeChild(popup_twofa.lastChild);
+                popup_twofa_qrcode.innerHTML = "";
                 popup_twofa.style.display = "none";
               }
             }

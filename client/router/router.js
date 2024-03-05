@@ -17,14 +17,28 @@ const router = {
     });
     // check if the player is logged in
     let pathname = window.location.pathname;
-    if (pathname == "/") pathname = "/home/";
+    pathname = pathname.split("/");
+    pathname = pathname.filter((str) => str != "");
+    pathname = "/" + pathname.join("/") + "/";
+    if (pathname === "/" || pathname === "//") pathname = "/home/";
     fetching(`https://${window.ft_transcendence_host}/authentication/isloggedin/`).then((res) => {
       if (res.statusCode == 200) {
         if (pathname == "/login/" || pathname == "/twofa/") pathname = "/home/";
+      } else if (res.error.startsWith("2FA")) {
+        if (
+          pathname == "/game/" ||
+          pathname == "/home/" ||
+          pathname == "/login/" ||
+          pathname == "/profile/" ||
+          pathname == "/setting/" ||
+          pathname == "/tournaments/"
+        )
+          pathname = "/twofa/";
       } else {
         if (
           pathname == "/game/" ||
           pathname == "/home/" ||
+          pathname == "/twofa/" ||
           pathname == "/profile/" ||
           pathname == "/setting/" ||
           pathname == "/tournaments/"
@@ -38,7 +52,7 @@ const router = {
   go: (route, state) => {
     if (state == "add" && window.location.pathname != route)
       history.pushState({ route }, "", route);
-    if (state == "replace") history.replaceState({ route }, "", route + window.location.search);
+    else if (state == "replace") history.replaceState({ route }, "", route);
     let pageElement;
     if (routes.hasOwnProperty(route)) {
       pageElement = document.createElement(routes[route]);

@@ -88,7 +88,6 @@ function gameLoop(canvas, ctx, ball, paddle1, paddle2, paddle3, paddle4) {
       count++;
     }
     if (count <= 1) {
-      console.log("Game Over");
       ws.close();
     }
 }
