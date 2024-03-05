@@ -31,7 +31,10 @@ import SettingPage from "./pages/SettingPage.js";
 import TournamentPage from "./pages/TournamentPage.js";
 import NotfoundPage from "./pages/NotfoundPage.js";
 
-window.ft_transcendence_host = "localhost";
+Object.defineProperty(window, "ft_transcendence_host", {
+  value: "localhost",
+  writable: false,
+});
 
 window.addEventListener("DOMContentLoaded", () => {
   router.init();

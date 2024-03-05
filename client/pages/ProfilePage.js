@@ -16,6 +16,7 @@ export default class ProfilePage extends HTMLElement {
       this.querySelector(".player-data .username").innerText = res.player.username;
       this.querySelector(".player-data .first-name").innerText = res.player.first_name;
       this.querySelector(".player-data .last-name").innerText = res.player.last_name;
+      this.querySelector(".player-data .champions").innerText = res.player.champions;
       this.querySelector(".player-data .wins").innerText = res.player.wins;
       this.querySelector(".player-data .losses").innerText = res.player.losses;
     });
