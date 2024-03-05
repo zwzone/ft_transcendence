@@ -228,7 +228,8 @@ body
     background-color: rgba(248,236,144, 0.045);
     /* background-color: rgba(248,236,144, 0.1); */
     /* border: 1px solid rgba(248,236,144, 0.25);  */
-    padding: 0.5em;
+    padding: 0.15em 0.15em;
+    /* padding: 1px 1px; */
     border-radius: 0.2em;
     /* margin: auto; */
     width: 3vw;
@@ -237,8 +238,22 @@ body
     border-bottom: 1px solid rgba(248,236,144, 0.3);
     border-left: 1px solid rgba(248,236,144, 0.1);
     border-right: 1px solid rgba(248,236,144, 0.1);
+    display: flex;
+    justify-content: center;
+    font-size: 1.5em;
+    /* justify-content: center; */
     
     /* box-shadow: 1px 1px 2px 1px rgba(248,236,144, 0.2); */
+}
+
+.spot.o
+{
+    color: rgba(42,163,225, 1);
+}
+
+.spot.x
+{
+        color : rgba(248,236,144, 1);
 }
 
 .status
@@ -467,4 +482,33 @@ body
     height: 100%;
     object-fit: cover;
     border-radius: 0.5em; 
+}
+
+.filled
+{
+    /* display: block; */
+    justify-content: center;
+    align-content: center;
+}
+
+.spot-fill-x
+{
+    width: 10vw;
+    height: 10vw;
+    font-size: 13vw;
+    padding: 5px 5px;
+    text-align: center;
+    /* border: 1px solid green; */
+    color: rgba(248,236,144, 1);
+}
+
+.spot-fill-o
+{
+    width: 10vw;
+    height: 10vw;
+    font-size: 6em;
+    padding: 5px 5px;
+    text-align: center;
+    /* border: 1px solid green; */
+    color: rgba(42,163,225, 1);
 }
