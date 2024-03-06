@@ -14,7 +14,7 @@ function setPlayerData(data) {
   player_elem.style.justifyContent = "center";
   player_elem.style.alignItems = "center";
   player_elem.innerHTML = `
-    <img src="${avatar_left}" alt="avatar">
+    <img src="${avatar_left}" alt="avatar" referrerpolicy="no-referrer">
     <h1>${username_left}</h1>
   `;
   player_elem.querySelector("img").style.width = "100px";
@@ -26,7 +26,7 @@ function setPlayerData(data) {
   player_elem.style.justifyContent = "center";
   player_elem.style.alignItems = "center";
   player_elem.innerHTML = `
-    <img src="${avatar_right}" alt="avatar">
+    <img src="${avatar_right}" alt="avatar" referrerpolicy="no-referrer">
     <h1>${username_right}</h1>
   `;
   player_elem.querySelector("img").style.width = "100px";
@@ -77,7 +77,6 @@ export default function runPongTwoGame(canvas, ctx, match_id) {
       }
       if (typeof tmp === "string") {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
         ctx.fillText(tmp, canvas.width / 2, canvas.height / 2);
         ws.close();
         return;
