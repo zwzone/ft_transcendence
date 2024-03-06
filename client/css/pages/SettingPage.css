@@ -1,12 +1,36 @@
 setting-page main {
-  background-color: var(--color-primary-300);
+  /* background-color: var(--color-primary-300); */
   max-width: 1080px;
 }
 
-.setting-header,
+.setting-header {
+  background-color: var(--color-primary-200);
+  color: var(--color-secondary-100);
+}
+
 .setting-data {
   background-color: var(--color-primary-400);
+  color: var(--color-primary-200);
+}
+
+.setting-data .btn {
+  background-color: var(--color-primary-100) !important;
+  color: var(--color-secondary-100) !important;
+}
+
+.setting-data .btn:hover,
+.setting-data .btn:active {
+  background-color: var(--color-primary-200) !important;
+  color: var(--color-secondary-100) !important;
+}
+
+.setting-data input[type="text"] {
+  background-color: var(--color-primary-300);
   color: var(--color-secondary-100);
+}
+
+.setting-data input[type="text"]::placeholder {
+  color: var(--color-primary-400);
 }
 
 .setting-avatar {
@@ -18,45 +42,37 @@ setting-page main {
   height: 150px;
 }
 
-.change-avatar {
+.setting-avatar input {
+  display: none;
+}
+
+.setting-avatar .change-avatar {
   width: 150px;
   height: 150px;
   position: absolute;
   left: 0;
   bottom: 0;
   opacity: 0;
-  transition: opacity .2s;
+  transition: opacity 0.2s;
   background-color: var(--color-primary-300);
   cursor: pointer;
 }
 
-.change-avatar:hover {
+.setting-avatar .change-avatar:hover {
   opacity: 50%;
 }
 
-.change-avatar img {
+.setting-avatar .change-avatar img {
   width: 70%;
   height: 70%;
 }
 
-#input-avatar {
-  display: none;
-}
-
-.setting-data button {
+.setting-twofa,
+.slider:before {
   background-color: var(--color-primary-300);
-  color: var(--color-secondary-100);
 }
 
-.setting-data button:hover {
-  background-color: var(--color-primary-200);
-}
-
-.setting-twofa {
-  background-color: var(--color-secondary-100);
-}
-
-.popup-twofa {
+.setting-twofa .popup-twofa {
   display: none;
   position: fixed;
   top: 0;
@@ -66,7 +82,7 @@ setting-page main {
   background-color: rgba(0, 0, 0, 0.4);
 }
 
-.popup-twofa>div {
+.setting-twofa .popup-twofa > div {
   background-color: var(--color-primary-300);
 }
 
@@ -94,8 +110,8 @@ setting-page main {
   right: 0;
   bottom: 0;
   background-color: var(--color-primary-400);
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 .slider:before {
@@ -105,13 +121,12 @@ setting-page main {
   width: 26px;
   left: 4px;
   bottom: 4px;
-  background-color: var(--color-secondary-100);
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 input:checked + .slider {
-  background-color: var(--color-primary-200);
+  background-color: var(--color-primary-100);
 }
 
 input:checked + .slider:before {

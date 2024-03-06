@@ -1,0 +1,19 @@
+game-page a.btn {
+  background-color: var(--color-primary-400) !important;
+  color: var(--color-primary-300) !important;
+}
+
+game-page a.btn:hover,
+game-page a.btn:active {
+  background-color: var(--color-primary-300) !important;
+  color: var(--color-primary-400) !important;
+}
+
+#canvas-pong {
+  width: 50%;
+  height: 50%;
+  background-image: url("../../images/stadium.jpeg");
+  background-position: center;
+  background-size: cover;
+  border-radius: 8px;
+}

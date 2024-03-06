@@ -1,3 +1,5 @@
+import router from "../utilities/router.js";
+
 export default class PlayCard extends HTMLElement {
   constructor() {
     super();
@@ -31,16 +33,16 @@ export default class PlayCard extends HTMLElement {
       play_four_elem.style.display = "none";
     }
     play_two_elem.addEventListener("click", () => {
-      window.location.href = `/game/?game=${game}&mode=two`;
+      router.go("/game/", `?game=${game}&mode=two`, "add");
     });
     play_four_elem.addEventListener("click", () => {
-      window.location.href = `/game/?game=${game}&mode=four`;
+      router.go("/game/", `?game=${game}&mode=four`, "add");
     });
     play_ai_elem.addEventListener("click", () => {
-      window.location.href = `/game/?game=${game}&mode=ai`;
+      router.go("/game/", `?game=${game}&mode=ai`, "add");
     });
     play_coop_elem.addEventListener("click", () => {
-      window.location.href = `/game/?game=${game}&mode=coop`;
+      router.go("/game/", `?game=${game}&mode=coop`, "add");
     });
   }
 }

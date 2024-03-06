@@ -18,7 +18,7 @@ export default class TournamentMatchCard extends HTMLElement {
 
     const btn = this.querySelector("button");
     btn.addEventListener("click", () => {
-      window.location.href = `/game?game=PG&mode=two&match=${this.getAttribute("match-id")}`;
+      router.go("/game/", `?game=PG&mode=two&match=${this.getAttribute("match-id")}`, "add");
     });
   }
 }

@@ -1,4 +1,4 @@
-import Router from "../router/router.js";
+import router from "../utilities/router.js";
 
 export default class Navbar extends HTMLElement {
   constructor() {
@@ -20,7 +20,7 @@ export default class Navbar extends HTMLElement {
     const handleLink = (event) => {
       event.preventDefault();
       const url = event.target.getAttribute("href");
-      Router.go(url, "add");
+      router.go(url, "", "add");
     };
 
     const logo = this.querySelector(".logo");

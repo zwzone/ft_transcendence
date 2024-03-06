@@ -13,7 +13,7 @@ const routes = {
 const router = {
   init: () => {
     window.addEventListener("popstate", (event) => {
-      router.go(event.state.route, "navigation");
+      router.go(event.state.route, event.state.query, "navigation");
     });
     // check if the player is logged in
     let pathname = window.location.pathname;
@@ -45,14 +45,14 @@ const router = {
         )
           pathname = "/login/";
       }
-      router.go(pathname, "replace");
+      router.go(pathname, window.location.search, "replace");
     });
   },
 
-  go: (route, state) => {
+  go: (route, query, state) => {
     if (state == "add" && window.location.pathname != route)
-      history.pushState({ route: route + window.location.search }, "", route + window.location.search);
-    else if (state == "replace") history.replaceState({ route: route + window.location.search }, "", route + window.location.search);
+      history.pushState({ route, query }, "", route + query);
+    else if (state == "replace") history.replaceState({ route, query }, "", route + query);
     let pageElement;
     if (routes.hasOwnProperty(route)) {
       pageElement = document.createElement(routes[route]);
