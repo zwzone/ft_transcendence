@@ -39,43 +39,99 @@ padd_down = {
 }
 
 
+async def check_win(room_id, match_id):
+    result = None
+    match False:
+        case elm if elm == rooms[room_id]['padd_left']['info']['eliminated']:
+            result = await set_db_four_player(room_id, match_id, 'left')
+        case elm if elm == rooms[room_id]['padd_right']['info']['eliminated']:
+            result = await set_db_four_player(room_id, match_id, 'right')
+        case elm if elm == rooms[room_id]['padd_up']['info']['eliminated']:
+            result = await set_db_four_player(room_id, match_id, 'up')
+        case elm if elm == rooms[room_id]['padd_down']['info']['eliminated']:
+            result = await set_db_four_player(room_id, match_id, 'down')
+    return result
+
+
+def walk_over_two(room_id, match_id, pos):
+    player_left = rooms[room_id]['padd_left']
+    player_right = rooms[room_id]['padd_right']
+    player_left_db = Player.objects.get(id=player_left['user_id'])
+    player_right_db = Player.objects.get(id=player_right['user_id'])
+    match = get_match(match_id)
+    match pos:
+        case 'left':
+            player_match_left, created = PlayerMatch.objects.get_or_create(
+                match_id=match,
+                player_id=player_left_db,
+            )
+            player_match_left.score = 0
+            player_match_left.won = False
+            player_match_right, created = PlayerMatch.objects.get_or_create(
+                match_id=match,
+                player_id=player_right_db,
+            )
+            player_match_right.score = 2
+            player_match_right.won = True
+            player_match_right.save()
+            player_match_left.save()
+            return player_left_db.username + ' left you win'
+        case 'right':
+            player_match_left, created = PlayerMatch.objects.get_or_create(
+                match_id=match,
+                player_id=player_left_db,
+            )
+            player_match_left.score = 2
+            player_match_left.won = True
+            player_match_right, created = PlayerMatch.objects.get_or_create(
+                match_id=match,
+                player_id=player_right_db,
+            )
+            player_match_right.score = 0
+            player_match_right.won = False
+            player_match_right.save()
+            player_match_left.save()
+            return player_right_db.username + ' left you win'
+
+
+def walk_over_four(room_id, match_id, pos):
+    player_left = rooms[room_id]['padd_left']
+    player_right = rooms[room_id]['padd_right']
+    player_up = rooms[room_id]['padd_up']
+    player_down = rooms[room_id]['padd_down']
+    match pos:
+        case 'left':
+            if player_left['info']['eliminated']:
+                return None
+            player_right['info']['eliminated'] = True
+            rooms[room_id]['elimination_count'] += 1
+        case 'right':
+            if player_right['info']['eliminated']:
+                return None
+            player_right['info']['eliminated'] = True
+            rooms[room_id]['elimination_count'] += 1
+        case 'up':
+            if player_up['info']['eliminated']:
+                return None
+            padd_up['info']['eliminated'] = True
+            rooms[room_id]['elimination_count'] += 1
+        case 'down':
+            if player_down['info']['eliminated']:
+                return None
+            player_down['info']['eliminated'] = True
+            rooms[room_id]['elimination_count'] += 1
+            if rooms[room_id]['elimination_count'] >= 3:
+                return None
+    if rooms[room_id]['elimination_count'] >= 3:
+        return check_win(room_id, match_id)
+
+
 @database_sync_to_async
-def walk_over(room_id, match_id, pos):
+def walk_over(room_id, match_id, pos, capacity):
     try:
-        player_left = rooms[room_id]['padd_left']
-        player_right = rooms[room_id]['padd_right']
-        player_left_db = Player.objects.get(id=player_left['user_id'])
-        player_right_db = Player.objects.get(id=player_right['user_id'])
-        match = get_match(match_id)
-        match pos:
-            case 'left':
-                PlayerMatch.objects.get_or_create(
-                    match_id=match,
-                    player_id=player_left_db,
-                    score=0,
-                    won=False
-                )
-                PlayerMatch.objects.get_or_create(
-                    match_id=match,
-                    player_id=player_right_db,
-                    score=2,
-                    won=True
-                )
-                return player_left_db.username + ' left you won'
-            case 'right':
-                PlayerMatch.objects.get_or_create(
-                    match_id=match,
-                    player_id=player_left_db,
-                    score=2,
-                    won=True
-                )
-                PlayerMatch.objects.get_or_create(
-                    match_id=match,
-                    player_id=player_right_db,
-                    score=0,
-                    won=False
-                )
-                return player_right_db.username + ' left you won'
+        if capacity == 2:
+            return walk_over_two(room_id, match_id, pos)
+        return walk_over_four(room_id, match_id, pos)
     except Exception as e:
         print(e, flush=True)
 
@@ -83,12 +139,114 @@ def walk_over(room_id, match_id, pos):
 def get_match(match_id):
     if not match_id:
         return Match.objects.create(game='PO',
-                                    state='PLY')
-    return Match.objects.get(id=match_id)
+                                    state=Match.State.PLAYED.value)
+    match = Match.objects.get(id=match_id)
+    match.state = Match.State.PLAYED.value
+    match.save()
+    return match
 
 
 @database_sync_to_async
-def create_or_get_db(room_id, match_id):
+def set_db_four_player(room_id, match_id, winner):
+    try:
+        player_left = rooms[room_id]['padd_left']
+        player_right = rooms[room_id]['padd_right']
+        player_up = rooms[room_id]['padd_up']
+        player_down = rooms[room_id]['padd_down']
+        match = get_match(match_id)
+        player_left_db = Player.objects.get(id=player_left['user_id'])
+        player_right_db = Player.objects.get(id=player_right['user_id'])
+        player_up_db = Player.objects.get(id=player_up['user_id'])
+        player_down_db = Player.objects.get(id=player_down['user_id'])
+        result = None
+        player_match_left, created = PlayerMatch.objects.get_or_create(
+            match_id=match,
+            player_id=player_left_db
+        )
+        player_match_right, created = PlayerMatch.objects.get_or_create(
+            match_id=match,
+            player_id=player_right_db
+        )
+        player_match_up, created = PlayerMatch.objects.get_or_create(
+            match_id=match,
+            player_id=player_up_db
+        )
+        player_match_down, created = PlayerMatch.objects.get_or_create(
+            match_id=match,
+            player_id=player_down_db
+        )
+        match winner:
+            case 'left':
+                player_match_left.score = 1
+                player_match_left.won = True
+                player_match_right.score = 0
+                player_match_right.won = False
+                player_match_up.score = 0
+                player_match_up.won = False
+                player_match_down.score = 0
+                player_match_down.won = False
+                player_left_db.wins += 1
+                player_right_db.losses += 1
+                player_up_db.losses += 1
+                player_down_db.losses += 1
+                result = player_left_db.username + ' is the winner'
+            case 'right':
+                player_match_left.score = 0
+                player_match_left.won = False
+                player_match_right.score = 1
+                player_match_right.won = True
+                player_match_up.score = 0
+                player_match_up.won = False
+                player_match_down.score = 0
+                player_match_down.won = False
+                player_left_db.losses += 1
+                player_right_db.wins += 1
+                player_up_db.losses += 1
+                player_down_db.losses += 1
+                result = player_right_db.username + ' is the winner'
+            case 'up':
+                player_match_left.score = 0
+                player_match_left.won = False
+                player_match_right.score = 0
+                player_match_right.won = False
+                player_match_up.score = 1
+                player_match_up.won = True
+                player_match_down.score = 0
+                player_match_down.won = False
+                player_left_db.losses += 1
+                player_right_db.losses += 1
+                player_up_db.wins += 1
+                player_down_db.losses += 1
+                result = player_up_db.username + ' is the winner'
+            case 'down':
+                player_match_left.score = 0
+                player_match_left.won = False
+                player_match_right.score = 0
+                player_match_right.won = False
+                player_match_up.score = 0
+                player_match_up.won = False
+                player_match_down.score = 1
+                player_match_down.won = True
+                player_left_db.losses += 1
+                player_right_db.losses += 1
+                player_up_db.losses += 1
+                player_down_db.wins += 1
+                result = player_down_db.username + ' is the winner'
+        player_match_left.save()
+        player_match_right.save()
+        player_match_up.save()
+        player_match_down.save()
+        player_left_db.save()
+        player_right_db.save()
+        player_up_db.save()
+        player_down_db.save()
+        return result
+    except Exception as e:
+        print(e, flush=True)
+
+
+@database_sync_to_async
+def set_db_two_player(room_id, match_id):
     player_left = rooms[room_id]['padd_left']
     player_right = rooms[room_id]['padd_right']
     player_left_db = None
@@ -97,27 +255,33 @@ def create_or_get_db(room_id, match_id):
     try:
         player_left_db = Player.objects.get(id=player_left['user_id'])
         player_right_db = Player.objects.get(id=player_right['user_id'])
-        PlayerMatch.objects.get_or_create(
+        player_match_left, created = PlayerMatch.objects.get_or_create(
             match_id=match,
-            player_id=player_left_db,
-            score=player_left['info']['score'],
-            won=True if player_left['info']['score'] == 7 else False
+            player_id=player_left_db
         )
-        PlayerMatch.objects.get_or_create(
+        player_match_left.score = player_left['info']['score']
+        player_match_left.won = True if player_left['info']['score'] == 7 else False
+        player_match_left.save()
+        player_match_right, created = PlayerMatch.objects.get_or_create(
             match_id=match,
-            player_id=player_right_db,
-            score=player_right['info']['score'],
-            won=True if player_right['info']['score'] == 7 else False
+            player_id=player_right_db
         )
+        player_match_right.score = player_right['info']['score']
+        player_match_right.won = True if player_right['info']['score'] == 7 else False
+        player_match_right.save()
     except Exception as e:
         print(e, flush=True)
     if player_left['info']['score'] == 7:
-        # player_left_db.wins += 1
-        # player_right_db.losses += 1
+        player_left_db.wins += 1
+        player_right_db.losses += 1
+        player_left_db.save()
+        player_right_db.save()
         return player_left_db.username + ' won'
     else:
-        # player_left_db.losses += 1
-        # player_right_db.wins += 1
+        player_left_db.losses += 1
+        player_right_db.wins += 1
+        player_left_db.save()
+        player_right_db.save()
         return player_right_db.username + ' won'
 
 
@@ -192,6 +356,7 @@ class Pong(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
         room_id = self.scope['url_route']['kwargs']['room_id']
+        message = None
         await self.channel_layer.group_discard(
             room_id,
             self.channel_name
@@ -200,32 +365,25 @@ class Pong(AsyncWebsocketConsumer):
             match self.channel_name:
                 case player if player == rooms[room_id]['padd_left']['player']:
                     if close_code is not None:
-                        message = await walk_over(room_id, self.match_id, 'left')
-                        await self.channel_layer.group_send(
-                            room_id,
-                            {
-                                'type': 'pong.message',
-                                'message': message
-                            }
-                        )
+                        message = await walk_over(room_id, self.match_id, 'left', self.capacity)
                 case player if player == rooms[room_id]['padd_right']['player']:
                     if close_code is not None:
-                        message = await walk_over(room_id, self.match_id, 'right')
-                        print(message, flush=True)
-                        await self.channel_layer.group_send(
-                            room_id,
-                            {
-                                'type': 'pong.message',
-                                'message': message
-                            }
-                        )
+                        message = await walk_over(room_id, self.match_id, 'right', self.capacity)
                 case player if player == rooms[room_id]['padd_up']['player']:
                     if close_code is not None:
-                        print('Up player disconnected', flush=True)
+                        message = await walk_over(room_id, self.match_id, 'up', self.capacity)
                 case player if player == rooms[room_id]['padd_down']['player']:
                     if close_code is not None:
-                        print('Down player disconnected', flush=True)
-            del rooms[room_id]
+                        message = await walk_over(room_id, self.match_id, 'down', self.capacity)
+            if message is not None:
+                await self.channel_layer.group_send(
+                    room_id,
+                    {
+                        'type': 'pong.message',
+                        'message': message
+                    }
+                )
+                del rooms[room_id]
 
     async def receive(self, text_data=None, bytes_data=None):
         room_id = self.scope['url_route']['kwargs']['room_id']
@@ -278,6 +436,7 @@ class Pong(AsyncWebsocketConsumer):
             rooms[room_id]['padd_down']['info']['score'] = 0
             rooms[room_id]['padd_down']['info']['positionX'] = rooms[room_id]['canvas_width'] / 2 - 100
             rooms[room_id]['padd_down']['info']['positionY'] = rooms[room_id]['canvas_height'] - 100
+            rooms[room_id]['elimination_count'] = 0
         else:
             rooms[room_id]['canvas_width'] = 1920
             rooms[room_id]['canvas_height'] = 1080
@@ -297,30 +456,32 @@ class Pong(AsyncWebsocketConsumer):
         if x and rooms[room_id]['ball']['speedX'] > 0:
             if self.capacity == 4:
                 rooms[room_id]['padd_right']['info']['eliminated'] = True
+                rooms[room_id]['elimination_count'] += 1
             else:
                 rooms[room_id]['padd_left']['info']['score'] += 1
                 if rooms[room_id]['padd_left']['info']['score'] == 7:
-                    final_message = await create_or_get_db(room_id, self.match_id)
+                    result = await set_db_two_player(room_id, self.match_id)
                     await self.channel_layer.group_send(
                         room_id,
                         {
                             'type': 'pong.message',
-                            'message': final_message
+                            'message': result
                         }
                     )
             rooms[room_id]['ball']['speedX'] = 10
         elif x:
             if self.capacity == 4:
                 rooms[room_id]['padd_left']['info']['eliminated'] = True
+                rooms[room_id]['elimination_count'] += 1
             else:
                 rooms[room_id]['padd_right']['info']['score'] += 1
                 if rooms[room_id]['padd_right']['info']['score'] == 7:
-                    final_message = await create_or_get_db(room_id, self.match_id)
+                    result = await set_db_two_player(room_id, self.match_id)
                     await self.channel_layer.group_send(
                         room_id,
                         {
                             'type': 'pong.message',
-                            'message': final_message
+                            'message': result
                         }
                     )
             rooms[room_id]['ball']['speedX'] = -10
@@ -329,6 +490,7 @@ class Pong(AsyncWebsocketConsumer):
                 rooms[room_id]['padd_down']['info']['eliminated'] = True
             else:
                 rooms[room_id]['padd_up']['info']['eliminated'] = True
+            rooms[room_id]['elimination_count'] += 1
             rooms[room_id]['ball']['speedY'] = 12
         rooms[room_id]['ball']['positionX'] = rooms[room_id]['canvas_width'] / 2
         rooms[room_id]['ball']['positionY'] = rooms[room_id]['canvas_height'] / 2
@@ -489,16 +651,28 @@ class Pong(AsyncWebsocketConsumer):
                 break
             rooms[room_id]['ball']['positionX'] += rooms[room_id]['ball']['speedX']
             rooms[room_id]['ball']['positionY'] += rooms[room_id]['ball']['speedY']
-            await self.BallCollision(room_id)
-            await self.paddleCollision(room_id)
-            await self.BallPaddleCollision(room_id)
-            await self.channel_layer.group_send(
-                room_id,
-                {
-                    'type': 'pong.message',
-                    'message': 'ball',
-                }
-            )
+            try:
+                await self.BallCollision(room_id)
+                await self.paddleCollision(room_id)
+                await self.BallPaddleCollision(room_id)
+                if self.capacity == 4 and rooms[room_id]['elimination_count'] > 2:
+                    result = await check_win(room_id, self.match_id)
+                    await self.channel_layer.group_send(
+                        room_id,
+                        {
+                            'type': 'pong.message',
+                            'message': result
+                        }
+                    )
+                await self.channel_layer.group_send(
+                    room_id,
+                    {
+                        'type': 'pong.message',
+                        'message': 'ball',
+                    }
+                )
+            except Exception as e:
+                print(e, flush=True)
             if rooms[room_id]['ball']['speedX'] > 0:
                 rooms[room_id]['ball']['speedX'] += 0.01
             else:

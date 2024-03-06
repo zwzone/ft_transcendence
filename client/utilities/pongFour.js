@@ -1,6 +1,37 @@
 import {Ball, Paddle, keys} from "./pongTwo.js";
 
-let ws;
+let ws, alreadyInGame = false;
+
+function setImage(pong_players_elem, avatar, username) {
+  let player_elem = document.createElement("div");
+  player_elem.style.display = "flex";
+  player_elem.style.flexDirection = "column";
+  player_elem.style.justifyContent = "center";
+  player_elem.style.alignItems = "center";
+  player_elem.innerHTML = `
+    <img src="${avatar}" alt="avatar" referrerpolicy="no-referrer">
+    <h1>${username}</h1>
+  `;
+  player_elem.querySelector("img").style.width = "100px";
+  player_elem.querySelector("img").style.borderRadius = "50%";
+  pong_players_elem.append(player_elem);
+}
+
+function setPlayerData(data) {
+  const avatar_left = data["padd_left"]["avatar"];
+  const avatar_right = data["padd_right"]["avatar"];
+  const avatar_up = data["padd_up"]["avatar"];
+  const avatar_down = data["padd_down"]["avatar"];
+  const username_left = data["padd_left"]["username"];
+  const username_right = data["padd_right"]["username"];
+  const username_up = data["padd_up"]["username"];
+  const username_down = data["padd_down"]["username"];
+  const pong_players_elem = document.querySelector(".pong-players");
+  setImage(pong_players_elem, avatar_left, username_left);
+  setImage(pong_players_elem, avatar_right, username_right);
+  setImage(pong_players_elem, avatar_up, username_up);
+  setImage(pong_players_elem, avatar_down, username_down);
+}
 
 export default function runPongFourGame(canvas, ctx) {
   canvas.width = 1300;
@@ -36,6 +67,16 @@ export default function runPongFourGame(canvas, ctx) {
     ws = new WebSocket(`wss://${window.ft_transcendence_host}/ws/pong/${e.data}/4/`);
     ws.onmessage = function (e) {
       let tmp = JSON.parse(e.data);
+      if (alreadyInGame === false) {
+        setPlayerData(tmp);
+        alreadyInGame = true;
+      }
+      if (typeof tmp === "string")  {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillText(tmp, canvas.width / 2, canvas.height / 2);
+        ws.close();
+        return;
+      }
       ball.positionX = tmp["ball"].positionX;
       ball.positionY = tmp["ball"].positionY;
       paddle1.positionY = tmp["padd_left"]["info"].positionY;
@@ -70,24 +111,16 @@ export default function runPongFourGame(canvas, ctx) {
 function gameLoop(canvas, ctx, ball, paddle1, paddle2, paddle3, paddle4) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ball.render(ctx);
-    let count = 0;
     if (paddle1.eliminated === false) {
       paddle1.render(ctx);
-      count++;
     }
     if (paddle2.eliminated === false) {
       paddle2.render(ctx);
-      count++;
     }
     if (paddle3.eliminated === false) {
       paddle3.render(ctx);
-      count++;
     }
     if (paddle4.eliminated === false) {
       paddle4.render(ctx);
-      count++;
-    }
-    if (count <= 1) {
-      ws.close();
     }
 }

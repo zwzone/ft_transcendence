@@ -51,8 +51,8 @@ const router = {
 
   go: (route, state) => {
     if (state == "add" && window.location.pathname != route)
-      history.pushState({ route }, "", route);
-    else if (state == "replace") history.replaceState({ route }, "", route);
+      history.pushState({ route: route + window.location.search }, "", route + window.location.search);
+    else if (state == "replace") history.replaceState({ route: route + window.location.search }, "", route + window.location.search);
     let pageElement;
     if (routes.hasOwnProperty(route)) {
       pageElement = document.createElement(routes[route]);
