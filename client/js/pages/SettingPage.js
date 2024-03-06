@@ -79,6 +79,7 @@ export default class SettingPage extends HTMLElement {
       const url = URL.createObjectURL(blob);
       const img = new Image();
       img.src = url;
+      img.style.borderRadius = "1rem";
       img.onload = () => {
         popup_twofa.style.display = "flex";
         popup_twofa_qrcode.appendChild(img);

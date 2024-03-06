@@ -1,6 +1,7 @@
 import runPongTwoGame from "../utilities/pongTwo.js";
 import runPongFourGame from "../utilities/pongFour.js";
 import runPongCoopGame from "../utilities/pongCoop.js";
+import router from "../utilities/router.js";
 
 export default class GamePage extends HTMLElement {
   constructor() {
@@ -19,6 +20,7 @@ export default class GamePage extends HTMLElement {
     const game_header_query = new URLSearchParams(window.location.search).get("game");
     const game_type_query = new URLSearchParams(window.location.search).get("mode");
     const game_match_query = new URLSearchParams(window.location.search).get("match");
+
     let match_id = null;
     if (game_header_query === "PG") game_header.textContent = "PING PONG";
     else if (game_header_query === "TTT") game_header.textContent = "TIC TAC TOE";

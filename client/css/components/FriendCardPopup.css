@@ -7,11 +7,15 @@ friend-card-popup {
   background-color: rgba(0, 0, 0, 0.4);
 }
 
-friend-card-popup>div {
+friend-card-popup > div {
   background-color: var(--color-primary-300);
 }
 
 friend-card-popup img.avatar {
   width: 150px;
   height: 150px;
+}
+
+friend-card-popup .username {
+  color: var(--color-primary-400);
 }

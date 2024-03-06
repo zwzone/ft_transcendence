@@ -15,7 +15,6 @@ export default class MatchHistory extends HTMLElement {
       "justify-content-center",
       "gap-3",
       "py-2",
-      "px-3",
       "rounded-5",
     );
 

@@ -12,7 +12,8 @@ export default class PlayerCard extends HTMLElement {
       "flex-column",
       "justify-content-center",
       "align-items-center",
-      "rounded-3",
+      "py-2",
+      "rounded-5",
     );
 
     const avatar_elem = this.querySelector(".avatar");

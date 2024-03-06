@@ -9,10 +9,12 @@ export default class MatchCard extends HTMLElement {
     this.appendChild(component);
     this.classList.add(
       "d-flex",
+      "flex-wrap",
       "justify-content-around",
       "align-items-center",
+      "p-1",
+      "gap-1",
       "rounded-5",
-      "p-2",
     );
 
     const match = JSON.parse(this.getAttribute("match"));
