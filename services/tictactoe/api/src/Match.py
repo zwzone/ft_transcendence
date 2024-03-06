@@ -11,10 +11,10 @@ Users       = { "PENDING"}
 
 class MatchC():
     def __init__( self,  ):
-        self.__id        = "" #generate using database
-        self.__room_name = "" #using player
-        self.__state     = "PENDING"  
-        self.__moves     = [ ] #moves
+        self.__match            = 
+        self.__room_name        = "" #using player
+        self.__state            = "PENDING"  
+        self.__moves            = [ ] #moves
 
     def __str__( self ):
         return  "id         : " + str(self.__id)          + "\n"  \
