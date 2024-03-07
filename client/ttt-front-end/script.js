@@ -37,7 +37,7 @@ class Match
     #__id;
     #__player_me; // Me [ User ]
     #__player_op; // Opponent
-    #__moves; // [Move(), Move()]]
+    #__moves = []; // [Move(), Move()]]
     #__current_move; // [1,2,3,4,..., n ]
     #__turn_move; // "me", "op"
     #__state; // PENDING, END
@@ -45,9 +45,10 @@ class Match
 
     constructor ( id, player_me, player_op ) {
 
-        this.#__id          = id;
-        this.#__player_me   = player_me;
-        this.#__player_op   = player_op;
+        this.#__id              = id;
+        this.#__player_me       = player_me;
+        this.#__player_op       = player_op;
+        this.#__current_move    = "CONTINUE";
 
     }
 
@@ -73,8 +74,27 @@ class Match
 
 class Game
 {
-    constructor() {
-        
+    #__socket;
+    // #__room;
+
+    constructor( room ) {
+        this.#__socket = new WebSocket("ws://localhost:8000/tictactoe/" + room);
+    }
+
+    #open_socket( event ) {
+        console.log( event.data );
+    }
+
+    #receive_socket( event ) {
+        console.log( event.data );
+    }
+
+    #send_socket() {
+
+    }
+
+    destructor() {
+        this.#__socket.close();
     }
 }
 // Controls events actions namespace
@@ -212,11 +232,10 @@ function    lunch_events()
 
 function    TicTacToe()
 {
+    let game = new Game( "test-room" );
     // Lunch controls events
     lunch_events();
 };
 
 // Tic Tac Toe
 TicTacToe();
-
-let ws = new WebSocket( "ws://localhost:8000/ws/match/" );
