@@ -353,8 +353,8 @@
 
   <!-- TOURNAMENT PLAYERS -->
   <template id="tournament-players">
-    <section class="tournament-players-list d-flex flex-wrap gap-1"></section>
-    <button class="start btn">START</button>
+    <section class="tournament-players-list d-flex flex-wrap align-self-stretch gap-1"></section>
+    <button class="start btn d-none">START</button>
     <button class="leave btn">LEAVE</button>
   </template>
 
@@ -380,22 +380,22 @@
     <div class="d-flex flex-column justify-content-center align-items-center rounded-5 gap-5 p-5">
       <button class="popup-close btn-close align-self-end"></button>
       <h1 class="popup-header fw-bold"></h1>
-      <div class="alias-name">
+      <div class="alias-name d-flex flex-column justify-content-center align-items-center">
         <h4>Your alias name</h4>
-        <input type="text" class="popup-input">
+        <input type="text" class="popup-input rounded-5 px-2" required>
       </div>
-      <div class="tournament-name">
+      <div class="tournament-name d-flex flex-column justify-content-center align-items-center">
         <h4>Name of tournament</h4>
-        <input type="text" class="popup-input">
+        <input type="text" class="popup-input rounded-5 px-2" required>
       </div>
-      <h2 class="popup-tournament-name"></h2>
-      <button class="popup-btn btn btn-primary"></button>
+      <h2 class="popup-tournament-name p-3 rounded-5"></h2>
+      <button class="popup-btn btn"></button>
     </div>
   </template>
 
   <!-- TOURNAMENT MATCH CARD -->
   <template id="tournament-match-card">
-    <div class="d-flex justify-content-center align-items-center flex-wrap">
+    <div class="d-flex justify-content-center align-items-center flex-wrap gap-3">
       <tournament-player-card class="player1"></tournament-player-card>
       <tournament-player-card class="player2"></tournament-player-card>
     </div>

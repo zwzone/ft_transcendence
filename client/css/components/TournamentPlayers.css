@@ -1,0 +1,13 @@
+tournament-players .start.btn,
+tournament-players .leave.btn {
+  background-color: var(--color-primary-200) !important;
+  color: var(--color-secondary-100) !important;
+}
+
+tournament-players .start.btn:hover,
+tournament-players .start.btn:active,
+tournament-players .leave.btn:hover,
+tournament-players .leave.btn:active {
+  background-color: var(--color-primary-100) !important;
+  color: var(--color-secondary-100) !important;
+}
