@@ -72,21 +72,33 @@ class Match
     // }
 }
 
+var ws = new WebSocket( "ws://localhost:8000/tictactoe/ws/" );
+
+ws.onmessage = function(e) {
+    console.log("check");
+};
+
+
 class Game
 {
     #__socket;
     // #__room;
 
     constructor( room ) {
-        this.#__socket = new WebSocket("ws://localhost:8000/tictactoe/" + room);
+        this.#__socket              = new WebSocket( "ws://localhost:8000/tictactoe/ws/" );
+
+        this.#__socket.onopen       = this.#open_socket;
+        this.#__socket.onmessage    = this.#receive_socket;
     }
 
     #open_socket( event ) {
-        console.log( event.data );
+        console.log( "hello" );
     }
-
+    
     #receive_socket( event ) {
+        console.log("check");
         console.log( event.data );
+        this.#__socket.send( JSON.stringify( {"name": "youness", "type":"hello" } ) );
     }
 
     #send_socket() {
@@ -207,6 +219,8 @@ let __move_events = {
         console.log(e);
         e.target.classList.add("o");
         e.target.innerHTML = "O";
+
+        ws.send( JSON.stringify("hello") );
         // e.target.style.display = "none";
     },
 
@@ -218,6 +232,8 @@ let __move_events = {
             __move_spots[i].addEventListener(
                 "click", this.__move
             );
+
+
     }
 }
 
@@ -230,12 +246,12 @@ function    lunch_events()
 
 };
 
-function    TicTacToe()
-{
-    let game = new Game( "test-room" );
-    // Lunch controls events
-    lunch_events();
-};
+// function    TicTacToe()
+// {
+//     let game = new Game( "test-room" );
+//     // Lunch controls events
+// };
+lunch_events();
 
 // Tic Tac Toe
-TicTacToe();
+// TicTacToe();
