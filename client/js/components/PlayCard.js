@@ -15,16 +15,18 @@ export default class PlayCard extends HTMLElement {
       "align-items-center",
       "flex-column",
       "rounded-5",
-      "p-3",
+      "pb-3",
     );
 
     const play_two_elem = this.querySelector(".play-two");
     const play_four_elem = this.querySelector(".play-four");
     const play_ai_elem = this.querySelector(".play-ai");
     const play_coop_elem = this.querySelector(".play-coop");
-    const game = this.getAttribute("game");
     const head = this.querySelector("h1");
+    const game = this.getAttribute("game");
+    const wallpaper = this.getAttribute("wallpaper");
 
+    this.querySelector("img").src = wallpaper;
     if (game === "PG") {
       head.textContent = "PING PONG";
       play_ai_elem.style.display = "none";

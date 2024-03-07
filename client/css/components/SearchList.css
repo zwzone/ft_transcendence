@@ -5,6 +5,16 @@ profile-page search-list .search-input {
 }
 
 profile-page search-list .search-btn {
-  background-color: var(--color-primary-300);
+  background-color: var(--color-primary-200);
+  color: var(--color-secondary-100);
+}
+
+profile-page search-list .search-btn:hover,
+profile-page search-list .search-btn:active {
+  background-color: var(--color-primary-100);
+  color: var(--color-secondary-100);
+}
+
+profile-page search-list .search-results {
   color: var(--color-secondary-100);
 }
