@@ -25,3 +25,11 @@ class MatchManager:
 
                 self.__pending_matches[ room_name ]  = MatchC( match_id, type )
                 
+    def add_user( self, id, player ):
+        if id in self.__players:
+            return
+        self.__players[ id ] = player
+
+    def get_user( self, id ):
+        return self.__players[ id ] if id in self.__players else None
+    

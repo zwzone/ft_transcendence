@@ -1,5 +1,5 @@
 class MoveC( ):
-    def __init__( self, type_player_        = -1,
+    def __init__( self,
                         row_                = -1,
                         column_             = -1,
                         sub_board_row_      = -1,
@@ -9,7 +9,8 @@ class MoveC( ):
         self.__column           = column_
         self.__sub_board_row    = sub_board_row_
         self.__sub_board_column = sub_board_column_
-        self.__type_player      = type_player_
+        self.__debug            = ""
+        self.__game_info        = ""
   
     def __str__( self ):
         return  "row    :   "   + str( self.__row )                 + "\n"  + \

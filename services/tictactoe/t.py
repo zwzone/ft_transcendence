@@ -1,4 +1,4 @@
-# import asyncio
+import asyncio
 
 # async def my_task():
 #     try:
@@ -29,23 +29,34 @@
 
 # # Run the main coroutine
 # asyncio.run(main())
+async def f1():
+    print("hello1")
+    print("hello2")
+    # for i in range(1000000):
+    #     print(1)
+    await asyncio.sleep(3)
+    print("hello3")
 
-arr = {}
+async def f2():
+    print("1hello1")
+    print("1hello2")
 
-class test:
-    def __init__( self, id ):
-        self.__id = id
-        print("construct")
+async def f3():
+    for i in range(1000000):
+        print(2)
+    print("kaka")
+    return
+
+async def one():
+    t2 = asyncio.create_task(f1())
+    t1 = asyncio.create_task(f2())
+    await f3()
+    await t2
+    await t1
+
+asyncio.run(one())
+# asyncio.create_task(f1)
+# task = f1()
+# # await task
+# f2()
     
-    def fun( self ):
-        print(self.__id in arr) 
-        arr.pop( self.__id )
-        print("remove elem")
-        print(self.__id in arr)
-
-    def __del__( self ):
-        print("destructor")
-
-arr["yoy"] = test("yoy")
-
-arr["yoy"].fun()
