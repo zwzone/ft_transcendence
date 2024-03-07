@@ -298,6 +298,7 @@ body
     justify-content: center;
     align-items: center;
 }
+
 .char
 {
     font-size: 2.5em;
@@ -388,14 +389,15 @@ body
 
 .player.ble .choice
 {
-    color: rgba(42,163,225, 1);
-    
+    color: rgb(44,172,255);
+    /* color: black; */
     /* margin-right: 1em; */
     /* padding: 0 1em; */
     /* border: 1px solid red; */
     /* padding: 0 10px; */
     /* position: */
-    text-shadow: rgba(248,236,144, 0.5) 1px 1px 100px;
+    /* font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; */
+    text-shadow: rgba(44,172, 255, 0.75) 1px 1px 20px;
 }
 
 .player.yel .choice
@@ -502,6 +504,6 @@ body
     padding: 5px 5px;
     text-align: center;
     /* border: 1px solid green; */
-    color: rgba(42,163,225, 1);
-    text-shadow: rgba(42,163,225, 0.5) 1px 1px 50px;
+    color: rgb(44,172,255);
+    text-shadow: rgba(44,172,255, 0.5) 1px 1px 50px;
 }
