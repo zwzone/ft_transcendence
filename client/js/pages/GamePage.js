@@ -1,7 +1,7 @@
-import runPongTwoGame from "../utilities/pongTwo.js";
-import runPongFourGame from "../utilities/pongFour.js";
-import runPongCoopGame from "../utilities/pongCoop.js";
 import router from "../utilities/router.js";
+import { runPongTwoGame, wsTwo } from "./pongTwo.js";
+import { runPongFourGame, wsFour } from "./pongFour.js";
+import { runPongCoopGame } from "./pongCoop.js";
 
 export default class GamePage extends HTMLElement {
   constructor() {
@@ -16,6 +16,7 @@ export default class GamePage extends HTMLElement {
 
     const game_header = this.querySelector(".game-header");
     const game_type = this.querySelector(".game-mode");
+    const game_exit = this.querySelector(".game-exit");
 
     const game_header_query = new URLSearchParams(window.location.search).get("game");
     const game_type_query = new URLSearchParams(window.location.search).get("mode");
@@ -29,6 +30,11 @@ export default class GamePage extends HTMLElement {
     else if (game_type_query === "ai") game_type.textContent = "AI";
     else if (game_type_query === "coop") game_type.textContent = "Co-op";
     if (game_match_query) match_id = Number(game_match_query);
+    game_exit.addEventListener("click", () => {
+      if (wsTwo) wsTwo.close(1000);
+      if (wsFour) wsFour.close(1000);
+      router.go("/home/", "", "add");
+    });
 
     const canvas = document.getElementById("canvas-pong");
     const ctx = canvas.getContext("2d");

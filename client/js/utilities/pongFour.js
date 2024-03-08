@@ -1,6 +1,7 @@
-import {Ball, Paddle, keys} from "./pongTwo.js";
+import { Ball, Paddle, keys } from "./pongTwo.js";
 
-let ws, alreadyInGame = false;
+export let wsFour;
+let alreadyInGame = false;
 
 function setImage(pong_players_elem, avatar, username) {
   let player_elem = document.createElement("div");
@@ -33,10 +34,10 @@ function setPlayerData(data) {
   setImage(pong_players_elem, avatar_down, username_down);
 }
 
-export default function runPongFourGame(canvas, ctx) {
+export function runPongFourGame(canvas, ctx) {
   canvas.width = 1300;
   canvas.height = 1300;
-  ws = new WebSocket(`wss://${window.ft_transcendence_host}/ws/matchmaking/4/`);
+  wsFour = new WebSocket(`wss://${window.ft_transcendence_host}/ws/matchmaking/4/`);
   const ball = new Ball([canvas.width / 2, canvas.height / 2], 20);
   const paddle1 = new Paddle([60, canvas.height / 2 - 100], [40, 200]);
   const paddle2 = new Paddle([canvas.width - 100, canvas.height / 2 - 100], [40, 200]);
@@ -56,25 +57,25 @@ export default function runPongFourGame(canvas, ctx) {
     );
     if (i === 3) i = 0;
   }, 500);
-  ws.onmessage = function (e) {
+  wsFour.onmessage = function (e) {
     clearInterval(intervalId);
     if (e.data === "error") {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.fillText("ALREADY IN GAME", canvas.width / 2, canvas.height / 2);
-      ws.close();
+      wsFour.close();
       return;
     }
-    ws = new WebSocket(`wss://${window.ft_transcendence_host}/ws/pong/${e.data}/4/`);
-    ws.onmessage = function (e) {
+    wsFour = new WebSocket(`wss://${window.ft_transcendence_host}/ws/pong/${e.data}/4/`);
+    wsFour.onmessage = function (e) {
       let tmp = JSON.parse(e.data);
       if (alreadyInGame === false) {
         setPlayerData(tmp);
         alreadyInGame = true;
       }
-      if (typeof tmp === "string")  {
+      if (typeof tmp === "string") {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillText(tmp, canvas.width / 2, canvas.height / 2);
-        ws.close();
+        wsFour.close();
         return;
       }
       ball.positionX = tmp["ball"].positionX;
@@ -93,34 +94,34 @@ export default function runPongFourGame(canvas, ctx) {
       paddle4.score = tmp["padd_down"]["info"]["score"];
       gameLoop(canvas, ctx, ball, paddle1, paddle2, paddle3, paddle4);
     };
-  }
-  keys[65] = 'a';
-  keys[68] = 'd';
-  keys[37] = 'left';
-  keys[39] = 'right';
+  };
+  keys[65] = "a";
+  keys[68] = "d";
+  keys[37] = "left";
+  keys[39] = "right";
   window.addEventListener("keydown", function (e) {
-    if (e.keyCode in keys && ws.readyState !== WebSocket.CLOSED) ws.send(keys[e.keyCode]);
+    if (e.keyCode in keys && wsFour.readyState !== WebSocket.CLOSED) wsFour.send(keys[e.keyCode]);
   });
-  window.addEventListener("keydown", function(e) {
-    if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
-        e.preventDefault();
+  window.addEventListener("keydown", function (e) {
+    if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(e.code) > -1) {
+      e.preventDefault();
     }
   });
 }
 
 function gameLoop(canvas, ctx, ball, paddle1, paddle2, paddle3, paddle4) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ball.render(ctx);
-    if (paddle1.eliminated === false) {
-      paddle1.render(ctx);
-    }
-    if (paddle2.eliminated === false) {
-      paddle2.render(ctx);
-    }
-    if (paddle3.eliminated === false) {
-      paddle3.render(ctx);
-    }
-    if (paddle4.eliminated === false) {
-      paddle4.render(ctx);
-    }
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ball.render(ctx);
+  if (paddle1.eliminated === false) {
+    paddle1.render(ctx);
+  }
+  if (paddle2.eliminated === false) {
+    paddle2.render(ctx);
+  }
+  if (paddle3.eliminated === false) {
+    paddle3.render(ctx);
+  }
+  if (paddle4.eliminated === false) {
+    paddle4.render(ctx);
+  }
 }

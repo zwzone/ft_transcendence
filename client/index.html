@@ -38,7 +38,7 @@
     <div class="d-flex flex-wrap justify-content-between align-items-center p-5">
       <h1 class="game-header display-1 fw-bold m-0"></h1>
       <h1 class="game-mode fw-bold m-0"></h1>
-      <a class="btn btn-lg fw-bold" href="/home/">Back</a>
+      <button class="game-exit btn btn-lg fw-bold" href="/home/">Back</button>
     </div>
     <main class="container-fluid my-5">
       <div class="pong-players d-flex flex-wrap justify-content-around align-items-center">
@@ -354,8 +354,10 @@
   <!-- TOURNAMENT PLAYERS -->
   <template id="tournament-players">
     <section class="tournament-players-list d-flex flex-wrap align-self-stretch gap-1"></section>
-    <button class="start btn d-none">START</button>
-    <button class="leave btn">LEAVE</button>
+    <div class="d-flex flex-wrap justify-content-center align-items-center gap-1">
+      <button class="start btn d-none">START</button>
+      <button class="leave btn">LEAVE</button>
+    </div>
   </template>
 
   <!-- TOURNAMENT MATCHES -->

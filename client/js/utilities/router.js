@@ -1,4 +1,6 @@
-import fetching from "../utilities/fetching.js";
+import fetching from "./fetching.js";
+/* import { wsTwo } from "./pongTwo.js";
+import { wsFour } from "./pongFour.js"; */
 
 const routes = {
   "/game/": "game-page",
@@ -13,6 +15,8 @@ const routes = {
 const router = {
   init: () => {
     window.addEventListener("popstate", (event) => {
+      if (wsTwo) wsTwo.close(1000);
+      if (wsFour) wsFour.close(1000);
       router.go(event.state.route, event.state.query, "navigation");
     });
     // check if the player is logged in
