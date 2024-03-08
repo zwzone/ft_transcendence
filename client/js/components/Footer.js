@@ -7,6 +7,11 @@ export default class Footer extends HTMLElement {
     const template = document.getElementById("my-footer");
     const component = template.content.cloneNode(true);
     this.appendChild(component);
+    this.classList.add(
+      "d-flex",
+      "justify-content-center",
+      "align-items-center",
+    );
     this.style.fontFamily = "Koulen";
   }
 }

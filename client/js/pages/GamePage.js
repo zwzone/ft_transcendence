@@ -1,7 +1,7 @@
 import router from "../utilities/router.js";
-import { runPongTwoGame, wsTwo } from "./pongTwo.js";
-import { runPongFourGame, wsFour } from "./pongFour.js";
-import { runPongCoopGame } from "./pongCoop.js";
+import { runPongTwoGame, wsTwo } from "../utilities/pongTwo.js";
+import { runPongFourGame, wsFour } from "../utilities/pongFour.js";
+import { runPongCoopGame } from "../utilities/pongCoop.js";
 
 export default class GamePage extends HTMLElement {
   constructor() {

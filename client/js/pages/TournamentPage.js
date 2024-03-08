@@ -74,7 +74,9 @@ export default class TournamentPage extends HTMLElement {
               JSON.stringify({ action: "start", tournament_id: data.current_tournament.id }),
               { "Content-Type": "application/json" },
             ).then((data) => {
-              if (data.status === 400) {
+              if (data.status === 200) {
+                window.location.reload();
+              } else {
                 alert(data.message);
               }
             });

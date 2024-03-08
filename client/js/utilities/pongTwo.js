@@ -1,5 +1,4 @@
 export let wsTwo;
-let alreadyInGame = false;
 
 function setPlayerData(data) {
   const avatar_left = data["padd_left"]["avatar"];
@@ -59,15 +58,16 @@ export function runPongTwoGame(canvas, ctx, match_id) {
   }, 500);
   wsTwo.onmessage = function (e) {
     clearInterval(intervalId);
-    if (e.data === "error") {
+    if (e.data === "ALREADY IN GAME" || e.data === "ALREADY PLAYED") {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = "white";
       ctx.font = "100px monospace";
       ctx.textAlign = "center";
-      ctx.fillText("ALREADY IN GAME", canvas.width / 2, canvas.height / 2);
+      ctx.fillText(e.data, canvas.width / 2, canvas.height / 2);
       wsTwo.close();
       return;
     }
+    let alreadyInGame = false;
     wsTwo = new WebSocket(
       `wss://${window.ft_transcendence_host}/ws/pong/${e.data}/2/${
         !match_id ? "" : match_id + "/"

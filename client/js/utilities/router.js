@@ -1,6 +1,6 @@
 import fetching from "./fetching.js";
-/* import { wsTwo } from "./pongTwo.js";
-import { wsFour } from "./pongFour.js"; */
+import { wsTwo } from "./pongTwo.js";
+import { wsFour } from "./pongFour.js";
 
 const routes = {
   "/game/": "game-page",

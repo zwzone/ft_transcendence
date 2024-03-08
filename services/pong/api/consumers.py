@@ -384,6 +384,8 @@ class Pong(AsyncWebsocketConsumer):
                     }
                 )
                 del rooms[room_id]
+            if self.capacity == 2 and room_id in rooms:
+                del rooms[room_id]
 
     async def receive(self, text_data=None, bytes_data=None):
         room_id = self.scope['url_route']['kwargs']['room_id']
@@ -664,6 +666,7 @@ class Pong(AsyncWebsocketConsumer):
                             'message': result
                         }
                     )
+                    return
                 await self.channel_layer.group_send(
                     room_id,
                     {

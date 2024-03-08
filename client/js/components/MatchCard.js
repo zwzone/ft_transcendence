@@ -12,7 +12,7 @@ export default class MatchCard extends HTMLElement {
       "flex-wrap",
       "justify-content-around",
       "align-items-center",
-      "p-1",
+      "p-2",
       "gap-1",
       "rounded-5",
     );

@@ -1,7 +1,6 @@
 import { Ball, Paddle, keys } from "./pongTwo.js";
 
 export let wsFour;
-let alreadyInGame = false;
 
 function setImage(pong_players_elem, avatar, username) {
   let player_elem = document.createElement("div");
@@ -59,16 +58,17 @@ export function runPongFourGame(canvas, ctx) {
   }, 500);
   wsFour.onmessage = function (e) {
     clearInterval(intervalId);
-    if (e.data === "error") {
+    if (e.data === "ALREADY IN GAME") {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillText("ALREADY IN GAME", canvas.width / 2, canvas.height / 2);
+      ctx.fillText(e.data, canvas.width / 2, canvas.height / 2);
       wsFour.close();
       return;
     }
+    let alreadyInGame = false;
     wsFour = new WebSocket(`wss://${window.ft_transcendence_host}/ws/pong/${e.data}/4/`);
     wsFour.onmessage = function (e) {
       let tmp = JSON.parse(e.data);
-      if (alreadyInGame === false) {
+      if (!alreadyInGame) {
         setPlayerData(tmp);
         alreadyInGame = true;
       }
