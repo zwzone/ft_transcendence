@@ -29,7 +29,7 @@ export default class TournamentPage extends HTMLElement {
           for (const tournament of data.tournaments) {
             const tournament_card = document.createElement("tournament-card");
             tournament_card.setAttribute("tournament-name", tournament.name);
-            tournament_card.setAttribute("size", 3);
+            tournament_card.setAttribute("size", tournament.players_count);
             tournament_list.append(tournament_card);
             tournament_card.addEventListener("click", () => {
               const tournament_popup = document.createElement("tournament-popup");
@@ -63,13 +63,23 @@ export default class TournamentPage extends HTMLElement {
             player_elem.setAttribute("status", "PN");
             tournament_players_list.append(player_elem);
           }
+          if (data.current_tournament.creator === true) {
+            tournament_players_start.classList.remove("d-none");
+            tournament_players_start.classList.add("d-block");
+          }
           tournament_players_start.addEventListener("click", () => {
             fetching(
               `https://${window.ft_transcendence_host}/tournament/`,
               "POST",
               JSON.stringify({ action: "start", tournament_id: data.current_tournament.id }),
               { "Content-Type": "application/json" },
-            );
+            ).then((data) => {
+              if (data.status === 200) {
+                window.location.reload();
+              } else {
+                alert(data.message);
+              }
+            });
           });
           tournament_players_leave.addEventListener("click", () => {
             fetching(
@@ -91,7 +101,6 @@ export default class TournamentPage extends HTMLElement {
             if (match) {
               match_elem.setAttribute("match-id", match.id);
               if (match.current) {
-                match_elem.style.border = "2px solid #0d6efd";
                 match_elem.querySelector("button").classList.remove("d-none");
               }
               for (let j = 0; j < 2; ++j) {

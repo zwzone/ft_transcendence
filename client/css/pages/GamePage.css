@@ -1,11 +1,11 @@
-game-page a.btn {
-  background-color: var(--color-primary-400) !important;
-  color: var(--color-primary-300) !important;
+game-page button.btn {
+  background-color: var(--color-primary-200) !important;
+  color: var(--color-primary-400) !important;
 }
 
-game-page a.btn:hover,
-game-page a.btn:active {
-  background-color: var(--color-primary-300) !important;
+game-page button.btn:hover,
+game-page button.btn:active {
+  background-color: var(--color-primary-100) !important;
   color: var(--color-primary-400) !important;
 }
 

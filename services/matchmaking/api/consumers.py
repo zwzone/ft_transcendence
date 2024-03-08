@@ -1,6 +1,7 @@
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from channels.layers import get_channel_layer
+from .models import Match
 import uuid
 
 rooms = []
@@ -44,6 +45,9 @@ def find_channels_room(player_id, channel_name):
                 return room
     return None
 
+def match_played(match_id):
+    match = Match.objects.get(id=match_id)
+    return match.state == 'PLY'
 
 class Matchmaking(WebsocketConsumer):
     def receive(self, text_data):
@@ -55,8 +59,11 @@ class Matchmaking(WebsocketConsumer):
     def connect(self):
         match_id = self.scope['url_route']['kwargs'].get('match_id')
         self.accept()
+        if match_id is not None and match_played(match_id):
+            self.send("ALREADY PLAYED")
+            return
         if find_channels_room(self.scope['payload']['id'], self.channel_name):
-            self.send("error")
+            self.send("ALREADY IN GAME")
             return
         r = get_room(self.scope['payload']['id'], self.scope['url_route']['kwargs']['capacity'], self.channel_name, match_id)
         if not r:

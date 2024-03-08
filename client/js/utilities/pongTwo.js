@@ -1,5 +1,4 @@
-let ws;
-let alreadyInGame = false;
+export let wsTwo;
 
 function setPlayerData(data) {
   const avatar_left = data["padd_left"]["avatar"];
@@ -34,8 +33,8 @@ function setPlayerData(data) {
   pong_players_elem.appendChild(player_elem);
 }
 
-export default function runPongTwoGame(canvas, ctx, match_id) {
-  ws = new WebSocket(
+export function runPongTwoGame(canvas, ctx, match_id) {
+  wsTwo = new WebSocket(
     `wss://${window.ft_transcendence_host}/ws/matchmaking/2/${!match_id ? "" : match_id + "/"}`,
   );
   canvas.width = 1920;
@@ -57,19 +56,24 @@ export default function runPongTwoGame(canvas, ctx, match_id) {
     );
     if (i === 3) i = 0;
   }, 500);
-  ws.onmessage = function (e) {
+  wsTwo.onmessage = function (e) {
     clearInterval(intervalId);
-    if (e.data === "error") {
+    if (e.data === "ALREADY IN GAME" || e.data === "ALREADY PLAYED") {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = "white";
       ctx.font = "100px monospace";
       ctx.textAlign = "center";
-      ctx.fillText("ALREADY IN GAME", canvas.width / 2, canvas.height / 2);
-      ws.close();
+      ctx.fillText(e.data, canvas.width / 2, canvas.height / 2);
+      wsTwo.close();
       return;
     }
-    ws = new WebSocket(`wss://${window.ft_transcendence_host}/ws/pong/${e.data}/2/${!match_id ? "" : match_id + "/"}`);
-    ws.onmessage = function (e) {
+    let alreadyInGame = false;
+    wsTwo = new WebSocket(
+      `wss://${window.ft_transcendence_host}/ws/pong/${e.data}/2/${
+        !match_id ? "" : match_id + "/"
+      }`,
+    );
+    wsTwo.onmessage = function (e) {
       let tmp = JSON.parse(e.data);
       if (!alreadyInGame) {
         setPlayerData(tmp);
@@ -78,7 +82,7 @@ export default function runPongTwoGame(canvas, ctx, match_id) {
       if (typeof tmp === "string") {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillText(tmp, canvas.width / 2, canvas.height / 2);
-        ws.close();
+        wsTwo.close();
         return;
       }
       ball.positionX = tmp["ball"].positionX;
@@ -91,7 +95,7 @@ export default function runPongTwoGame(canvas, ctx, match_id) {
     };
   };
   window.addEventListener("keydown", function (e) {
-    if (e.keyCode in keys && ws.readyState != WebSocket.CLOSED) ws.send(keys[e.keyCode]);
+    if (e.keyCode in keys && wsTwo.readyState != WebSocket.CLOSED) wsTwo.send(keys[e.keyCode]);
   });
   window.addEventListener("keydown", function (e) {
     if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(e.code) > -1) {
@@ -107,8 +111,7 @@ export const keys = {
   83: "s",
 };
 
-
-export  class Paddle {
+export class Paddle {
   constructor(position, size) {
     this.positionX = position[0];
     this.positionY = position[1];

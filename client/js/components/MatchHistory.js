@@ -11,9 +11,10 @@ export default class MatchHistory extends HTMLElement {
     this.appendChild(component);
     this.classList.add(
       "d-flex",
-      "flex-column",
+      "flex-wrap",
       "justify-content-center",
-      "gap-3",
+      "align-items-center",
+      "gap-5",
       "py-2",
       "rounded-5",
     );

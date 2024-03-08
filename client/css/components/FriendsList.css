@@ -1,9 +1,10 @@
-friends-list li .btn {
-  background-color: var(--color-primary-200);
-  color: var(--color-primary-400);
+profile-page friends-list li .btn {
+  background-color: var(--color-primary-200) !important;
+  color: var(--color-primary-400) !important;
 }
 
-friends-list li .btn:hover {
-  background-color: var(--color-primary-400);
-  color: var(--color-primary-100);
+profile-page friends-list nav .btn:hover,
+profile-page friends-list nav .btn.active {
+  background-color: var(--color-primary-100) !important;
+  color: var(--color-secondary-100) !important;
 }

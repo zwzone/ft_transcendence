@@ -1,0 +1,8 @@
+tournament-card {
+  background-color: var(--color-primary-200);
+  cursor: pointer;
+}
+
+tournament-card:hover {
+  background-color: var(--color-primary-100);
+}

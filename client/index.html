@@ -38,7 +38,7 @@
     <div class="d-flex flex-wrap justify-content-between align-items-center p-5">
       <h1 class="game-header display-1 fw-bold m-0"></h1>
       <h1 class="game-mode fw-bold m-0"></h1>
-      <a class="btn btn-lg fw-bold" href="/home/">Back</a>
+      <button class="game-exit btn btn-lg fw-bold" href="/home/">Back</button>
     </div>
     <main class="container-fluid my-5">
       <div class="pong-players d-flex flex-wrap justify-content-around align-items-center">
@@ -54,10 +54,9 @@
   <template id="home-template">
     <my-navbar></my-navbar>
     <main class="container-fluid d-flex flex-column justify-content-center gap-5 my-5">
-      <img class="w-100 rounded-5" src="/images/pong.jpg" alt="logo" referrerpolicy="no-referrer">
       <section class="d-flex flex-wrap justify-content-center align-items-center gap-5 w-100">
-        <play-card game="PG"></play-card>
-        <play-card game="TTT"></play-card>
+        <play-card game="PG" wallpaper="/images/pong.jpg"></play-card>
+        <play-card game="TTT" wallpaper="/images/TicTacToe.jpeg"></play-card>
       </section>
     </main>
     <my-footer></my-footer>
@@ -262,17 +261,27 @@
 
   <!-- FOOTER -->
   <template id="my-footer">
-    <footer class="text-center p-5 fs-4">2024 / At 1337 &copy; done by | zakaria wina | <span class="display-1">taha naceur</span> | mustapha idfath | houssam haddouch | youness chaaibi</footer>
+    <footer class="p-5">
+      <h5>&copy 2024 At 1337, Made with love by:</h5>
+      <ul class="d-flex flex-column ps-4 m-0">
+        <li class="fs-6">youness chaaibi <a href="https://github.com/ychaaibi" target="_blank">ychaaibi</a></li>
+        <li class="fs-6">zakaria wina <a href="https://github.com/zwzone" target="_blank">zwzone</a></li>
+        <li class="fs-6">taha naceur <a href="https://github.com/tnaceur" target="_blank">tnaceur</a></li>
+        <li class="fs-6">mustapha idfath <a href="https://github.com/reogine" target="_blank">reogine</a></li>
+        <li class="fs-6">houssam haddouch <a href="https://github.com/GowthertG" target="_blank">GowthertG</a></li>
+      </ul>
+    </footer>
   </template>
 
   <!-- PLAY CARD -->
   <template id="play-card">
-    <h1 class="text-center fw-bold m-0 display-1"></h1>
-    <div class="d-flex flex-column justify-content-center gap-1">
-      <a class="play-two btn btn-lg fw-bold">Play Online &#40;2 Players&#41;</a>
-      <a class="play-four btn btn-lg fw-bold">Play Online &#40;4 Players&#41;</a>
-      <a class="play-ai btn btn-lg fw-bold">Play With AI</a>
-      <a class="play-coop btn btn-lg fw-bold">Play CO-OP</a>
+    <img class="rounded-top-5" alt="wallpaper" referrerpolicy="no-referrer">
+    <h1 class="text-center fw-bold display-1 mx-1 my-0"></h1>
+    <div class="d-flex flex-column justify-content-center gap-1 mx-1">
+      <a class="play-two btn btn-lg fw-bold rounded-5">Play Online &#40;2 Players&#41;</a>
+      <a class="play-four btn btn-lg fw-bold rounded-5">Play Online &#40;4 Players&#41;</a>
+      <a class="play-ai btn btn-lg fw-bold rounded-5">Play With AI</a>
+      <a class="play-coop btn btn-lg fw-bold rounded-5">Play CO-OP</a>
     </div>
   </template>
 
@@ -281,16 +290,16 @@
     <nav class="friends-tabs">
       <ul class="d-flex justify-content-center align-items-center flex-wrap p-0 m-0 gap-1">
         <li>
-          <button class="btn friends-btn">Friends</button>
+          <button class="btn btn-lg fw-bold friends-btn">Friends</button>
         </li>
         <li>
-          <button class="btn requests-btn">Requests</button>
+          <button class="btn btn-lg fw-bold requests-btn">Requests</button>
         </li>
         <li>
-          <button class="btn invites-btn">Invites</button>
+          <button class="btn btn-lg fw-bold invites-btn">Invites</button>
         </li>
         <li>
-          <button class="btn search-btn">Search</button>
+          <button class="btn btn-lg fw-bold search-btn">Search</button>
         </li>
       </ul>
     </nav>
@@ -301,7 +310,7 @@
   <template id="search-list">
     <div class="d-flex flex-wrap justify-content-center align-items-center p-0 m-0 gap-1">
       <input class="search-input px-2 py-1 rounded-3" type="text">
-      <button class="search-btn btn btn-lg fw-bold">SEARCH</button>
+      <button class="search-btn btn fw-bold rounded-5">SEARCH</button>
     </div>
     <div class="search-results d-flex flex-wrap gap-1"></div>
   </template>
@@ -353,9 +362,11 @@
 
   <!-- TOURNAMENT PLAYERS -->
   <template id="tournament-players">
-    <section class="tournament-players-list d-flex flex-wrap gap-1"></section>
-    <button class="start btn">START</button>
-    <button class="leave btn">LEAVE</button>
+    <section class="tournament-players-list d-flex flex-wrap align-self-stretch gap-1"></section>
+    <div class="d-flex flex-wrap justify-content-center align-items-center gap-1">
+      <button class="start btn d-none">START</button>
+      <button class="leave btn">LEAVE</button>
+    </div>
   </template>
 
   <!-- TOURNAMENT MATCHES -->
@@ -380,22 +391,22 @@
     <div class="d-flex flex-column justify-content-center align-items-center rounded-5 gap-5 p-5">
       <button class="popup-close btn-close align-self-end"></button>
       <h1 class="popup-header fw-bold"></h1>
-      <div class="alias-name">
+      <div class="alias-name d-flex flex-column justify-content-center align-items-center">
         <h4>Your alias name</h4>
-        <input type="text" class="popup-input">
+        <input type="text" class="popup-input rounded-5 px-2" required>
       </div>
-      <div class="tournament-name">
+      <div class="tournament-name d-flex flex-column justify-content-center align-items-center">
         <h4>Name of tournament</h4>
-        <input type="text" class="popup-input">
+        <input type="text" class="popup-input rounded-5 px-2" required>
       </div>
-      <h2 class="popup-tournament-name"></h2>
-      <button class="popup-btn btn btn-primary"></button>
+      <h2 class="popup-tournament-name p-3 rounded-5"></h2>
+      <button class="popup-btn btn"></button>
     </div>
   </template>
 
   <!-- TOURNAMENT MATCH CARD -->
   <template id="tournament-match-card">
-    <div class="d-flex justify-content-center align-items-center flex-wrap">
+    <div class="d-flex justify-content-center align-items-center flex-wrap gap-3">
       <tournament-player-card class="player1"></tournament-player-card>
       <tournament-player-card class="player2"></tournament-player-card>
     </div>

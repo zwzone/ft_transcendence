@@ -22,10 +22,7 @@ export default class SearchList extends HTMLElement {
       ).then((req) => {
         const arr = req.players;
         if (!arr || arr.length === 0) {
-          const no_results = document.createElement("div");
-          no_results.classList.add("text-center", "text-muted");
-          no_results.textContent = "No results found";
-          search_results.appendChild(no_results);
+          search_results.textContent = "No results found";
           return;
         }
         for (let i = 0; i < arr.length; i++) {

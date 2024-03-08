@@ -1,3 +1,5 @@
+import router from "../utilities/router.js";
+
 export default class TournamentMatchCard extends HTMLElement {
   constructor() {
     super();
@@ -13,7 +15,8 @@ export default class TournamentMatchCard extends HTMLElement {
       "justify-content-center",
       "align-items-center",
       "rounded-4",
-      "p-2",
+      "gap-3",
+      "p-1",
     );
 
     const btn = this.querySelector("button");

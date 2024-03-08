@@ -1,17 +1,23 @@
 play-card {
+  max-width: 500px;
   background-color: var(--color-primary-400);
 }
 
+play-card img {
+  width: 100%;
+}
+
 play-card h1 {
-  color: var(--color-primary-100);
+  color: var(--color-primary-200);
 }
 
 play-card a.btn {
-  background-color: var(--color-primary-100);
-  color: var(--color-primary-400);
+  background-color: var(--color-primary-200) !important;
+  color: var(--color-primary-400) !important;
 }
 
-play-card a.btn:hover {
-  background-color: var(--color-primary-200);
-  color: var(--color-primary-400);
+play-card a.btn:hover,
+play-card a.btn:active {
+  background-color: var(--color-primary-100) !important;
+  color: var(--color-primary-400) !important;
 }
