@@ -79,11 +79,11 @@ class Match
     {
         switch( player )
         {
-            case "ME":
-                return this.#__player_me.choice();
+            case this.#__player_me.id:
+                return this.#__player_me.choice;
 
-            case "OP":
-                return this.#__player_op.choice();
+            case this.#__player_op.id:
+                return this.#__player_op.choice;
         }
     }
 
@@ -93,10 +93,10 @@ class Match
         switch( player )
         {
             case "ME":
-                return this.#__player_me.choice();
+                return this.#__player_me.id;
 
             case "OP":
-                return this.#__player_op.choice();
+                return this.#__player_op.id;
         }
     }
 
@@ -147,7 +147,7 @@ class Game
 
     choice( player )
     {
-        return ( this.#__room.id( player ) );
+        return ( this.#__room.choice( player ) );
     }
 
     destructor() {
@@ -164,21 +164,21 @@ let __socket    = new WebSocket( "ws://localhost:8000/tictactoe/ws/" );
 
 /////////////////////////////////////////////////////////////////////////////////
 
-__socket.onopen = (event)=> {
-    console.log("hello");
-}
+let __move_events = {
+    __move          : function(e) {
+        // e.target.style.display = "none";
+        __socket.send( JSON.stringify( {"move": e.target.getAttribute( "id" ), "player": __game.id( "ME" ) } ) );
+        // console.log(e.target.getAttribute( "id" ) );
+    },
 
-__socket.onmessage = (event)=> {
-    let data = JSON.parse(event.data);
-    console.log( data );
+    __lunch         : function() {
+        let __move_spots = document.getElementsByClassName("spot");
 
-    if ( data["type"] == "start-game" )
-    {
-        __game.init_game( data );
-        return ;
+        for ( let i=0; i<__move_spots.length; i++ )
+            __move_spots[i].addEventListener(
+                "click", this.__move
+            );
     }
-
-    let move = new Move( data["move"], data["player"] );
 }
 
 // Controls events actions namespace
@@ -286,25 +286,6 @@ let __play_events = {
     }
 }
 
-let __move_events = {
-    __move          : function(e) {
-        // e.target.style.display = "none";
-        __socket.send( JSON.stringify( {"move": e.target.getAttribute( "id" ), "player": __game.c } ) );
-        console.log(e.target.getAttribute( "id" ) );
-    },
-
-    __lunch         : function() {
-        let __move_spots = document.getElementsByClassName("spot");
-
-        for ( let i=0; i<__move_spots.length; i++ )
-            __move_spots[i].addEventListener(
-                "click", this.__move
-            );
-
-
-    }
-}
-
 function    lunch_events()
 {
     // __controls_events.__lunch();
@@ -328,10 +309,11 @@ function    render_board()
     {
         for ( let board_y=0; board_y<3; board_y++ )
         {
-            let sub_board = document.createElement( 'div' );
+            let sub_board       = document.createElement( 'div' );
             
             sub_board.className = 'sub-board';
-            
+            sub_board.id        = [ convert(board_x), convert(board_y) ].join('')
+
             for ( let sub_board_x=0; sub_board_x<3; sub_board_x++ )
             {
                 for ( let sub_board_y=0; sub_board_y<3; sub_board_y++ )
@@ -339,17 +321,7 @@ function    render_board()
                     
                     let spot = document.createElement( 'div' );
                     
-                    if ( board_x == 0  || board_x == 1)
-                    {
-                        spot.className  = 'spot x';
-                        spot.innerHTML  = 'X';
-                    }
-                    else
-                    {
-                        spot.innerHTML = 'O';
-                        spot.className = 'spot o';
-                    }
-                    
+                    spot.className  = 'spot';
                     spot.id         = [ convert(board_x), convert(board_y),
                                         convert(sub_board_x), convert(sub_board_y)].join('');
 
@@ -361,6 +333,60 @@ function    render_board()
         }
     }
 }
+
+__socket.onopen = (event)=> {
+    console.log("hello");
+}
+
+__socket.onmessage = (event)=> {
+    let data = JSON.parse(event.data);
+
+
+    if ( data["type"] == "start-game" )
+    {
+        __game.init_game( data );
+        return ;
+    }
+
+    console.log( data );
+
+    let move    = new Move( data["move"], data["player"] );
+    let spot    = document.getElementById( data["move"] );
+    let status  = data["status"]
+
+    spot.classList.add( __game.choice( data["player"] ) );
+    
+    spot.innerHTML = __game.choice( data["player"] ).toUpperCase();
+
+    spot.removeEventListener( "click", __move_events.__move );
+
+    if ( status == "SUB-WIN" )
+    {
+        console.log( data["sub-win"] );
+
+        let sub_board   = document.getElementById( data[ "sub-win" ] );
+
+        switch ( __game.choice( data[ "player" ] ) )
+        {
+            case "x":
+                sub_board.className = "sub-board filled";
+                sub_board.innerHTML = "<div class=\"spot-fill-x\">X</div>";
+                break ;
+            case "o":
+                sub_board.className = "sub-board filled";
+                sub_board.innerHTML = "<div class=\"spot-fill-o\">O</div>";
+                break ;
+        }
+    }
+
+    asyncio.sl
+    if ( __game.choice( data["player"] ) == 'x')
+    {
+
+    }
+    // spot.removeEventListener( "click", __move_events.__move );
+}
+
 
 function    TicTacToe()
 {

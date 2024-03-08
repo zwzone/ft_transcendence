@@ -340,7 +340,6 @@ body
 {
     color: rgba(248,236,144);
     background-color: rgba(248,236,144, 0.1);
-    /* background-color: rgba(248,236,144, 0.1); */
     border-top: 1px solid rgba(248,236,144, 0.25);
     border-bottom: 1px solid rgba(248,236,144, 0.25);
     box-shadow: 1px 1px 1px 1px rgba(248,236,144, 0.3);
@@ -350,7 +349,6 @@ body
 {
     color: rgba(167,212,245, 1);;
     background-color: rgba(42,163,225, 0.2);
-    /* background-color: rgba(248,236,144, 0.1); */
     border-top: 1px solid rgba(42,163,225, 0.25);
     border-bottom: 1px solid rgba(42,163,225, 0.25);
     box-shadow: -1px 1px 1px 1px rgba(42,163,225, 0.3);
@@ -365,6 +363,7 @@ body
     height: 3em;
     /* font-size: em; */
     letter-spacing: 0.1em;
+    /* background-color: rgb(44,172,255); */
     /* display: grid;
     grid-template-columns: 5fr 1fr;
     border: 1px solid salmon; */
@@ -414,15 +413,17 @@ body
 
 .player.ble .info .player-name
 {
+    background-color: rgba(44,172,255, 0.75);
+    box-shadow: 1px 1px 12px 2px rgba(44,172,255, 0.75);
     color: rgba(211, 236, 255, 1);
-    background-color: rgba(42,163,225, 0.75);
     height: 3em;
 
 }
 
 .player.yel .info .player-name 
 {
-    background-color: rgba(248,236,144, 0.7);
+    background-color: rgba(248,236,144, 0.75);
+    box-shadow: 1px 1px 12px 2px rgba(248,236,144, 0.75);
     color: rgb(248,243,203);
     height: 3em;
 }
