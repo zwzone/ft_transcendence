@@ -1,11 +1,14 @@
 from    .Board  import  Board
 
 class Player():
-    def __init__( self ):
+    def __init__( self, id ):
         self.__username = ""
-        self.__id       = ""
+        self.__id       = id
 
         self.__board    = Board()
+    
+    def simulate( self, move ):
+        return  self.__board.simulate( move )
 
     
         

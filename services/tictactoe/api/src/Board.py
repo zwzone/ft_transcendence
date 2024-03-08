@@ -1,12 +1,32 @@
 # from    .Match   import  PENDING, DRAW, WIN
+from    .Move   import  Move
+
+class StateBoard():
+    def __init__( self ):
+        self.__all_board         = [ [ [ [ False for _ in range( 3 ) ]
+                                            for _ in range( 3 ) ]
+                                            for _ in range( 3 ) ]
+                                            for _ in range( 3 ) ]
+        
+        self.__sub_board         = [ [ False for _ in range( 3 ) ]
+                                             for _ in range( 3 ) ]
+        
+    def valid_move( self, move ):
+        return not self.__all_board[move.row][move.column][move.sub_board_row][move.sub_column_row]
+
+    def do_move_sub( self, move ):
+        self.__all_board[move.row][move.column][move.sub_board_row][move.sub_column_row] = True
+    
+    def do_move( self, move ):
+        self.__sub_board[move.row][move.column] = True
+    
 
 class Board():
-    board             = [ [ [ [ False for _ in range( 3 ) ]
-                                        for _ in range( 3 ) ]
-                                        for _ in range( 3 ) ]
-                                        for _ in range( 3 ) ]
+    
 
-    def __init__( self, bot_path ):
+    def __init__( self ):
+
+        self.response            = {}
 
         self.__sub_board_stats   = [ [ {    "row"       : [ 0 for _ in range( 3 ) ],
                                             "column"    : [ 0 for _ in range( 3 ) ],
@@ -21,20 +41,20 @@ class Board():
         
 
     def __increment_row( self, move ):
-        self.__sub_board_stats[ move.sub_board_row ]       \
-                              [ move.sub_board_column ]    \
+        self.__sub_board_stats[ move.sub_board_row ]         \
+                              [ move.sub_board_column ]      \
                               [ "row" ]                      \
                               [ move.row ] += 1
 
     def __increment_column( self, move ):
-        self.__sub_board_stats[ move.sub_board_row ]       \
-                              [ move.sub_board_column ]    \
+        self.__sub_board_stats[ move.sub_board_row ]         \
+                              [ move.sub_board_column ]      \
                               [ "column" ]                   \
                               [ move.column ] += 1
 
     def __increment_lb_rt_diagonal( self, move ): #Increment Left-Buttom Right-Top Diagonal
-        self.__sub_board_stats[ move.sub_board_row ]       \
-                              [ move.sub_board_column ]    \
+        self.__sub_board_stats[ move.sub_board_row ]         \
+                              [ move.sub_board_column ]      \
                               [ "diagonal" ]                 \
                               [ move.column + move.row ] += 1 * ( move.column + move.row == 2 )
 
@@ -94,7 +114,6 @@ class Board():
             self.__check_column        ( move ) or  \
             self.__check_lb_rt_diagonal( move ) or  \
             self.__check_lt_rb_diagonal( move ):
-            print("one win", flush=True)
             self.__board_stats[   "row"   ] \
                          [ move.sub_board_row ] += 1
             self.__board_stats[  "column" ] \
@@ -103,39 +122,39 @@ class Board():
                          [ move.sub_board_column + move.sub_board_row ] += 1 * ( move.sub_board_column +  move.sub_board_row == 2 )
             self.__board_stats[ "diagonal" ]  \
                               [ abs( move.sub_board_column - move.sub_board_row ) ] += 1 * ( move.sub_board_column == move.sub_board_row )
-            self.__sub_board_stats[ move.sub_board_row ]      \
-                                  [ move.sub_board_column ]   \
-                                  [ "stats" ] = move.type_player # Update Sub-Board stat to move.player_type ( X, O ) [ WIN ]
+            self.response[ "status" ]   = "SUB-WIN"
+            self.response[ "sub-win" ]  = f"{move.sub_board_row}{move.sub_board_column}"
                         
-    def __play( self, move ):
-        print(str(move))
-        print(self.__board_stats)
-        self.__move_sub_board( move )
-        self.__move_board    ( move )
     def __stat( self, move ):
         if  self.__board_stats[   "row"   ]             \
-                         [ move.sub_board_row ] == 3  \
+                         [ move.sub_board_row ] == 3    \
             or  \
             self.__board_stats[  "column" ]                 \
-                         [ move.sub_board_column ] == 3   \
+                         [ move.sub_board_column ] == 3     \
             or  \
             self.__board_stats[ "diagonal" ]     \
                          [ 0 ] == 3             \
             or  \
             self.__board_stats[ "diagonal" ]  \
                          [ 2 ] == 3:
-            print("WIN ALL", flush=True)
-            return  "WIN"
-        #Check Draw
-        #else Then
-        return "PENDING"
+            self.response["status"] = "WIN"
+            
+    def __play( self, move ):
+        self.__move_sub_board( move )
+        self.__move_board    ( move )
+        self.__stat( move )
+
+        if "status" not in self.response:
+            self.response["status"] = "PLAYING"
+
 
     def simulate( self, move ):
         print("Enter here", flush=True)
+        self.response = {}
         self.__play( move )
         # pass
-        return self.__stat( move )
-
+        print( self.response, flush=True )
+        return self.response
 
 # 0000 0001 0002     0100 0101 0102     0200 0201 0202
 # 0010 0011 0012     0110 0111 0112     0210 0211 0212

@@ -1,6 +1,7 @@
 import                      asyncio
 from    .Player  import     Player
 from    .Move    import     Move
+from    .Board   import     StateBoard
 
 PENDING     = 0
 DRAW        = 1
@@ -18,8 +19,10 @@ class Match():
         self.__moves            = [ ] #moves
         self.__turn             = 0 # id
 
+        self.__board            = StateBoard()
+
     def add_player( self, id ):
-        self.__players[ id ] = 1
+        self.__players[ id ] = Player( id )
 
     def remove_player( self, id ):
         self.__players.pop( id )
@@ -50,13 +53,18 @@ class Match():
         # Abort the player and the other one win
         # end
 
-    def simulate( self, move_s, mode, player_id ):
+    def simulate( self, move_s, player_id ):
         move    = Move( int( move_s[2] ),
                         int( move_s[3] ),
                         int( move_s[0] ),
                         int( move_s[1] ) )
         
-        self.__players[ player_id ].simulate( move )
+        # print( move )
+        # print( player_id )
+
+        response = self.__players[ player_id ].simulate( move )
+        print("check ", response, flush=True)
+        return response
         
         
                         
