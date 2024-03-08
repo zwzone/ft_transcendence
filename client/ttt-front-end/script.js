@@ -7,7 +7,16 @@ class Player
 
         this.#__id       = id;
         this.#__choice   = choice;
+    }
 
+    get id()
+    {
+        return ( this.#__id );
+    }
+
+    get choice()
+    {
+        return ( this.#__choice );
     }
 }
 
@@ -66,49 +75,112 @@ class Match
             this.#__current_move--;
     }
 
+    choice( player )
+    {
+        switch( player )
+        {
+            case "ME":
+                return this.#__player_me.choice();
+
+            case "OP":
+                return this.#__player_op.choice();
+        }
+    }
+
+
+    id( player )
+    {
+        switch( player )
+        {
+            case "ME":
+                return this.#__player_me.choice();
+
+            case "OP":
+                return this.#__player_op.choice();
+        }
+    }
+
+    turn( player_id )
+    {
+        if ( this.#__turn_move == player_id )
+            return ( true );
+        return ( false );
+    }
+
+    simulate( move )
+    {
+        if ( this.#__turn_move == move.player() )
+        {
+            getElementById( data["move"] ).appendChild( choice( move.player() ) );
+        }
+        else
+            console.log("should wait for your turn");
+    }
     // Maybe later
     // navigate_move( ) {
 
     // }
 }
 
-var ws = new WebSocket( "ws://localhost:8000/tictactoe/ws/" );
-
-ws.onmessage = function(e) {
-    console.log("check");
-};
-
-
 class Game
 {
     #__socket;
-    // #__room;
+    #__room;
 
-    constructor( room ) {
-        this.#__socket              = new WebSocket( "ws://localhost:8000/tictactoe/ws/" );
+    constructor( ) {
 
-        this.#__socket.onopen       = this.#open_socket;
-        this.#__socket.onmessage    = this.#receive_socket;
     }
 
-    #open_socket( event ) {
-        console.log( "hello" );
-    }
-    
-    #receive_socket( event ) {
-        console.log("check");
-        console.log( event.data );
-        this.#__socket.send( JSON.stringify( {"name": "youness", "type":"hello" } ) );
+    init_game( data )
+    {
+        lunch_events();
+
+        this.#__room    = new Match( data["match-id"],
+                                     new Player( data["player-me"], data["choice-me"] ),
+                                     new Player( data["player-op"], data["choice-op"] ) );
     }
 
-    #send_socket() {
+    id( player )
+    {
+        return ( this.#__room.id( player ) );
+    }
 
+    choice( player )
+    {
+        return ( this.#__room.id( player ) );
     }
 
     destructor() {
-        this.#__socket.close();
+        this.__socket.close();
     }
 }
+
+/////////////////////////////////////////////////////////////////////////////////
+
+let __game      = new Game( "test-room" );
+
+
+let __socket    = new WebSocket( "ws://localhost:8000/tictactoe/ws/" );
+
+/////////////////////////////////////////////////////////////////////////////////
+
+__socket.onopen = (event)=> {
+    console.log("hello");
+}
+
+__socket.onmessage = (event)=> {
+    let data = JSON.parse(event.data);
+    console.log( data );
+
+    if ( data["type"] == "start-game" )
+    {
+        __game.init_game( data );
+        return ;
+    }
+
+    let move = new Move( data["move"], data["player"] );
+}
+
 // Controls events actions namespace
 
 let __controls_events = {
@@ -121,7 +193,7 @@ let __controls_events = {
     },
 
     __create_room   : function() {
-        console.log( "Creat Room have been clicked !!");
+        console.log( "Create Room have been clicked !!");
     },
 
     __enter_room    : function() {
@@ -201,7 +273,7 @@ let __play_events = {
         for ( let i=0; i<__modes_play.length; i++ )
             __modes_play[i].addEventListener(
                 "click", this.__play
-        )
+            )
 
         __modes_play = document.getElementsByClassName( "__watch" );
 
@@ -216,18 +288,14 @@ let __play_events = {
 
 let __move_events = {
     __move          : function(e) {
-        console.log(e);
-        e.target.classList.add("o");
-        e.target.innerHTML = "O";
-
-        ws.send( JSON.stringify("hello") );
         // e.target.style.display = "none";
+        __socket.send( JSON.stringify( {"move": e.target.getAttribute( "id" ), "player": __game.c } ) );
+        console.log(e.target.getAttribute( "id" ) );
     },
 
     __lunch         : function() {
         let __move_spots = document.getElementsByClassName("spot");
 
-        console.log( __move_spots );
         for ( let i=0; i<__move_spots.length; i++ )
             __move_spots[i].addEventListener(
                 "click", this.__move
@@ -246,12 +314,60 @@ function    lunch_events()
 
 };
 
-// function    TicTacToe()
-// {
-//     let game = new Game( "test-room" );
-//     // Lunch controls events
-// };
-lunch_events();
+function    render_board()
+{
+    function convert(digit)
+    {
+        return ( String.fromCharCode( '0'.charCodeAt(0) + digit ) );
+    }
+
+    let board = document.getElementById( "board" );
+    
+    
+    for ( let board_x=0; board_x<3; board_x++ )
+    {
+        for ( let board_y=0; board_y<3; board_y++ )
+        {
+            let sub_board = document.createElement( 'div' );
+            
+            sub_board.className = 'sub-board';
+            
+            for ( let sub_board_x=0; sub_board_x<3; sub_board_x++ )
+            {
+                for ( let sub_board_y=0; sub_board_y<3; sub_board_y++ )
+                {
+                    
+                    let spot = document.createElement( 'div' );
+                    
+                    if ( board_x == 0  || board_x == 1)
+                    {
+                        spot.className  = 'spot x';
+                        spot.innerHTML  = 'X';
+                    }
+                    else
+                    {
+                        spot.innerHTML = 'O';
+                        spot.className = 'spot o';
+                    }
+                    
+                    spot.id         = [ convert(board_x), convert(board_y),
+                                        convert(sub_board_x), convert(sub_board_y)].join('');
+
+                    sub_board.appendChild( spot ); 
+                        
+                }
+                board.appendChild( sub_board );
+            }
+        }
+    }
+}
+
+function    TicTacToe()
+{
+    render_board();
+    // lunch_events();
+    // Lunch controls events
+};
 
 // Tic Tac Toe
-// TicTacToe();
+TicTacToe();

@@ -167,7 +167,7 @@ body
     }
 }
 
-.board
+#board
 {
     display: grid;
     color: white;
@@ -390,13 +390,6 @@ body
 .player.ble .choice
 {
     color: rgb(44,172,255);
-    /* color: black; */
-    /* margin-right: 1em; */
-    /* padding: 0 1em; */
-    /* border: 1px solid red; */
-    /* padding: 0 10px; */
-    /* position: */
-    /* font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; */
     text-shadow: rgba(44,172, 255, 0.75) 1px 1px 20px;
 }
 
@@ -404,7 +397,20 @@ body
 {
     color : rgba(248,236,144, 1);
     text-shadow: rgba(248,236,144, 0.75) 1px 1px 20px;
-}    
+}
+
+
+.player.ble .choice.desactive
+{
+    color: rgba(44,172,255, 0.5);
+    text-shadow: rgba(44,172, 255, 0.1) 1px 1px 20px;
+}
+
+.player.yel .choice.desactive
+{
+    color : rgba(248,236,144, 0.5);
+    text-shadow: rgba(248,236,144, 0.1) 1px 1px 20px;
+} 
 
 .player.ble .info .player-name
 {
