@@ -1,4 +1,4 @@
-class MoveC( ):
+class Move( ):
     def __init__( self,
                         row_                = -1,
                         column_             = -1,

@@ -1,6 +1,6 @@
 import                      asyncio
 from    .Player  import     Player
-from    .Move    import     MoveC
+from    .Move    import     Move
 
 PENDING     = 0
 DRAW        = 1
@@ -9,19 +9,27 @@ class Match():
     def __init__( self ):
         self.__id               = 0
         self.__room_name        = "" #using player
-        self.__state            = "PENDING" # "CONTINUE", #WIN #LOSE #DRAW
+        self.__state            = "PENDING" # "CONTINUE", #WIN, #LOSE, #DRAW, #PAUSE
         self.__winner           = 0 #id_winner
         self.__players          = {} # { id1:player[0], id2:player[2] }
+        self.__owners           = {}
         self.__bot_players      = {}
         self.__manual_players   = {}
         self.__moves            = [ ] #moves
         self.__turn             = 0 # id
 
-    def __str__( self ):
-        return  "id         : " + str(self.__id)          + "\n"  \
-              + "moves      : " + str(self.__moves)
-            #   + "player_x   : " + self.__player_x    + "\n"  \ 
-            #   + "player_o   : " + self.__player_o    + "\n"  \
+    def add_player( self, id ):
+        self.__players[ id ] = 1
+
+    def remove_player( self, id ):
+        self.__players.pop( id )
+
+    def status( self ):
+        print( "players ", self.__players )
+        if len( self.__players ) == 2:
+            return "PLAYING"
+        else:
+            return "PENDING"
 
     async def wait_match( self ):
         await asyncio.sleep( 120 )
@@ -42,11 +50,13 @@ class Match():
         # Abort the player and the other one win
         # end
 
-    async def simulate( self, move_s, mode, player_id ):
-        move    = MoveC( int( move_s[2] ),
-                         int( move_s[3] ),
-                         int( move_s[0] ),
-                         int( move_s[1] ) )
+    def simulate( self, move_s, mode, player_id ):
+        move    = Move( int( move_s[2] ),
+                        int( move_s[3] ),
+                        int( move_s[0] ),
+                        int( move_s[1] ) )
+        
+        self.__players[ player_id ].simulate( move )
         
         
                         

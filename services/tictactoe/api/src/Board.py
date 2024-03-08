@@ -1,11 +1,12 @@
 # from    .Match   import  PENDING, DRAW, WIN
 
-class PlayerC():
+class Board():
+    board             = [ [ [ [ False for _ in range( 3 ) ]
+                                        for _ in range( 3 ) ]
+                                        for _ in range( 3 ) ]
+                                        for _ in range( 3 ) ]
+
     def __init__( self, bot_path ):
-        self.__board             = [ [ [ [ 0 for _ in range( 3 ) ]
-                                             for _ in range( 3 ) ]
-                                             for _ in range( 3 ) ]
-                                             for _ in range( 3 ) ]
 
         self.__sub_board_stats   = [ [ {    "row"       : [ 0 for _ in range( 3 ) ],
                                             "column"    : [ 0 for _ in range( 3 ) ],
@@ -17,14 +18,7 @@ class PlayerC():
         self.__board_stats       = {    "row"       : [0 for _ in range( 3 ) ],
                                         "column"    : [0 for _ in range( 3 ) ],
                                         "diagonal"  : [0 for _ in range( 6 ) ]  }
-
-        self.__bot_path          = bot_path #bot_path
-        self.__mode              = "" #mode ( manual, bot, ai )
-
-    def __str__( self ):
-        return    "board       : " +  self.__board      + "\n" \
-                + "bot_path    : " +  self.__bot_path   + "\n" \
-                + "mode        : " +  self.__mode
+        
 
     def __increment_row( self, move ):
         self.__sub_board_stats[ move.sub_board_row ]       \
