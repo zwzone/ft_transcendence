@@ -21,6 +21,8 @@ class Match():
 
         self.__board            = StateBoard()
 
+        self.task_abort         = None
+
     def add_player( self, id ):
         self.__players[ id ] = Player( id )
 
@@ -28,14 +30,13 @@ class Match():
         self.__players.pop( id )
 
     def status( self ):
-        print( "players ", self.__players )
         if len( self.__players ) == 2:
             return "PLAYING"
         else:
             return "PENDING"
 
     async def wait_match( self ):
-        await asyncio.sleep( 120 )
+        await asyncio.sleep( 10 )
         #incst
         #incst
         #incst
@@ -43,6 +44,7 @@ class Match():
         #incst
         #incst
         # Can have mutexes
+        print("Match abort", flush=True)
         # Matches[ self.__state ].pop( self.__id )
         #end
 
@@ -63,7 +65,7 @@ class Match():
         # print( player_id )
 
         response = self.__players[ player_id ].simulate( move )
-        print("check ", response, flush=True)
+
         return response
         
         

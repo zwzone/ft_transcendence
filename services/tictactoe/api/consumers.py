@@ -1,28 +1,27 @@
 from    channels.generic.websocket  import  AsyncWebsocketConsumer
 import                                      json
 from    .src.Match                  import  Match
+import                                      asyncio
 # from    .src.Manager                import  Manager
 
 # __manager   = Manager()
 
 mmatch = Match()
+abort_task = None
 num = 0
 # btws = 0
 
 class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
     async def   connect( self ):
-        global num
-        self.__id               = num
-        # btws = btws ^ num
-        num += 1 # resolve from the middleware
-        # self.__id_opponent      = 2
-        self.__room_name        = "test"
-        # self.__player           = __manager.get_player( id )
+        global abort_task
+
+        self.__room_id          = self.scope["url_route"]["kwargs"]["room_id"]
+        self.__id               = self.scope["url_route"]["kwargs"]["player_id"]
 
         await self.accept()
 
         await self.channel_layer.group_add(
-            self.__room_name,
+            self.__room_id,
             self.channel_name 
         )
 
@@ -30,20 +29,29 @@ class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
 
         match mmatch.status():
             case "PLAYING":
-                print( "what", flush=True)
+                # self.wait_match( mmatch )
+                # print( self.__abort_task, flush=True)
+                abort_task.cancel()
                 await self.channel_layer.group_send(
-                    self.__room_name,
-                    {
-                        "type"      : "start_game",
-                    } )
+                      self.__room_id, {
+                          "type"      : "start_game",
+                      }
+                )
+                return
+                
+        abort_task = asyncio.create_task( self.wait_match( mmatch ) )
+        # print( self.__abort_task, flush=True)
+
+
         
         
     async def start_game( self, data ):
+        # print("id ", self.__id, flush=True)
         await self.send( json.dumps( {  "type"      : "start-game",
                                         "player-me" : self.__id,
-                                        "choice-me" : "x" if self.__id == 0 else "o",
-                                        "player-op" : 1 if self.__id == 0 else 0,
-                                        "choice-op" : "o" if self.__id == 0 else "x",
+                                        "choice-me" : "x" if self.__id == 1 else "o",
+                                        "player-op" : 2 if self.__id == 1 else 1,
+                                        "choice-op" : "o" if self.__id == 1 else "x",
         }))
         # await self.__preface_game()
 
@@ -53,7 +61,7 @@ class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
             "status"    : data["status"],
             "move"      : data["move"],
             "player"    : data["player"],
-            "sub-win"   : data["sub-win"] if data["status"] == "SUB-WIN" else ""
+            "sub-win"   : data["sub-win"] if "sub-win" in data else ""
         }))
 
     async def   disconnect( self, code ):
@@ -62,7 +70,7 @@ class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
         await self.close()
         
         await self.channel_layer.group_discard(
-            self.__room_name,
+            self.__room_id,
             self.channel_name
         )
 
@@ -73,9 +81,8 @@ class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
 
         response = await self.__simulate( text_data["move"], int(text_data["player"]) )
 
-        
         await self.channel_layer.group_send(
-            self.__room_name,
+            self.__room_id,
             {
                 "type"      : "play_move",
                 "status"    : response["status"],
@@ -85,9 +92,19 @@ class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
             }
         )
 
+    async def wait_player( self, match ):
+        await asyncio.sleep( 120 )
+
+    async def wait_match( self, match ):
+        await asyncio.sleep( 10 )
+
+        await self.send( json.dumps( {
+            "type"      : "ABORT",
+        }))
+
+        print("Match abort", flush=True)
 
     async def __simulate( self, move, player_id ):
         response = mmatch.simulate( move, player_id )
-        print("socket ", response, flush=True)
 
         return response

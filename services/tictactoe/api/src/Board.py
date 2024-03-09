@@ -12,7 +12,10 @@ class StateBoard():
                                              for _ in range( 3 ) ]
         
     def valid_move( self, move ):
-        return not self.__all_board[move.row][move.column][move.sub_board_row][move.sub_column_row]
+        return not self.__all_board[move.row]           \
+                                   [move.column]        \
+                                   [move.sub_board_row] \
+                                   [move.sub_column_row]
 
     def do_move_sub( self, move ):
         self.__all_board[move.row][move.column][move.sub_board_row][move.sub_column_row] = True
