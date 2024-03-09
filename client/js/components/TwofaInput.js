@@ -29,8 +29,8 @@ export default class TwofaInput extends HTMLElement {
           JSON.stringify({ code: input.value }),
           { "Content-Type": "application/json" },
         ).then((res) => {
-          input.value = "";
           if (res.statusCode === 200) {
+            input.value = "";
             if (res.redirected)
               window.location.href = `https://${window.ft_transcendence_host}/home/`;
             else {
@@ -41,9 +41,14 @@ export default class TwofaInput extends HTMLElement {
                 popup_twofa_qrcode.innerHTML = "";
                 popup_twofa.style.display = "none";
               }
+              alert(res.message);
             }
+          } else {
+            alert(res.message);
           }
         });
+      } else {
+        alert("Please enter a 6-digit code.");
       }
     });
   }

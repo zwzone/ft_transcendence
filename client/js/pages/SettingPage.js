@@ -40,13 +40,13 @@ export default class SettingPage extends HTMLElement {
       fetching(`https://${window.ft_transcendence_host}/player/avatar/`, "POST", formData);
     };
     button_username.onclick = (event) => {
-      player_post_changes("username", input_username.value);
+      player_post_changes("username", input_username);
     };
     button_first_name.onclick = (event) => {
-      player_post_changes("first_name", input_first_name.value);
+      player_post_changes("first_name", input_first_name);
     };
     button_last_name.onclick = (event) => {
-      player_post_changes("last_name", input_last_name.value);
+      player_post_changes("last_name", input_last_name);
     };
     checkbox_twofa.onchange = (event) => {
       if (checkbox_twofa.checked) {
@@ -54,17 +54,26 @@ export default class SettingPage extends HTMLElement {
           .then((res) => res.blob())
           .then((blob) => set_qrcode(blob));
       } else {
-        player_post_changes("two_factor", checkbox_twofa.checked);
+        player_post_changes("two_factor", checkbox_twofa);
       }
     };
 
     popup_twofa_close.onclick = (event) => {
       checkbox_twofa.checked = !checkbox_twofa.checked;
+      popup_twofa.querySelector("twofa-input input[type=number]").value = "";
       popup_twofa_qrcode.innerHTML = "";
       popup_twofa.style.display = "none";
     };
 
-    function player_post_changes(field, value) {
+    function player_post_changes(field, input_elem) {
+      let value;
+      if (field === "two_factor") {
+        value = input_elem.checked;
+      } else {
+        value = input_elem.value;
+        input_elem.placeholder = value;
+        input_elem.value = "";
+      }
       fetching(
         `https://${window.ft_transcendence_host}/player/`,
         "POST",

@@ -23,6 +23,7 @@ setting-page main {
 .setting-data input[type="text"] {
   background-color: var(--color-primary-200);
   color: var(--color-secondary-100);
+  border: 2px solid var(--color-primary-400);
 }
 
 .setting-data input[type="text"]::placeholder {

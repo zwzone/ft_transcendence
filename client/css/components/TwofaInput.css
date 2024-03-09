@@ -1,0 +1,26 @@
+twofa-input input[type="number"] {
+  font-size: 50px;
+  outline: none;
+  text-align: center;
+  border: none;
+  color: var(--color-secondary-100);
+  background-color: var(--color-primary-200);
+  border-radius: 50px;
+}
+
+twofa-input input[type="number"]::-webkit-inner-spin-button,
+twofa-input input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+twofa-input button.btn.btn-lg {
+  background-color: var(--color-primary-200) !important;
+  color: var(--color-secondary-100) !important;
+}
+
+twofa-input button.btn.btn-lg:hover,
+twofa-input button.btn.btn-lg:active {
+  background-color: var(--color-primary-100) !important;
+  color: var(--color-secondary-100) !important;
+}

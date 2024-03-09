@@ -40,7 +40,6 @@ li .logout:active {
 .hamburger {
   display: none;
   cursor: pointer;
-  background-color: var(--color-secondary-100);
 }
 
 .hamburger .line {

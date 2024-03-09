@@ -75,11 +75,11 @@
     <my-footer></my-footer>
   </template>
 
-  <!-- 2FA PAGE -->
+  <!-- TWOFA PAGE -->
   <template id="twofa-template">
     <div></div>
-    <div class="d-flex flex-column justify-content-center align-items-center w-100 h-100">
-      <h1 class="fw-bold text-center text-black-50">TWO FACTOR AUTHENTICATION</h1>
+    <div class="d-flex flex-column justify-content-center align-items-center w-100 h-100 gap-5">
+      <h1 class="text-center fw-bold p-5 rounded-5">TWO FACTOR AUTHENTICATION</h1>
       <twofa-input></twofa-input>
     </div>
     <my-footer></my-footer>
@@ -103,33 +103,33 @@
         <div class="data-section d-flex flex-column justify-content-center align-items-center gap-2 p-2 rounded-5">
           <img class="avatar border border-1 border-white rounded-4" alt="avatar" referrerpolicy="no-referrer">
           <h4 class="username align-self-stretch text-center m-0 p-2 rounded-5"></h4>
-          <h1 class="text-center m-0 p-3 rounded-5" id="full-name">
+          <h1 class="text-center fw-bold m-0 p-3 rounded-5" id="full-name">
             <span class="first-name"></span>
             <span class="last-name"></span>
           </h1>
         </div>
         <div class="data-section d-flex flex-wrap justify-content-center gap-2 p-2 rounded-5">
           <div class="d-flex flex-column justify-content-center rounded-5 p-2">
-            <h2 class="m-0 p-3">Champions</h2>
-            <h2 class="champions m-0 p-3 text-center rounded-5"></h2>
+            <h2 class="m-0 p-3 fw-bold">Champions</h2>
+            <h2 class="champions m-0 p-3 text-center fw-bold rounded-5"></h2>
           </div>
           <div class="d-flex flex-column justify-content-center rounded-5 p-2">
-            <h2 class="m-0 p-3">Wins</h2>
-            <h2 class="wins m-0 p-3 text-center rounded-5"></h2>
+            <h2 class="m-0 p-3 fw-bold">Wins</h2>
+            <h2 class="wins m-0 p-3 text-center fw-bold rounded-5"></h2>
           </div>
           <div class="d-flex flex-column justify-content-center rounded-5 p-2">
-            <h2 class="m-0 p-3">Losses</h2>
-            <h2 class="losses m-0 p-3 text-center rounded-5"></h2>
+            <h2 class="m-0 p-3 fw-bold">Losses</h2>
+            <h2 class="losses m-0 p-3 text-center fw-bold rounded-5"></h2>
           </div>
         </div>
       </div>
       <div class="player-data-related d-flex flex-column justify-content-around gap-5 p-3 rounded-5">
         <div class="match-history d-flex flex-column justify-content-center gap-2 p-3 rounded-5 flex-grow-1">
-          <h2 class="text-center m-0 px-3 py-1 rounded-5">Match History</h2>
+          <h2 class="text-center fw-bold m-0 px-3 py-1 rounded-5">Match History</h2>
           <match-history></match-history>
         </div>
         <div class="friend-list d-flex flex-column justify-content-center gap-2 p-3 rounded-5 flex-grow-1">
-          <h2 class="text-center m-0 px-3 py-1 rounded-5">My Friends</h2>
+          <h2 class="text-center fw-bold m-0 px-3 py-1 rounded-5">My Friends</h2>
           <friends-list></friends-list>
         </div>
       </div>
@@ -145,7 +145,7 @@
         SETTINGS
       </h1>
       <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-2 rounded-5">
-        <h2 class="text-center m-0 px-4 py-2">Change avatar</h2>
+        <h2 class="text-center fw-bold m-0 px-4 py-2">Change avatar</h2>
         <div class="setting-avatar d-flex justify-content-center align-items-center gap-1">
           <img class="avatar rounded-5 border border-1 border-white" alt="avatar" referrerpolicy="no-referrer">
           <input type="file" id="input-avatar" accept="image/jpeg, image/png, image/jpg">
@@ -155,28 +155,28 @@
         </div>
       </div>
       <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-2 rounded-5">
-        <h2 class="text-center m-0 px-3 py-2">Change Username</h2>
+        <h2 class="text-center fw-bold m-0 px-3 py-2">Change Username</h2>
         <div class="setting-username d-flex flex-wrap justify-content-center align-items-center gap-1">
-          <input type="text" class="input-username border-0 rounded-5 p-3 fs-5">
+          <input type="text" class="input-username rounded-5 p-3 fs-5">
           <button class="btn button-username rounded-5 p-3">Submit</button>
         </div>
       </div>
       <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-2 rounded-5">
-        <h2 class="text-center m-0 px-3 py-2">Change First Name</h2>
+        <h2 class="text-center fw-bold m-0 px-3 py-2">Change First Name</h2>
         <div class="setting-first-name d-flex flex-wrap justify-content-center align-items-center gap-1">
-          <input type="text" class="input-first-name border-0 rounded-5 p-3 fs-5">
+          <input type="text" class="input-first-name rounded-5 p-3 fs-5">
           <button class="btn button-first-name rounded-5 p-3">Submit</button>
         </div>
       </div>
       <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-2 rounded-5">
-        <h2 class="text-center m-0 px-3 py-2">Change Last Name</h2>
+        <h2 class="text-center fw-bold m-0 px-3 py-2">Change Last Name</h2>
         <div class="setting-last-name d-flex flex-wrap justify-content-center align-items-center gap-1">
-          <input type="text" class="input-last-name border-0 rounded-5 p-3 fs-5">
+          <input type="text" class="input-last-name rounded-5 p-3 fs-5">
           <button class="btn button-last-name rounded-5 p-3">Submit</button>
         </div>
       </div>
       <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-2 rounded-5">
-        <h2 class="text-center m-0 px-3 py-2">Two Factor Authentication</h2>
+        <h2 class="text-center fw-bold m-0 px-3 py-2">Two Factor Authentication</h2>
         <div class="setting-twofa p-2 rounded-5">
           <label class="switch">
             <input type="checkbox">
@@ -203,16 +203,16 @@
     <main class="container-fluid d-flex flex-column justify-content-around align-items-stretch gap-3 my-5">
       <section class="tournament-actions d-none flex-column justify-content-center align-items-center py-5 px-4 rounded-5 gap-5">
         <div class="tournament-create d-flex flex-column justify-content-center p-4 rounded-5 gap-4">
-          <h1 class="text-center m-0">CREATE A TOURNAMENT</h1>
+          <h1 class="text-center fw-bold m-0">CREATE A TOURNAMENT</h1>
           <button class="btn btn-lg fw-bold">CREATE</button>
         </div>
         <div class="tournament-join d-flex flex-column justify-content-center align-items-center p-4 rounded-5 gap-4">
-          <h1 class="text-center m-0">JOIN A TOURNAMENT</h1>
+          <h1 class="text-center fw-bold m-0">JOIN A TOURNAMENT</h1>
           <div class="tournament-list d-flex flex-wrap justify-content-center align-items-center gap-1"></div>
         </div>
       </section>
       <section class="tournament-current d-none flex-column p-5 rounded-5">
-        <h1 class="text-center rounded-5 py-5 mb-5">CURRENT TOURNAMENT</h1>
+        <h1 class="text-center fw-bold rounded-5 py-5 mb-5">CURRENT TOURNAMENT</h1>
         <tournament-players></tournament-players>
         <tournament-matches></tournament-matches>
       </section>
@@ -227,7 +227,7 @@
     <a class="btn btn-lg border border-5 rounded-5 fw-bold fs-1 text-light"></a>
   </template>
 
-  <!-- 2FA BUTTON -->
+  <!-- TWOFA INPUT -->
   <template id="twofa-input">
     <input type="number">
     <button class="btn btn-lg p-2 rounded-4">SEND</button>
