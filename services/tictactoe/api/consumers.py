@@ -24,7 +24,7 @@ class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
             self.__room_id,
             self.channel_name 
         )
-
+ 
         mmatch.add_player( self.__id )
 
         match mmatch.status():
