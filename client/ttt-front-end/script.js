@@ -159,8 +159,8 @@ class Game
 
 let __game      = new Game( "test-room" );
 
-
-let __socket    = new WebSocket( "ws://localhost:8000/tictactoe/ws/" );
+console.log(window.location.pathname);
+let __socket    = undefined;//new WebSocket( "ws://localhost:8000/ws/tictactoe/play" + window.location.pathname);
 
 /////////////////////////////////////////////////////////////////////////////////
 
@@ -334,58 +334,67 @@ function    render_board()
     }
 }
 
-__socket.onopen = (event)=> {
-    console.log("hello");
-}
+// __socket.onopen = (event)=> {
+//     console.log("hello");
+// }
 
-__socket.onmessage = (event)=> {
-    let data = JSON.parse(event.data);
+// __socket.onmessage = (event)=> {
+//     let data = JSON.parse(event.data);
 
 
-    if ( data["type"] == "start-game" )
-    {
-        __game.init_game( data );
-        return ;
-    }
+//     if ( data["type"] == "start-game" )
+//     {
+//         __game.init_game( data );
+//         return ;
+//     }
+//     else if ( data["type"] == "ABORT" )
+//     {
+//         alert("Game was aborted");
+//         return ;
+//     }
+//     console.log( data );
 
-    console.log( data );
+//     let move    = new Move( data["move"], data["player"] );
+//     let spot    = document.getElementById( data["move"] );
+//     let status  = data["status"]
 
-    let move    = new Move( data["move"], data["player"] );
-    let spot    = document.getElementById( data["move"] );
-    let status  = data["status"]
-
-    spot.classList.add( __game.choice( data["player"] ) );
+//     spot.classList.add( __game.choice( data["player"] ) );
     
-    spot.innerHTML = __game.choice( data["player"] ).toUpperCase();
+//     spot.innerHTML = __game.choice( data["player"] ).toUpperCase();
 
-    spot.removeEventListener( "click", __move_events.__move );
+//     spot.removeEventListener( "click", __move_events.__move );
 
-    if ( status == "SUB-WIN" )
-    {
-        console.log( data["sub-win"] );
+//     if ( status == "SUB-WIN" || status == "WIN")
+//     {
+//         console.log( data["sub-win"] );
 
-        let sub_board   = document.getElementById( data[ "sub-win" ] );
+//         let sub_board   = document.getElementById( data[ "sub-win" ] );
 
-        switch ( __game.choice( data[ "player" ] ) )
-        {
-            case "x":
-                sub_board.className = "sub-board filled";
-                sub_board.innerHTML = "<div class=\"spot-fill-x\">X</div>";
-                break ;
-            case "o":
-                sub_board.className = "sub-board filled";
-                sub_board.innerHTML = "<div class=\"spot-fill-o\">O</div>";
-                break ;
-        }
-    }
+//         switch ( __game.choice( data[ "player" ] ) )
+//         {
+//             case "x":
+//                 sub_board.className = "sub-board filled";
+//                 sub_board.innerHTML = "<div class=\"spot-fill-x\">X</div>";
+//                 break ;
+//             case "o":
+//                 sub_board.className = "sub-board filled";
+//                 sub_board.innerHTML = "<div class=\"spot-fill-o\">O</div>";
+//                 break ;
+//         }
 
-    asyncio.sl
-    if ( __game.choice( data["player"] ) == 'x')
-    {
+//         if ( status == "WIN" )
+//         {
+//             setTimeout(() => {
+//                 alert( __game.choice(data["player"]) + " Won" );
+//             }, 2000);
+//         }
+//     }
+//     // if ( __game.choice( data["player"] ) == 'x')
+//     // {
 
-    }
-    // spot.removeEventListener( "click", __move_events.__move );
-}
+//     // }
+//     // spot.removeEventListener( "click", __move_events.__move );
+// }
 
 
 function    TicTacToe()
@@ -397,3 +406,82 @@ function    TicTacToe()
 
 // Tic Tac Toe
 TicTacToe();
+
+let choices=document.getElementsByClassName("id");
+
+for ( let i=0; i<choices.length; i++ )
+{
+    choices[i].addEventListener( "click", (e)=>{
+        console.log(e.target.getAttribute("val"));
+        console.log("ws://localhost:8000/ws/tictactoe/play/1/" + e.target.getAttribute("val"));
+
+        __socket    = new WebSocket( "ws://localhost:8000/ws/tictactoe/play/1/" + e.target.getAttribute("val"));
+
+        
+        __socket.onopen = (event)=> {
+            console.log("hello");
+        }
+        
+        __socket.onmessage = (event)=> {
+            let data = JSON.parse(event.data);
+        
+        
+            if ( data["type"] == "start-game" )
+            {
+                __game.init_game( data );
+                console.log( data );
+                return ;
+            }
+            else if ( data["type"] == "ABORT" )
+            {
+                alert("Game was aborted");
+                return ;
+            }
+            console.log( data );
+        
+            let move    = new Move( data["move"], data["player"] );
+            let spot    = document.getElementById( data["move"] );
+            let status  = data["status"]
+        
+            spot.classList.add( __game.choice( data["player"] ) );
+            
+            console.log( __game.choice( data["player"] ) );
+
+            spot.innerHTML = __game.choice( data["player"] ).toUpperCase();
+        
+            spot.removeEventListener( "click", __move_events.__move );
+        
+            if ( status == "SUB-WIN" || status == "WIN")
+            {
+                console.log( data["sub-win"] );
+        
+                let sub_board   = document.getElementById( data[ "sub-win" ] );
+        
+                switch ( __game.choice( data[ "player" ] ) )
+                {
+                    case "x":
+                        sub_board.className = "sub-board filled";
+                        sub_board.innerHTML = "<div class=\"spot-fill-x\">X</div>";
+                        break ;
+                    case "o":
+                        sub_board.className = "sub-board filled";
+                        sub_board.innerHTML = "<div class=\"spot-fill-o\">O</div>";
+                        break ;
+                }
+        
+                if ( status == "WIN" )
+                {
+                    setTimeout(() => {
+                        alert( __game.choice(data["player"]) + " Won" );
+                    }, 2000);
+                }
+            }
+            // if ( __game.choice( data["player"] ) == 'x')
+            // {
+        
+            // }
+            // spot.removeEventListener( "click", __move_events.__move );
+        }
+    })
+    
+}
