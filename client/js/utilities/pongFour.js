@@ -66,14 +66,20 @@ export function runPongFourGame(canvas, ctx) {
     }
     let alreadyInGame = false;
     wsFour = new WebSocket(`wss://${window.ft_transcendence_host}/ws/pong/${e.data}/4/`);
+    let pos;
     wsFour.onmessage = function (e) {
       let tmp = JSON.parse(e.data);
       if (!alreadyInGame) {
+        if (typeof tmp === "number") {
+          pos = tmp;
+          return ;
+        }
         setPlayerData(tmp);
         alreadyInGame = true;
       }
       if (typeof tmp === "string") {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "white";
         ctx.fillText(tmp, canvas.width / 2, canvas.height / 2);
         wsFour.close();
         return;
@@ -92,7 +98,7 @@ export function runPongFourGame(canvas, ctx) {
       paddle2.score = tmp["padd_right"]["info"]["score"];
       paddle3.score = tmp["padd_up"]["info"]["score"];
       paddle4.score = tmp["padd_down"]["info"]["score"];
-      gameLoop(canvas, ctx, ball, paddle1, paddle2, paddle3, paddle4);
+      gameLoop(canvas, ctx, ball, paddle1, paddle2, paddle3, paddle4, pos);
     };
   };
   keys[65] = "a";
@@ -109,19 +115,31 @@ export function runPongFourGame(canvas, ctx) {
   });
 }
 
-function gameLoop(canvas, ctx, ball, paddle1, paddle2, paddle3, paddle4) {
+function gameLoop(canvas, ctx, ball, paddle1, paddle2, paddle3, paddle4, pos) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ball.render(ctx);
   if (paddle1.eliminated === false) {
-    paddle1.render(ctx);
+    if (pos === 1)
+      paddle1.render(ctx, 'red');
+    else
+      paddle1.render(ctx);
   }
   if (paddle2.eliminated === false) {
-    paddle2.render(ctx);
+    if (pos === 2)
+      paddle2.render(ctx, 'red');
+    else
+        paddle2.render(ctx);
   }
   if (paddle3.eliminated === false) {
-    paddle3.render(ctx);
+    if (pos === 3)
+      paddle3.render(ctx, 'red');
+    else
+      paddle3.render(ctx);
   }
   if (paddle4.eliminated === false) {
-    paddle4.render(ctx);
+    if (pos === 4)
+      paddle4.render(ctx, 'red');
+    else
+      paddle4.render(ctx);
   }
 }

@@ -22,9 +22,11 @@ export default class FriendCard extends HTMLElement {
     const first_name = this.attributes["first-name"].value;
     const last_name = this.attributes["last-name"].value;
     const avatar = this.attributes["avatar"].value;
+    const status = this.attributes["status"].value;
 
     this.querySelector("h6").textContent = username;
     this.querySelector("img").src = avatar;
+    this.querySelector(".status").style.backgroundColor = status === "ON" ? "green" : "red";
 
     this.addEventListener("click", () => {
       const friend_card_popup = document.createElement("friend-card-popup");

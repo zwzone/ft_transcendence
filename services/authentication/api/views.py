@@ -126,24 +126,6 @@ def google_callback_auth(request):
 
 
 @api_view(["GET"])
-def is_logged_in_auth(request):
-    if "jwt_token" not in request.COOKIES:
-        return Response({"statusCode": 401, 'error': 'JWT token cookie missing'})
-    token = request.COOKIES.get("jwt_token")
-    try:
-        decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-    except jwt.ExpiredSignatureError:
-        return Response({"statusCode": 401, 'error': 'Token is expired'})
-    except jwt.InvalidTokenError:
-        return Response({"statusCode": 401, 'error': 'Invalid token'})
-    except Exception as e:
-        return Response({"statusCode": 500, 'error': str(e)})
-    if (decoded_token['twofa']):
-        return Response({"statusCode": 401, "error": "2FA required"})
-    return Response({"statusCode": 200, "message": "Token is valid"})
-
-
-@api_view(["GET"])
 @jwt_cookie_required
 def logout_user(request):
     if request.token is not None:
