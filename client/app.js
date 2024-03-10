@@ -2,6 +2,7 @@
 import router from "./js/utilities/router.js";
 
 // Components
+import Stars from "./js/components/Stars.js";
 import Navbar from "./js/components/Navbar.js";
 import Footer from "./js/components/Footer.js";
 import PlayCard from "./js/components/PlayCard.js";

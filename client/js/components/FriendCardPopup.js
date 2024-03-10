@@ -58,6 +58,10 @@ export default class FriendCardPopup extends HTMLElement {
       fetching(`https://${window.ft_transcendence_host}/player/friendship/`, action, json, {
         "Content-Type": "application/json",
       }).then((req) => {
+        if (req.status === 400 && req.message.startsWith("You")) {
+          alert(req.message);
+          return;
+        }
         const friend_list = document.querySelector(".friend-list");
         const friends_list = friend_list.querySelector("friends-list");
         this.parentElement.removeChild(this);

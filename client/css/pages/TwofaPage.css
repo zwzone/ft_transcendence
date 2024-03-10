@@ -1,4 +1,4 @@
 twofa-page h1 {
-  background-color: var(--color-primary-200);
-  color: var(--color-secondary-100);
+  background-color: var(--color-primary);
+  color: var(--color-font-white);
 }

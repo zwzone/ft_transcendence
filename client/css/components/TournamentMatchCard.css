@@ -1,15 +1,15 @@
 tournament-match-card {
-  background-color: var(--color-primary-100);
-  box-shadow: 5px 5px 10px 0px var(--color-primary-200);
+  background-color: var(--color-primary);
+  box-shadow: 5px 5px 10px 0px var(--color-primary);
 }
 
 tournament-match-card button.btn {
-  background-color: var(--color-primary-300) !important;
-  color: var(--color-secondary-100) !important;
+  background-color: var(--color-primary) !important;
+  color: var(--color-font-white) !important;
 }
 
 tournament-match-card button.btn:hover,
 tournament-match-card button.btn:active {
-  background-color: var(--color-primary-200) !important;
-  color: var(--color-secondary-100) !important;
+  background-color: var(--color-primary) !important;
+  color: var(--color-font-white) !important;
 }

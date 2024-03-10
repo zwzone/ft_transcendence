@@ -1,109 +1,56 @@
 my-navbar {
   font-family: "Koulen", sans-serif;
-  letter-spacing: .25rem;
+  letter-spacing: 0.25rem;
   position: relative;
   height: fit-content;
 }
 
 .link {
-  color: var(--color-primary-100);
-  transition: inherit;
+  background-color: var(--color-primary) !important;
+  color: var(--color-font-white) !important;
 }
 
-.link:hover {
-  background-color: var(--color-primary-100);
-  color: var(--color-secondary-100);
-}
-
+.link:hover,
 .link:active {
-  background-color: var(--color-secondary-100) !important;
-  color: var(--color-primary-100) !important;
-  border-color: var(--color-secondary-100) !important;
+  background-color: var(--color-primary) !important;
+  color: var(--color-font-white) !important;
 }
 
 li .logout {
   background-color: orangered;
-  color: var(--color-secondary-100);
+  color: var(--color-font-white);
 }
 
-li .logout:hover {
-  background-color: red;
-  color: var(--color-secondary-100);
-}
-
+li .logout:hover,
 li .logout:active {
-  background-color: var(--color-secondary-100) !important;
-  color: red !important;
-  border-color: var(--color-secondary-100) !important;
+  background-color: red;
+  color: var(--color-font-white);
 }
 
 .hamburger {
   display: none;
   cursor: pointer;
+  background-color: var(--color-primary);
 }
 
 .hamburger .line {
   width: 30px;
   height: 4px;
-  background-color: var(--color-primary-100);
+  background-color: var(--color-font-white);
   margin-block: 6px;
-  transition: inherit;
 }
 
 .hamburger:hover {
-  background-color: var(--color-primary-100);
-}
-
-.hamburger:hover .line {
-  background-color: var(--color-secondary-100);
-}
-
-.hamburger:active {
-  background-color: var(--color-secondary-100) !important;
-  border-color: var(--color-secondary-100) !important;
-}
-
-.hamburger:active .line {
-  background-color: var(--color-primary-100) !important;
-}
-
-.nav-bar ul {
-  transition: inherit;
+  background-color: var(--color-primary);
 }
 
 @media only screen and (max-width: 992px) {
   my-navbar.active {
-    background-color: var(--color-primary-200);
-  }
-
-  my-navbar.active .link {
-    background-color: var(--color-primary-200);
-    color: var(--color-secondary-100);
-  }
-
-  my-navbar.active .link:hover {
-    background-color: var(--color-secondary-100);
-    color: var(--color-primary-100);
+    background-color: var(--color-primary);
   }
 
   .hamburger {
     display: block;
-  }
-
-  my-navbar.active .hamburger {
-    background-color: var(--color-primary-200);
-  }
-
-  my-navbar.active .hamburger .line {
-    background-color: var(--color-secondary-100);
-  }
-
-  my-navbar.active .hamburger:hover {
-    background-color: var(--color-secondary-100);
-  }
-
-  my-navbar.active .hamburger:hover .line {
-    background-color: var(--color-primary-200);
   }
 
   .nav-bar {
@@ -114,8 +61,8 @@ li .logout:active {
     position: absolute;
     top: 100%;
     left: 0;
-    background-color: var(--color-primary-200);
-    color: var(--color-secondary-100);
+    background-color: var(--color-primary);
+    color: var(--color-font-white);
     overflow: hidden;
   }
 
@@ -130,7 +77,7 @@ li .logout:active {
 
 @media only screen and (max-width: 576px) {
   my-navbar.d-flex {
-    padding-inline: .5rem !important;
+    padding-inline: 0.5rem !important;
   }
 
   my-navbar .logo {

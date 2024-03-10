@@ -1,6 +1,6 @@
 player-card {
-  background-color: var(--color-primary-300);
-  color: var(--color-secondary-100);
+  background-color: var(--color-primary);
+  color: var(--color-font-white);
 }
 
 player-card img {

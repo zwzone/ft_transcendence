@@ -184,7 +184,7 @@
           </label>
           <div class="popup-twofa flex-column justify-content-center align-items-center">
             <div class="d-flex flex-column justify-content-center align-items-center rounded-5 gap-5 p-5">
-              <button class="popup-twofa-close btn-close align-self-end"></button>
+              <button class="popup-twofa-close btn-close btn-close-white align-self-end"></button>
               <div class="popup-twofa-qrcode d-flex justify-content-center align-items-center"></div>
               <div class="d-flex justify-content-center align-items-center">
                 <twofa-input></twofa-input>
@@ -221,6 +221,14 @@
   </template>
 
   <!--------------------------- COMPONENTS --------------------------->
+
+  <!-- STARS -->
+  <template id="stars-overlay">
+    <div id="stars1"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>
+    <div id="stars4"></div>
+  </template>
 
   <!-- LOGIN BUTTON -->
   <template id="login-button">
@@ -261,9 +269,9 @@
 
   <!-- FOOTER -->
   <template id="my-footer">
-    <footer class="p-5">
+    <footer class="d-flex flex-wrap p-5">
       <h5>&copy 2024 At 1337, Made with love by:</h5>
-      <ul class="d-flex flex-column ps-4 m-0">
+      <ul class="d-flex flex-wrap ps-4 m-0 gap-4">
         <li class="fs-6">youness chaaibi <a href="https://github.com/ychaaibi" target="_blank">ychaaibi</a></li>
         <li class="fs-6">zakaria wina <a href="https://github.com/zwzone" target="_blank">zwzone</a></li>
         <li class="fs-6">taha naceur <a href="https://github.com/tnaceur" target="_blank">tnaceur</a></li>
@@ -275,7 +283,7 @@
 
   <!-- PLAY CARD -->
   <template id="play-card">
-    <img class="rounded-top-5" alt="wallpaper" referrerpolicy="no-referrer">
+    <img class="rounded-top-5" alt="wallpaper">
     <h1 class="text-center fw-bold display-1 mx-1 my-0"></h1>
     <div class="d-flex flex-column justify-content-center gap-1 mx-1">
       <a class="play-two btn btn-lg fw-bold rounded-5">Play Online &#40;2 Players&#41;</a>
@@ -312,7 +320,7 @@
       <input class="search-input px-2 py-1 rounded-3" type="text">
       <button class="search-btn btn fw-bold rounded-5">SEARCH</button>
     </div>
-    <div class="search-results d-flex flex-wrap gap-1"></div>
+    <div class="search-results d-flex flex-wrap text-center gap-1"></div>
   </template>
 
   <!-- FRIEND CARD -->
@@ -325,7 +333,7 @@
   <!-- FRIEND CARD POPUP -->
   <template id="friend-card-popup">
     <div class="d-flex flex-column justify-content-center align-items-center rounded-5 gap-5 p-5">
-      <button class="popup-close btn-close align-self-end"></button>
+      <button class="popup-close btn-close btn-close-white align-self-end"></button>
       <h1 class="popup-header"></h1>
       <img class="avatar border border-1 border-white rounded-4" alt="avatar" referrerpolicy="no-referrer">
       <h2 class="username"></h2>
@@ -390,7 +398,7 @@
   <!-- TOURNAMENT POPUP -->
   <template id="tournament-popup">
     <div class="d-flex flex-column justify-content-center align-items-center rounded-5 gap-5 p-5">
-      <button class="popup-close btn-close align-self-end"></button>
+      <button class="popup-close btn-close btn-close-white align-self-end"></button>
       <h1 class="popup-header fw-bold"></h1>
       <div class="alias-name d-flex flex-column justify-content-center align-items-center">
         <h4>Your alias name</h4>

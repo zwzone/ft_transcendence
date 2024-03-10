@@ -1,12 +1,12 @@
 game-page button.btn {
-  background-color: var(--color-primary-200) !important;
-  color: var(--color-primary-400) !important;
+  background-color: var(--color-primary) !important;
+  color: var(--color-primary) !important;
 }
 
 game-page button.btn:hover,
 game-page button.btn:active {
-  background-color: var(--color-primary-100) !important;
-  color: var(--color-primary-400) !important;
+  background-color: var(--color-primary) !important;
+  color: var(--color-primary) !important;
 }
 
 #canvas-pong {

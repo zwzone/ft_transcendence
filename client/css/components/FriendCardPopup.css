@@ -8,7 +8,7 @@ friend-card-popup {
 }
 
 friend-card-popup > div {
-  background-color: var(--color-primary-300);
+  background-color: var(--color-primary-solid);
 }
 
 friend-card-popup img.avatar {
@@ -17,5 +17,5 @@ friend-card-popup img.avatar {
 }
 
 friend-card-popup .username {
-  color: var(--color-primary-400);
+  color: var(--color-primary);
 }

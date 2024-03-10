@@ -1,33 +1,33 @@
 setting-page main {
-  /* background-color: var(--color-primary-300); */
+  /* background-color: var(--color-primary); */
   max-width: 1080px;
 }
 
 .setting-header,
 .setting-data {
-  background-color: var(--color-primary-300);
-  color: var(--color-secondary-100);
+  background-color: var(--color-primary);
+  color: var(--color-font-white);
 }
 
 .setting-data .btn {
-  background-color: var(--color-primary-200) !important;
-  color: var(--color-secondary-100) !important;
+  background-color: var(--color-primary) !important;
+  color: var(--color-font-white) !important;
 }
 
 .setting-data .btn:hover,
 .setting-data .btn:active {
-  background-color: var(--color-primary-100) !important;
-  color: var(--color-secondary-100) !important;
+  background-color: var(--color-primary) !important;
+  color: var(--color-font-white) !important;
 }
 
 .setting-data input[type="text"] {
-  background-color: var(--color-primary-200);
-  color: var(--color-secondary-100);
-  border: 2px solid var(--color-primary-400);
+  background-color: var(--color-primary);
+  color: var(--color-font-white);
+  border: 2px solid var(--color-primary);
 }
 
 .setting-data input[type="text"]::placeholder {
-  color: var(--color-primary-400);
+  color: var(--color-primary);
 }
 
 .setting-avatar {
@@ -51,7 +51,7 @@ setting-page main {
   bottom: 0;
   opacity: 0;
   transition: opacity 0.2s;
-  background-color: var(--color-primary-300);
+  background-color: var(--color-primary);
   cursor: pointer;
 }
 
@@ -64,9 +64,8 @@ setting-page main {
   height: 70%;
 }
 
-.setting-twofa,
 .slider:before {
-  background-color: var(--color-secondary-100);
+  background-color: var(--color-primary);
 }
 
 .setting-twofa .popup-twofa {
@@ -80,7 +79,7 @@ setting-page main {
 }
 
 .setting-twofa .popup-twofa > div {
-  background-color: var(--color-primary-300);
+  background-color: var(--color-primary-solid);
 }
 
 /* The switch - the box around the slider */
@@ -106,7 +105,7 @@ setting-page main {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--color-primary-300);
+  background-color: var(--color-primary);
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
@@ -122,14 +121,11 @@ setting-page main {
   transition: 0.4s;
 }
 
-input:checked + .slider {
-  background-color: var(--color-primary-100);
-}
-
 input:checked + .slider:before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
   transform: translateX(26px);
+  background-color: var(--color-font-white);
 }
 
 /* Rounded sliders */
