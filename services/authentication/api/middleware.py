@@ -31,19 +31,20 @@ class TokenMiddleware:
             match = re.search("jwt_token=(.*)", cookies)
             if match is not None:
                 token_key = match.group(1)
-                scope['payload'] = self.decode_token(token_key)
-                if scope['payload'] is not None:
-                    return await self.inner(scope, receive, send)
-        return
+                scope['status'] = self.decode_token(token_key, scope)
+                return await self.inner(scope, receive, send)
+        scope['status'] = "Invalid"
+        return await self.inner(scope, receive, send)
 
-    def decode_token(self, token_key):
+    def decode_token(self, token_key, scope):
         try:
             payload = jwt.decode(token_key, SECRET_KEY, algorithms=['HS256'])
             if (payload['twofa']):
-                return None
-            return payload
+                return "Twofa"
+            scope['payload'] = payload
+            return "Valid"
         except jwt.InvalidTokenError:
-            return None
+            return "Invalid"
 
 
 MyAuthMiddlewareStack = lambda inner: TokenMiddleware(AuthMiddlewareStack(inner))

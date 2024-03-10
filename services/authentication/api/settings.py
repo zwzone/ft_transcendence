@@ -28,7 +28,7 @@ SECRET_KEY = getenv("DJANGO_SECRET_KEY")
 DEBUG = getenv("STAGE") == "Development"
 
 ALLOWED_HOSTS = [
-    "authentication",
+    "*",
 ]
 
 # Application definition
