@@ -25,10 +25,12 @@ const router = {
     pathname = pathname.filter((str) => str != "");
     pathname = "/" + pathname.join("/") + "/";
     if (pathname === "/" || pathname === "//") pathname = "/home/";
-    fetching(`https://${window.ft_transcendence_host}/authentication/isloggedin/`).then((res) => {
-      if (res.statusCode == 200) {
+    const ws = new WebSocket(`wss://${window.ft_transcendence_host}/authentication/ws/login/`);
+    ws.onmessage = (event) => {
+      const message = event.data;
+      if (message === "Valid") {
         if (pathname == "/login/" || pathname == "/twofa/") pathname = "/home/";
-      } else if (res.error.startsWith("2FA")) {
+      } else if (message === "Twofa") {
         if (
           pathname == "/game/" ||
           pathname == "/home/" ||
@@ -38,7 +40,7 @@ const router = {
           pathname == "/tournaments/"
         )
           pathname = "/twofa/";
-      } else {
+      } else if (message === "Invalid") {
         if (
           pathname == "/game/" ||
           pathname == "/home/" ||
@@ -50,7 +52,7 @@ const router = {
           pathname = "/login/";
       }
       router.go(pathname, window.location.search, "replace");
-    });
+    };
   },
 
   go: (route, query, state) => {

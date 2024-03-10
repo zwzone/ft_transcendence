@@ -72,6 +72,7 @@ export default class FriendsList extends HTMLElement {
         friend_card_elem.setAttribute("last-name", arr[i].last_name);
         friend_card_elem.setAttribute("username", arr[i].username);
         friend_card_elem.setAttribute("avatar", arr[i].avatar);
+        friend_card_elem.setAttribute("status", arr[i].status);
         friend_cards.appendChild(friend_card_elem);
       }
     });

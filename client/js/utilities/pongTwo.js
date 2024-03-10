@@ -32,7 +32,6 @@ function setPlayerData(data) {
   player_elem.querySelector("img").style.borderRadius = "50%";
   pong_players_elem.appendChild(player_elem);
 }
-
 export function runPongTwoGame(canvas, ctx, match_id) {
   wsTwo = new WebSocket(
     `wss://${window.ft_transcendence_host}/ws/matchmaking/2/${!match_id ? "" : match_id + "/"}`,
@@ -73,9 +72,14 @@ export function runPongTwoGame(canvas, ctx, match_id) {
         !match_id ? "" : match_id + "/"
       }`,
     );
+    let pos;
     wsTwo.onmessage = function (e) {
       let tmp = JSON.parse(e.data);
       if (!alreadyInGame) {
+        if (typeof tmp === "number") {
+          pos = tmp;
+          return ;
+        }
         setPlayerData(tmp);
         alreadyInGame = true;
       }
@@ -91,7 +95,7 @@ export function runPongTwoGame(canvas, ctx, match_id) {
       paddle2.positionY = tmp["padd_right"]["info"].positionY;
       paddle1.score = tmp["padd_left"]["info"]["score"];
       paddle2.score = tmp["padd_right"]["info"]["score"];
-      gameLoop(canvas, ctx, ball, paddle1, paddle2);
+      gameLoop(canvas, ctx, ball, paddle1, paddle2, pos);
     };
   };
   window.addEventListener("keydown", function (e) {
@@ -120,8 +124,8 @@ export class Paddle {
     this.score = 0;
   }
 
-  render(ctx) {
-    ctx.fillStyle = "whitesmoke";
+  render(ctx, color="whitesmoke") {
+    ctx.fillStyle = color;
     ctx.beginPath();
     ctx.roundRect(this.positionX, this.positionY, this.sizeX, this.sizeY, 20);
     ctx.stroke();
@@ -151,10 +155,16 @@ function RenderScore(ctx, canvas, right, left) {
   ctx.fillText(right, canvas.width / 2 + 100, 120);
 }
 
-function gameLoop(canvas, ctx, ball, paddle1, paddle2) {
+function gameLoop(canvas, ctx, ball, paddle1, paddle2, pos) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ball.render(ctx);
-  paddle1.render(ctx);
-  paddle2.render(ctx);
+  if (pos === 1)
+    paddle1.render(ctx, 'red');
+  else
+    paddle1.render(ctx);
+  if (pos === 2)
+    paddle2.render(ctx, 'red');
+  else
+    paddle2.render(ctx);
   RenderScore(ctx, canvas, paddle2.score, paddle1.score);
 }

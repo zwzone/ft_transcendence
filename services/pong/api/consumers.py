@@ -315,6 +315,7 @@ class Pong(AsyncWebsocketConsumer):
                     'avatar': player_db.avatar
                 },
             }
+            await self.send('1')
         else:
             if rooms[room_id].get('padd_right') is None and self.capacity >= 2:
                 rooms[room_id]['padd_right'] = {
@@ -324,6 +325,7 @@ class Pong(AsyncWebsocketConsumer):
                     'username': player_db.username,
                     'avatar': player_db.avatar
                 }
+                await self.send('2')
             elif rooms[room_id].get('padd_up') is None and self.capacity > 2:
                 rooms[room_id]['padd_up'] = {
                     'player': self.channel_name,
@@ -332,6 +334,7 @@ class Pong(AsyncWebsocketConsumer):
                     'username': player_db.username,
                     'avatar': player_db.avatar
                 }
+                await self.send('3')
             elif rooms[room_id].get('padd_down') is None and self.capacity > 2:
                 rooms[room_id]['padd_down'] = {
                     'player': self.channel_name,
@@ -340,6 +343,7 @@ class Pong(AsyncWebsocketConsumer):
                     'username': player_db.username,
                     'avatar': player_db.avatar
                 }
+                await self.send('4')
             if len(rooms[room_id]) == self.capacity:
                 await self.start_game(room_id)
 
