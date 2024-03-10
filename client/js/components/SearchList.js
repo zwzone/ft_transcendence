@@ -33,6 +33,7 @@ export default class SearchList extends HTMLElement {
           player_card_elem.setAttribute("first-name", arr[i].first_name);
           player_card_elem.setAttribute("last-name", arr[i].last_name);
           player_card_elem.setAttribute("avatar", arr[i].avatar);
+          player_card_elem.setAttribute("status", arr[i].status);
           search_results.appendChild(player_card_elem);
         }
       });
