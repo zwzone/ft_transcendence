@@ -12,6 +12,7 @@ def set_player_status(playerId, playerStatus):
 class LoginConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         await self.accept()
+        self.id = None
         if self.scope['status'] == 'Valid':
             self.id = self.scope['payload']['id']
             if self.id not in playersOpenTabs:
@@ -22,6 +23,8 @@ class LoginConsumer(AsyncWebsocketConsumer):
         await self.send(self.scope['status'])
 
     async def disconnect(self, close_code):
+        if self.id is None:
+            return
         if playersOpenTabs[self.id] == 1:
             await set_player_status(self.id, Player.Status.OFFLINE.value)
             del playersOpenTabs[self.id]

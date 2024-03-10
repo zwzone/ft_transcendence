@@ -26,7 +26,7 @@ class Player(AbstractBaseUser):
     wins = models.IntegerField(blank=False, null=False, default=0)
     losses = models.IntegerField(blank=False, null=False, default=0)
     two_factor = models.BooleanField(default=False)
-    status = models.CharField(max_length=2, choices=STATUS_CHOICES, default=Status.ONLINE.value)
+    status = models.CharField(max_length=2, choices=STATUS_CHOICES, default=Status.OFFLINE.value)
 
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
