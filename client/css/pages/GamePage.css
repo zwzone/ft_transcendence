@@ -1,3 +1,7 @@
+game-page {
+  color: var(--color-font-white) !important;
+}
+
 game-page button.btn {
   background-color: var(--color-primary) !important;
   color: var(--color-primary) !important;
@@ -6,14 +10,14 @@ game-page button.btn {
 game-page button.btn:hover,
 game-page button.btn:active {
   background-color: var(--color-primary) !important;
-  color: var(--color-primary) !important;
+  color: var(--color-font-white) !important;
 }
 
 #canvas-pong {
   width: 50%;
   height: 50%;
-  background-image: url("../../images/stadium.jpeg");
-  background-position: center;
-  background-size: cover;
-  border-radius: 8px;
+  background-color: var(--color-primary);
+  border-top: 2px solid var(--color-primary);
+  border-bottom: 2px solid var(--color-primary);
+  border-radius: 2rem;
 }

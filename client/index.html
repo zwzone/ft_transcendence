@@ -38,7 +38,7 @@
     <div class="d-flex flex-wrap justify-content-between align-items-center p-5">
       <h1 class="game-header display-1 fw-bold m-0"></h1>
       <h1 class="game-mode fw-bold m-0"></h1>
-      <button class="game-exit btn btn-lg fw-bold" href="/home/">Back</button>
+      <button class="game-exit btn btn-lg fw-bold" href="/home/">Exit</button>
     </div>
     <main class="container-fluid my-5">
       <div class="pong-players d-flex flex-wrap justify-content-around align-items-center">
@@ -64,12 +64,19 @@
 
   <!-- LOGIN PAGE -->
   <template id="login-template">
-    <div class="d-flex flex-column justify-content-center align-items-center gap-3 pt-5">
-      <img class="w-75" src="/images/pong.svg" alt="logo" referrerpolicy="no-referrer">
-      <h1 class="display-1 text-center fw-bold m-0">PING PONG</h1>
+    <div></div>
+    <div class="d-flex flex-wrap justify-content-center align-items-center gap-5 pt-5">
+      <div class="d-flex flex-column justify-content-center align-items-center gap-3">
+        <img class="w-75" src="/images/pong.svg" alt="logo" referrerpolicy="no-referrer">
+        <h1 class="display-1 text-center fw-bold m-0">PING PONG</h1>
+      </div>
+      <div class="d-flex flex-column justify-content-center align-items-center gap-3">
+        <img class="w-75" src="/images/tictactoe.svg" alt="logo" referrerpolicy="no-referrer">
+        <h1 class="display-1 text-center fw-bold m-0">TIC TAC TOE</h1>
+      </div>
     </div>
     <div class="d-flex flex-column justify-content-center align-items-center gap-3">
-    <login-button color="success" link="https://localhost/authentication/intra/" text="Intra 42"></login-button>
+      <login-button color="success" link="https://localhost/authentication/intra/" text="Intra 42"></login-button>
       <login-button color="primary" link="https://localhost/authentication/google/" text="Google"></login-button>
     </div>
     <my-footer></my-footer>
