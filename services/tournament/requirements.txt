@@ -1,0 +1,5 @@
+Django==4.2.9
+djangorestframework==3.14.0
+PyJWT==2.8.0
+daphne==2.5.0
+psycopg==3.1.18

@@ -7,17 +7,17 @@
 }
 
 :root {
-  --color-primary-100: #251749;
-  --color-primary-200: #263159;
-  --color-primary-300: #495579;
-  --color-primary-400: #9BB8CD;
-
-  --color-secondary-100: #FFFBEB;
+  --color-primary: #f8ec9030;
+  --color-primary-solid: #2e2c1d;
+  --color-primary-light: #f8ec90;
+  --color-font-white: #fffbeb;
+  --color-font-grey: #495579;
+  --color-font-black: #1a1a1a;
 }
 
 #root {
   min-height: 100vh;
-  background: linear-gradient(var(--color-secondary-100) 75%, var(--color-primary-400));
+  /* background: linear-gradient(var(--color-font-white) 75%, var(--color-primary)); */
 }
 
 .my-page {

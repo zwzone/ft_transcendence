@@ -1,0 +1,18 @@
+friend-card {
+  position: relative;
+  background-color: var(--color-primary);
+}
+
+friend-card:hover {
+  background-color: var(--color-primary);
+  cursor: pointer;
+}
+
+friend-card .status {
+  position: absolute;
+  top: 45px;
+  left: 65%;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+}

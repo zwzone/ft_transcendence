@@ -1,18 +1,33 @@
-@import url('https://fonts.googleapis.com/css2?family=Koulen&family=Rubik+Mono+One&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Koulen&family=Rubik+Mono+One&display=swap");
 @import "./root.css";
 
 /* Components */
-@import "./Navbar.css";
-@import "./pong.css";
-@import "./FriendsList.css";
-@import "./FriendCard.css";
-@import "./FriendCardPopup.css";
+@import "./components/Stars.css";
+@import "./components/Footer.css";
+@import "./components/FriendCard.css";
+@import "./components/FriendCardPopup.css";
+@import "./components/FriendsList.css";
+@import "./components/LoginButton.css";
+@import "./components/MatchCard.css";
+@import "./components/MatchHistory.css";
+@import "./components/Navbar.css";
+@import "./components/PlayCard.css";
+@import "./components/PlayerCard.css";
+@import "./components/SearchList.css";
+@import "./components/TournamentCard.css";
+@import "./components/TournamentMatchCard.css";
+@import "./components/TournamentMatches.css";
+@import "./components/TournamentPlayerCard.css";
+@import "./components/TournamentPlayers.css";
+@import "./components/TournamentPopup.css";
+@import "./components/TwofaInput.css";
 
 /* Pages */
-@import "./LoginPage.css";
-@import "./TwofaPage.css";
-@import "./GamePage.css";
-@import "./HomePage.css";
-@import "./TournamentPage.css";
-@import "./ProfilePage.css";
-@import "./SettingPage.css";
+@import "./pages/GamePage.css";
+@import "./pages/HomePage.css";
+@import "./pages/LoginPage.css";
+@import "./pages/NotfoundPage.css";
+@import "./pages/ProfilePage.css";
+@import "./pages/SettingPage.css";
+@import "./pages/TournamentPage.css";
+@import "./pages/TwofaPage.css";

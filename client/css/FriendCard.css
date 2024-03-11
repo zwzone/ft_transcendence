@@ -1,8 +1,0 @@
-friend-card {
-  background-color: var(--color-primary-200);
-}
-
-friend-card:hover {
-  background-color: var(--color-primary-100);
-  cursor: pointer;
-}

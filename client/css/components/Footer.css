@@ -1,0 +1,7 @@
+my-footer {
+  color: var(--color-font-white);
+}
+
+my-footer a {
+  color: var(--color-primary-light);
+}

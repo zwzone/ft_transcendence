@@ -24,6 +24,8 @@ class TokenMiddleware:
     def decode_token(self, token_key):
         try:
             payload = jwt.decode(token_key, SECRET_KEY, algorithms=['HS256'])
+            if (payload['twofa']):
+                return None
             return payload
         except jwt.InvalidTokenError:
             return None
