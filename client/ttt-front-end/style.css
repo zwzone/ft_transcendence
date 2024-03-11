@@ -28,7 +28,7 @@ body
     width: 100%;
     /* border: 7px solid green; */
     display: flex;
-    align-items: start;
+    align-items: center;
     justify-content: center;
     background-color: black;
     /* border: 2px solid purple; */
@@ -167,6 +167,90 @@ body
     }
 }
 
+.result
+{
+    /* text-align: center; */
+    position: fixed;
+    /* left: 0; */
+    /* right: 0; */
+    /* left:50% - 22vw; */
+    /* top:50% - 12vw; */
+    padding: 50px;
+    /* margin: auto; */
+    width: 35vw;
+    height: 17.5vw;
+    background-color: #f8ec90;
+    border-radius: 0.5em;
+    z-index: 10;
+    /* bottom: -20px; */
+    /* display: None; */
+    animation-name: anime;
+    animation-duration: 2s;
+    animation-delay: 1s;
+    /* border: 10px solid blue; */
+    opacity: 1;
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+    justify-content: space-between;
+    /* display: None; */
+    box-shadow: 1px 1px 10px 3px #f8ec90;
+}
+
+
+
+.result-players
+{
+    display: flex;
+    /* height: fit-content; */
+    /* height: 100%; */
+    /* margin: auto; */
+    width: 100%;
+    /* border: 3px solid salmon; */
+    justify-content: space-between;
+}
+
+.exit
+{
+    color: #f8ec90;
+    background-color: black;
+    width: fit-content;
+    height: fit-content;
+    /* border: 2px solid red; */
+    padding: 12px 20px;
+    text-align: center;
+    font-size: 0.75em;
+    border-radius: 15px;
+    box-shadow: 0 1px 4px 6px rgba(0,0,0,0.85);
+    /* border: 3px solid saddlebrown; */
+    /* width: ; */
+
+}
+
+.vs
+{
+    text-align: center;
+    margin: auto;
+    font-size: 1.5em;
+    /* border: 1px solid salmon; */
+}
+
+
+
+@keyframes anime {
+    from {
+        opacity: 0;
+        transform: translateY(100vh);
+        /* display: block; */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        /* display: block; */
+    }
+}
+
 #board
 {
     display: grid;
@@ -183,7 +267,9 @@ body
     position: fixed;
     user-select: none;
     /* transform: rotate3d(20,10,0,50deg); */
+    opacity: 0.65;
 }
+
 
 .sub-board
 {
@@ -258,6 +344,9 @@ body
     padding: 5px 5px;
     /* align-content: flex-start; */
     /* grid-template-columns: 1fr; */
+    position: fixed;
+    top:0;
+    opacity: 0.65;
 }
 
 .player
@@ -462,7 +551,7 @@ body
     width: 2.5em;
     height: 2.5em;
     /* border: 1px solid green; */
-    background-color: white;
+    /* background-color: white; */
     border-radius: 0.5em;
     
 }
@@ -486,7 +575,14 @@ body
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 0.5em; 
+    border-radius: 0.5em;
+    background-color: white;
+}
+
+.player-name-result
+{
+    font-size: 0.55em;
+    letter-spacing: 1px;
 }
 
 .filled
@@ -557,8 +653,9 @@ body
     height: 40px;
     z-index: 10;
     position: absolute;
-    bottom: 20px;
+    bottom: 0;
     text-align: center;
+
     /* top: 20px;; */
 }
 
@@ -569,4 +666,25 @@ body
 #id-2{
     right:20px;
 
+}
+
+/* .player-img.result
+{
+    font-size: 0.5em;
+} */
+
+#win-star img
+{
+    width: 35px;
+    height: 35px;
+    object-fit: cover;
+    background: transparent;
+    background-color: transparent;
+    opacity: 1;
+}
+
+.win
+{
+    position: relative;
+    top:-45px;
 }

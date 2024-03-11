@@ -1,3 +1,26 @@
+//------------------------------------------------ Move -----------------------------------------------//
+class Move
+{
+    #__move_id;
+    #__player_id; // "op", "me"
+    
+    constructor( move_id, player_id ) {
+        
+        this.#__move_id    = move_id;
+        this.#__player_id  = player_id;
+
+    }
+
+    get player() {
+        return ( this.#__player_id );
+    }
+
+    get move() {
+        return ( this.#__move_id );
+    }
+}
+
+//----------------------------------------------- Player ----------------------------------------------//
 class Player
 {
     #__id;
@@ -20,107 +43,105 @@ class Player
     }
 }
 
-class Move
-{
-    #__move;
-    #__player; // "op", "me"
-    
-    constructor( move, player ) {
-        
-        this.#__move    = move;
-        this.#__player  = player;
-
-    }
-
-    get player() {
-        return ( this.#__player );
-    }
-
-    get move() {
-        return ( this.#__move );
-    }
-}
-
+//----------------------------------------------- Macth -----------------------------------------------//
 class Match
 {
     #__id;
-    #__player_me; // Me [ User ]
-    #__player_op; // Opponent
+    #__player;
+    #__players;
     #__moves = []; // [Move(), Move()]]
-    #__current_move; // [1,2,3,4,..., n ]
     #__turn_move; // "me", "op"
     #__state; // PENDING, END
-    #__win; // "op", "me"
+    #__win; // id
 
-    constructor ( id, player_me, player_op ) {
+    constructor ( id, player, player_me, player_op ) {
 
         this.#__id              = id;
-        this.#__player_me       = player_me;
-        this.#__player_op       = player_op;
-        this.#__current_move    = "CONTINUE";
+        this.#__player          = player;
+        this.#__players         = new Map([
+                                    [ player_me.id, player_me ],
+                                    [ player_op.id, player_op ]
+                                ]);
+        this.#__turn_move       = 1;
 
+        // console.log( player_me.id );
+        // console.log( this.#__players.get(player_me.id ) );
     }
 
-    add_move( move ) {
-        this.#__moves.add( move );
-    }
-
-    next_move( ) {
-        if ( this.#__current_move + 1 < this.#__current_move - 1 )
-            this.#__current_move++;
-    }
-
-    prev_move( ) {
-        if ( this.#__current_move - 1 >= 0 )
-            this.#__current_move--;
+    get player( )
+    {
+        return ( this.#__player );
     }
 
     choice( player )
     {
-        switch( player )
-        {
-            case this.#__player_me.id:
-                return this.#__player_me.choice;
+        // console.log( this.#__players.get( player ) );
+        return this.#__players.get( player ).choice;
+    }
 
-            case this.#__player_op.id:
-                return this.#__player_op.choice;
+    id( player_id )
+    {
+        return this.#__players.get( player_id ).id;
+    }
+
+    turn( )
+    {
+        // console.log( this.)
+        return ( this.#__turn_move == this.#__player );
+    }
+
+    switch_turn( )
+    {
+        const keys = this.#__players.keys();
+
+        this.#__turn_move = keys.next().value ^ keys.next().value ^ this.#__turn_move;
+        console.log("-----------------");
+        console.log(this.#__turn_move);
+        console.log("-----------------");
+    }
+
+    simulate_match( move )
+    {
+        let spot        = document.getElementById( move.move );
+
+        spot.classList.add( __game.choice( move.player ) );
+        spot.innerHTML  = __game.choice( move.player ).toUpperCase();
+        spot.removeEventListener( "click", __move_events.__move );
+
+        __game.switch_turn();
+    }
+
+    simulate_status( data )
+    {
+        let status = data["status"];
+
+        if ( status == "PLAYING" )
+            return ;
+     
+        let sub_board   = document.getElementById( data[ "sub-win" ] );
+
+        switch ( __game.choice( data[ "player" ] ) )
+        {
+            case "x":
+                sub_board.className = "sub-board filled";
+                sub_board.innerHTML = "<div class=\"spot-fill-x\">X</div>";
+                break ;
+            case "o":
+                sub_board.className = "sub-board filled";
+                sub_board.innerHTML = "<div class=\"spot-fill-o\">O</div>";
+                break ;
+        }
+    
+        if ( status == "WIN" )
+        {
+            setTimeout(() => {
+                alert( __game.choice(data["player"]) + " Won" );
+            }, 1000);
         }
     }
-
-
-    id( player )
-    {
-        switch( player )
-        {
-            case "ME":
-                return this.#__player_me.id;
-
-            case "OP":
-                return this.#__player_op.id;
-        }
-    }
-
-    turn( player_id )
-    {
-        if ( this.#__turn_move == player_id )
-            return ( true );
-        return ( false );
-    }
-
-    simulate( move )
-    {
-        if ( this.#__turn_move == move.player() )
-        {
-            getElementById( data["move"] ).appendChild( choice( move.player() ) );
-        }
-        else
-            console.log("should wait for your turn");
-    }
-    // Maybe later
-    // navigate_move( ) {
-
-    // }
 }
+
+//----------------------------------------------- Game ------------------------------------------------//
 
 class Game
 {
@@ -136,8 +157,14 @@ class Game
         lunch_events();
 
         this.#__room    = new Match( data["match-id"],
+                                     data["player-me"],
                                      new Player( data["player-me"], data["choice-me"] ),
                                      new Player( data["player-op"], data["choice-op"] ) );
+    }
+
+    get player()
+    {
+        return ( this.#__room.player );
     }
 
     id( player )
@@ -150,6 +177,26 @@ class Game
         return ( this.#__room.choice( player ) );
     }
 
+    turn( )
+    {
+        return ( this.#__room.turn() );
+    }
+
+    switch_turn()
+    {
+        this.#__room.switch_turn();
+    }
+
+    simulate_match( move )
+    {
+        this.#__room.simulate_match( move );
+    }
+
+    simulate_status( data )
+    {
+        this.#__room.simulate_status( data );
+    }
+
     destructor() {
         this.__socket.close();
     }
@@ -159,16 +206,23 @@ class Game
 
 let __game      = new Game( "test-room" );
 
-console.log(window.location.pathname);
-let __socket    = undefined;//new WebSocket( "ws://localhost:8000/ws/tictactoe/play" + window.location.pathname);
+let __socket    = undefined;
 
 /////////////////////////////////////////////////////////////////////////////////
 
 let __move_events = {
     __move          : function(e) {
-        // e.target.style.display = "none";
-        __socket.send( JSON.stringify( {"move": e.target.getAttribute( "id" ), "player": __game.id( "ME" ) } ) );
-        // console.log(e.target.getAttribute( "id" ) );
+        console.log( __game.player );
+        if ( !__game.turn( __game ) )
+        {
+            console.log("should wait for your turn");
+            return ;
+        }
+
+        __socket.send( JSON.stringify( {
+                "move": e.target.getAttribute( "id" ),
+                "player": __game.player,
+        }));
     },
 
     __lunch         : function() {
@@ -181,116 +235,8 @@ let __move_events = {
     }
 }
 
-// Controls events actions namespace
-
-let __controls_events = {
-    __match         : function() {
-        console.log( "Match have been clicked !!");
-    },
-
-    __ai            : function() {
-        console.log( "AI have been clicked !!");
-    },
-
-    __create_room   : function() {
-        console.log( "Create Room have been clicked !!");
-    },
-
-    __enter_room    : function() {
-        console.log( "Enter Room have been clicked !!");
-    },
-
-    __exit          : function() {
-        console.log( "Exit have been clicked !!");
-    },
-
-    __lunch         : function() {        
-        document.getElementById("match").addEventListener(
-            "click", this.__match
-        )
-
-        document.getElementById("ai").addEventListener(
-            "click", this.__ai
-        )
-
-        document.getElementById("create-room").addEventListener(
-            "click", this.__create_room
-        )
-
-        document.getElementById("enter-room").addEventListener(
-            "click", this.__enter_room
-        )
-
-        document.getElementById("exit").addEventListener(
-            "click", this.__exit
-        )
-    }
-};
-
-let __mode_events  = {
-    __bot           : function() {
-        console.log( "Bot button was clicked" );
-    },
-
-    __manual        : function() {
-        console.log( "Manual was clicked" );
-    },
-
-    __lunch         : function()
-    {
-        let __modes_challenge;
-
-        __modes_challenge = document.getElementsByClassName("mode-challenge bot");
-
-        for ( let i=0; i<__modes_challenge.length; i++ )
-            __modes_challenge[i].addEventListener(
-                "click", this.__bot
-        )
-
-        __modes_challenge = document.getElementsByClassName( "mode-challenge manual" );
-
-        for ( let i=0; i<__modes_challenge.length; i++ )
-            __modes_challenge[i].addEventListener(
-                "click", this.__manual
-            )
-    }
-}
-
-let __play_events = {
-    __watch         : function() {
-        console.log( "Watch event was clicked" );
-    },
-
-    __play          : function() {
-        console.log( "Play event was clicked" );
-    },
-
-    __lunch         : function() {
-        let __modes_play;
-
-        __modes_play = document.getElementsByClassName("__play");
-
-        for ( let i=0; i<__modes_play.length; i++ )
-            __modes_play[i].addEventListener(
-                "click", this.__play
-            )
-
-        __modes_play = document.getElementsByClassName( "__watch" );
-
-        for ( let i=0; i<__modes_play.length; i++ )
-        {
-            __modes_play[i].addEventListener(
-                "click", this.__watch
-            )
-        }
-    }
-}
-
 function    lunch_events()
 {
-    // __controls_events.__lunch();
-    // __mode_events.__lunch();
-    // __play_events.__lunch();
     __move_events.__lunch();
 
 };
@@ -303,7 +249,6 @@ function    render_board()
     }
 
     let board = document.getElementById( "board" );
-    
     
     for ( let board_x=0; board_x<3; board_x++ )
     {
@@ -334,69 +279,6 @@ function    render_board()
     }
 }
 
-// __socket.onopen = (event)=> {
-//     console.log("hello");
-// }
-
-// __socket.onmessage = (event)=> {
-//     let data = JSON.parse(event.data);
-
-
-//     if ( data["type"] == "start-game" )
-//     {
-//         __game.init_game( data );
-//         return ;
-//     }
-//     else if ( data["type"] == "ABORT" )
-//     {
-//         alert("Game was aborted");
-//         return ;
-//     }
-//     console.log( data );
-
-//     let move    = new Move( data["move"], data["player"] );
-//     let spot    = document.getElementById( data["move"] );
-//     let status  = data["status"]
-
-//     spot.classList.add( __game.choice( data["player"] ) );
-    
-//     spot.innerHTML = __game.choice( data["player"] ).toUpperCase();
-
-//     spot.removeEventListener( "click", __move_events.__move );
-
-//     if ( status == "SUB-WIN" || status == "WIN")
-//     {
-//         console.log( data["sub-win"] );
-
-//         let sub_board   = document.getElementById( data[ "sub-win" ] );
-
-//         switch ( __game.choice( data[ "player" ] ) )
-//         {
-//             case "x":
-//                 sub_board.className = "sub-board filled";
-//                 sub_board.innerHTML = "<div class=\"spot-fill-x\">X</div>";
-//                 break ;
-//             case "o":
-//                 sub_board.className = "sub-board filled";
-//                 sub_board.innerHTML = "<div class=\"spot-fill-o\">O</div>";
-//                 break ;
-//         }
-
-//         if ( status == "WIN" )
-//         {
-//             setTimeout(() => {
-//                 alert( __game.choice(data["player"]) + " Won" );
-//             }, 2000);
-//         }
-//     }
-//     // if ( __game.choice( data["player"] ) == 'x')
-//     // {
-
-//     // }
-//     // spot.removeEventListener( "click", __move_events.__move );
-// }
-
-
 function    TicTacToe()
 {
     render_board();
@@ -412,75 +294,33 @@ let choices=document.getElementsByClassName("id");
 for ( let i=0; i<choices.length; i++ )
 {
     choices[i].addEventListener( "click", (e)=>{
-        console.log(e.target.getAttribute("val"));
-        console.log("ws://localhost:8000/ws/tictactoe/play/1/" + e.target.getAttribute("val"));
+        __socket            = new WebSocket( "ws://localhost:8000/ws/tictactoe/play/1/" + e.target.getAttribute("val"));
 
-        __socket    = new WebSocket( "ws://localhost:8000/ws/tictactoe/play/1/" + e.target.getAttribute("val"));
-
-        
-        __socket.onopen = (event)=> {
+        __socket.onopen     = (event)=> {
             console.log("hello");
         }
         
-        __socket.onmessage = (event)=> {
+        __socket.onmessage  = (event)=> {
             let data = JSON.parse(event.data);
-        
-        
-            if ( data["type"] == "start-game" )
-            {
-                __game.init_game( data );
-                console.log( data );
-                return ;
-            }
-            else if ( data["type"] == "ABORT" )
-            {
-                alert("Game was aborted");
-                return ;
-            }
-            console.log( data );
-        
-            let move    = new Move( data["move"], data["player"] );
-            let spot    = document.getElementById( data["move"] );
-            let status  = data["status"]
-        
-            spot.classList.add( __game.choice( data["player"] ) );
             
-            console.log( __game.choice( data["player"] ) );
-
-            spot.innerHTML = __game.choice( data["player"] ).toUpperCase();
-        
-            spot.removeEventListener( "click", __move_events.__move );
-        
-            if ( status == "SUB-WIN" || status == "WIN")
+            console.log( data );
+            
+            switch ( data["type"] )
             {
-                console.log( data["sub-win"] );
-        
-                let sub_board   = document.getElementById( data[ "sub-win" ] );
-        
-                switch ( __game.choice( data[ "player" ] ) )
-                {
-                    case "x":
-                        sub_board.className = "sub-board filled";
-                        sub_board.innerHTML = "<div class=\"spot-fill-x\">X</div>";
-                        break ;
-                    case "o":
-                        sub_board.className = "sub-board filled";
-                        sub_board.innerHTML = "<div class=\"spot-fill-o\">O</div>";
-                        break ;
-                }
-        
-                if ( status == "WIN" )
-                {
-                    setTimeout(() => {
-                        alert( __game.choice(data["player"]) + " Won" );
-                    }, 2000);
-                }
+                case "start":
+                    __game.init_game( data );
+                    return ;
+                case "abort":
+                    alert("Game was aborted");
+                    // redirect home
+                    return ;
+                case "invalid":
+                    alert("Game is alreadyu")
             }
-            // if ( __game.choice( data["player"] ) == 'x')
-            // {
+
+            __game.simulate_match( new Move( data["move"], data["player"] ) );
         
-            // }
-            // spot.removeEventListener( "click", __move_events.__move );
+            __game.simulate_status( data );
         }
     })
     
