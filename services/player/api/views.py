@@ -81,6 +81,7 @@ class PlayerInfo(APIView):
                 changed = True
             if "two_factor" in player_data and player_data['two_factor'] is False:
                 player.two_factor = player_data['two_factor']
+                changed = True
             player.save()
             message = "User updated successfully" if changed else "No changes detected"
             return Response({

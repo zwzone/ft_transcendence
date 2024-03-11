@@ -3,50 +3,44 @@ profile-page main {
 }
 
 profile-page .player-data {
-  background-color: var(--color-primary-400);
-  color: var(--color-secondary-100);
+  background-color: var(--color-primary);
+  color: var(--color-font-white);
   max-width: 1080px;
 }
 
-profile-page .player-data > .data-section {
-  background-color: var(--color-primary-300);
+profile-page .player-data > .data-section:first-child {
+  background-color: var(--color-primary);
 }
 
 profile-page .player-data > .data-section > img {
   width: 150px;
   height: 150px;
-  background-color: var(--color-primary-300);
 }
 
 profile-page .player-data > .data-section > h1,
 profile-page .player-data > .data-section > h4,
 profile-page .player-data > .data-section > div {
-  background-color: var(--color-primary-200);
+  background-color: var(--color-primary);
 }
 
 profile-page .champions,
 profile-page .wins,
 profile-page .losses {
-  background-color: var(--color-primary-400);
-  color: var(--color-primary-100);
-}
-
-profile-page .player-data > .data-section > h4 {
-  color: var(--color-primary-400);
+  background-color: var(--color-primary);
+  color: var(--color-font-white);
 }
 
 profile-page .player-data-related {
-  background-color: var(--color-primary-400);
+  background-color: var(--color-primary);
 }
 
 profile-page .player-data-related > div {
-  background-color: var(--color-primary-300);
-  color: var(--color-secondary-100);
+  color: var(--color-font-white);
 }
 
 profile-page .match-history > h2,
 profile-page .friend-list > h2 {
-  background-color: var(--color-primary-100);
+  background-color: var(--color-primary);
 }
 
 profile-page .friend-cards {

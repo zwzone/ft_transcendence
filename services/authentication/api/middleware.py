@@ -5,6 +5,8 @@ import jwt
 from django.db import close_old_connections
 from channels.auth import AuthMiddlewareStack
 from .settings import SECRET_KEY
+from .models import Player
+from channels.db import database_sync_to_async
 
 
 class JWTRevocationMiddleware:
@@ -18,6 +20,9 @@ class JWTRevocationMiddleware:
         response = self.get_response(request)
         return response
 
+@database_sync_to_async
+def get_player_by_id(id):
+    return Player.objects.get(id=id)
 
 class TokenMiddleware:
     def __init__(self, inner):
@@ -31,20 +36,22 @@ class TokenMiddleware:
             match = re.search("jwt_token=(.*)", cookies)
             if match is not None:
                 token_key = match.group(1)
-                scope['status'] = self.decode_token(token_key, scope)
+                await self.decode_token(token_key, scope)
                 return await self.inner(scope, receive, send)
         scope['status'] = "Invalid"
         return await self.inner(scope, receive, send)
 
-    def decode_token(self, token_key, scope):
+    async def decode_token(self, token_key, scope):
         try:
             payload = jwt.decode(token_key, SECRET_KEY, algorithms=['HS256'])
             if (payload['twofa']):
-                return "Twofa"
-            scope['payload'] = payload
-            return "Valid"
+                scope['status'] = "Twofa"
+            scope['player'] = await get_player_by_id(payload['id'])
+            scope['status'] = "Valid"
+        except Player.DoesNotExist:
+            scope['status'] = "Invalid"
         except jwt.InvalidTokenError:
-            return "Invalid"
+            scope['status'] = "Invalid"
 
 
 MyAuthMiddlewareStack = lambda inner: TokenMiddleware(AuthMiddlewareStack(inner))

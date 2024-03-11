@@ -17,6 +17,11 @@ export default class LoginButton extends HTMLElement {
     button.style.backgroundColor = `var(--bs-${color})`;
     button.textContent = text;
     button.classList.add(`border-${color}-subtle`);
+    if (color === "success") {
+      button.classList.add("intra");
+    } else if (color === "primary") {
+      button.classList.add("google");
+    }
   }
 }
 

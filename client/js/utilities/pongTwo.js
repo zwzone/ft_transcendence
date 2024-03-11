@@ -78,7 +78,7 @@ export function runPongTwoGame(canvas, ctx, match_id) {
       if (!alreadyInGame) {
         if (typeof tmp === "number") {
           pos = tmp;
-          return ;
+          return;
         }
         setPlayerData(tmp);
         alreadyInGame = true;
@@ -124,7 +124,7 @@ export class Paddle {
     this.score = 0;
   }
 
-  render(ctx, color="whitesmoke") {
+  render(ctx, color = "whitesmoke") {
     ctx.fillStyle = color;
     ctx.beginPath();
     ctx.roundRect(this.positionX, this.positionY, this.sizeX, this.sizeY, 20);
@@ -158,13 +158,9 @@ function RenderScore(ctx, canvas, right, left) {
 function gameLoop(canvas, ctx, ball, paddle1, paddle2, pos) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ball.render(ctx);
-  if (pos === 1)
-    paddle1.render(ctx, 'red');
-  else
-    paddle1.render(ctx);
-  if (pos === 2)
-    paddle2.render(ctx, 'red');
-  else
-    paddle2.render(ctx);
+  if (pos === 1) paddle1.render(ctx, "#f8ec90");
+  else paddle1.render(ctx);
+  if (pos === 2) paddle2.render(ctx, "#f8ec90");
+  else paddle2.render(ctx);
   RenderScore(ctx, canvas, paddle2.score, paddle1.score);
 }

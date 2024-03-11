@@ -1,11 +1,11 @@
 tournament-player-card {
-  background-color: var(--color-primary-200);
+  background-color: var(--color-primary);
 }
 
 tournament-player-card div,
 tournament-player-card h3 {
-  background-color: var(--color-primary-300);
-  color: var(--color-secondary-100);
+  background-color: var(--color-primary);
+  color: var(--color-font-white);
 }
 
 tournament-player-card div img {
@@ -14,6 +14,6 @@ tournament-player-card div img {
 }
 
 tournament-player-card div h6 {
-  background-color: var(--color-primary-200);
-  color: var(--color-secondary-100);
+  background-color: var(--color-primary);
+  color: var(--color-font-white);
 }

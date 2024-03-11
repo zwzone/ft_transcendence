@@ -72,7 +72,7 @@ export function runPongFourGame(canvas, ctx) {
       if (!alreadyInGame) {
         if (typeof tmp === "number") {
           pos = tmp;
-          return ;
+          return;
         }
         setPlayerData(tmp);
         alreadyInGame = true;
@@ -119,27 +119,19 @@ function gameLoop(canvas, ctx, ball, paddle1, paddle2, paddle3, paddle4, pos) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ball.render(ctx);
   if (paddle1.eliminated === false) {
-    if (pos === 1)
-      paddle1.render(ctx, 'red');
-    else
-      paddle1.render(ctx);
+    if (pos === 1) paddle1.render(ctx, "#f8ec90");
+    else paddle1.render(ctx);
   }
   if (paddle2.eliminated === false) {
-    if (pos === 2)
-      paddle2.render(ctx, 'red');
-    else
-        paddle2.render(ctx);
+    if (pos === 2) paddle2.render(ctx, "#f8ec90");
+    else paddle2.render(ctx);
   }
   if (paddle3.eliminated === false) {
-    if (pos === 3)
-      paddle3.render(ctx, 'red');
-    else
-      paddle3.render(ctx);
+    if (pos === 3) paddle3.render(ctx, "#f8ec90");
+    else paddle3.render(ctx);
   }
   if (paddle4.eliminated === false) {
-    if (pos === 4)
-      paddle4.render(ctx, 'red');
-    else
-      paddle4.render(ctx);
+    if (pos === 4) paddle4.render(ctx, "#f8ec90");
+    else paddle4.render(ctx);
   }
 }

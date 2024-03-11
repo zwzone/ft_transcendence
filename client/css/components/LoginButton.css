@@ -1,0 +1,11 @@
+login-button a.btn.intra:hover,
+login-button a.btn.intra:active {
+  background-color: var(--bs-success-border-subtle) !important;
+  color: var(--bs-success) !important;
+}
+
+login-button a.btn.google:hover,
+login-button a.btn.google:active {
+  background-color: var(--bs-primary-border-subtle) !important;
+  color: var(--bs-primary) !important;
+}

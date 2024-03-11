@@ -67,6 +67,7 @@ const router = {
     }
     const rootEl = document.querySelector("div#root");
     rootEl.innerHTML = "";
+    rootEl.appendChild(document.createElement("stars-overlay"));
     rootEl.appendChild(pageElement);
     window.scrollX = 0;
     window.scrollY = 0;
