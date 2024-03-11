@@ -91,6 +91,25 @@ services:
             postgres:
                 condition: service_healthy
         restart: on-failure
+    
+    tictactoe:
+        build:
+            context: ./services/tictactoe/
+            dockerfile: Dockerfile.dev
+        image: tictactoe:develop
+        container_name:  tictactoe
+        environment:
+            - STAGE=Development
+        env_file:
+            - .env
+        volumes:
+            - ./services/tictactoe/:/microservice/tictactoe/:rw
+        networks:
+            - ft_transcendence
+        depends_on:
+            postgres:
+                condition: service_healthy
+        restart: on-failure
 
     tournament:
         build:
