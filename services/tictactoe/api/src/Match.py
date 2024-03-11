@@ -8,7 +8,7 @@ DRAW        = 1
 WIN         = 3
 
 class Match():
-    def __init__( self ):
+    def __init__( self, id ):
         self.__id               = 0
         self.__room_name        = "" #using player
         self.__state            = "PENDING" # "CONTINUE", #WIN, #LOSE, #DRAW, #PAUSE
@@ -18,6 +18,10 @@ class Match():
         self.__turn             = 0 # id
 
         self.__board            = StateBoard()
+
+    @property
+    def id( self ):
+        return self.__id
 
     def add_player( self, id ):
         self.__players[ id ] = Player( id )

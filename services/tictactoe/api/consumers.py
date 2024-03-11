@@ -5,46 +5,68 @@ import                                      random
 
 Matches = {}
 
-mmatch = Match()
+waiting         = -1
+waiting_room    = 0
+mmatch          = None
+players         = set()
+
+match_id = 0
 
 class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
     async def   connect( self ):
-
-        self.__room_id          = self.scope["url_route"]["kwargs"]["room_id"]
         self.__id               = self.scope["url_route"]["kwargs"]["player_id"]
+        self.__room_id          = ""
 
+        global waiting, waiting_room, mmatch, Matches
         await self.accept()
 
-        if mmatch == "PLAYING":
-            await self.send( json.dumps({
-                "type"          :"invalid",
-            }))
-            self.close()
+        if  self.__id in players:
+            #serve already in match
+            print("player is already in", flush=True)
+            pass
+        
+
+        if waiting == -1:
+            waiting_room    += 1
+            self.__room_id  = str(waiting_room)
+            waiting         = self.__id
+            mmatch          = Match( self.__room_id )
+
+            await self.channel_layer.group_add(
+                self.__room_id,
+                self.channel_name 
+            )
+            mmatch.add_player( self.__id )
             return
+        
+        mmatch.add_player( self.__id )
+        self.__room_id              = str(waiting_room)
+        Matches[ self.__room_id ]   = mmatch
+        print( Matches, flush=True )
+        mmatch                      = None
 
         await self.channel_layer.group_add(
             self.__room_id,
             self.channel_name 
         )
 
-        mmatch.add_player( self.__id )
-        # match mmatch.status():
-        if mmatch.status() == "PLAYING":
-            await self.channel_layer.group_send(
-                  self.__room_id, {
-                      "type"      : "start",
-                  }
-            )
+        await self.channel_layer.group_send(
+              self.__room_id, {
+                  "type"      : "start",
+              }
+        )
 
     async def   disconnect( self, code ):
-        mmatch.remove_player( self.__id )
+        players.remove( self.__id )
 
-        await self.close()
-        
+        Matches[ self.__room_id ].remove_player()
+
         await self.channel_layer.group_discard(
             self.__room_id,
             self.channel_name
         )
+
+        await self.close()
 
         await self.channel_layer.group_send(
             self.__room_id, {
@@ -53,6 +75,9 @@ class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
                 "state" : "ABORT",
             }
         )
+
+        #save db
+        #remove from Matches
 
     async def receive( self, text_data=None ):
 
@@ -112,6 +137,10 @@ class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
     #  --------------------------------------------------------------Game-------------------------------------------------------------------------- #
         
     async def __simulate( self, move, player_id ):
-        response = mmatch.simulate( move, player_id )
+        global Matches
+        print( Matches[self.__room_id ] )
+
+        print( Matches[self.__room_id].status(), flush=True)
+        response = Matches[self.__room_id].simulate( move, player_id )
 
         return response
