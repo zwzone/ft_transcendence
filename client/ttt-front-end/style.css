@@ -167,7 +167,7 @@ body
     }
 }
 
-.result
+#result
 {
     /* text-align: center; */
     position: fixed;
@@ -184,11 +184,16 @@ body
     z-index: 10;
     /* bottom: -20px; */
     /* display: None; */
+    /* opacity: 0;
+
+    /// ADDED 
     animation-name: anime;
     animation-duration: 2s;
     animation-delay: 1s;
+    /// END
+    */
+
     /* border: 10px solid blue; */
-    opacity: 1;
     display: flex;
     flex-direction: column;
     /* justify-content: center; */
@@ -196,6 +201,9 @@ body
     justify-content: space-between;
     /* display: None; */
     box-shadow: 1px 1px 10px 3px #f8ec90;
+    transform: translateY(100vh);
+    z-index: 30;
+    /* display: none; */
 }
 
 
@@ -240,13 +248,26 @@ body
 
 @keyframes anime {
     from {
+        /* display: contents; */
         opacity: 0;
         transform: translateY(100vh);
         /* display: block; */
     }
     to {
+        /* display: contents; */
         opacity: 1;
         transform: translateY(0);
+        /* display: block; */
+    }
+}
+
+@keyframes anime_desapeir {
+    from {
+        opacity: 1;
+        /* display: block; */
+    }
+    to {
+        opacity: 0.5;
         /* display: block; */
     }
 }
@@ -267,7 +288,15 @@ body
     position: fixed;
     user-select: none;
     /* transform: rotate3d(20,10,0,50deg); */
-    opacity: 0.65;
+    /* opacity: 0.65; */
+
+    /* ADDED
+    animation-name: anime_desapeir;
+    animation-fill-mode: forwards;
+    animation-duration: 2s;
+    animation-delay: 1s;
+        END */
+    z-index: 20;
 }
 
 
@@ -334,7 +363,7 @@ body
     color : rgba(248,236,144, 1);
 }
 
-.status
+#status
 {
     width: 100vw;
     /* border: 1px solid saddlebrown; */
@@ -346,7 +375,28 @@ body
     /* grid-template-columns: 1fr; */
     position: fixed;
     top:0;
-    opacity: 0.65;
+    /* opacity: 0.65; */
+    /* ADDED
+    animation-name: anime_desapeir;
+    animation-fill-mode: forwards;
+    animation-duration: 2s;
+    animation-delay: 1s;
+        END */
+}
+
+.anime_appeir {
+    animation-name: anime;
+    animation-fill-mode: forwards;
+    animation-duration: 1.25s;
+    /* animation-delay: 1s; */
+}
+
+.anime_desapeir
+{
+    animation-name: anime_desapeir;
+    animation-fill-mode: forwards;
+    animation-duration: 1.25s;
+    /* animation-delay: 1s;   */
 }
 
 .player
@@ -602,7 +652,8 @@ body
     /* border: 1px solid green; */
     color: rgba(248,236,144, 1);
     text-shadow: rgba(248,236,144, 0.5) 1px 1px 50px;
-    animation: win_yellow ease-in-out 0.6s infinite alternate;
+    /* animation: win_yellow ease-in-out 0.6s infinite alternate; */
+    /* cursor: no; */
 
 }
 
@@ -616,7 +667,7 @@ body
     /* border: 1px solid green; */
     color: rgb(44,172,255);
     text-shadow: rgba(44,172,255, 0.5) 1px 1px 50px;
-    animation: win_blue ease-in-out 0.6s infinite alternate;
+    /* animation: win_blue ease-in-out 0.6s infinite alternate; */
 }
 
 @keyframes win_blue
@@ -642,7 +693,6 @@ body
         text-shadow: rgba(248,236,144, 0.1) 1px 1px 50px;
     }
 }
-
 
 .id
 {

@@ -1,3 +1,53 @@
+__render  = {
+    render_board    : function() {
+
+        function convert(digit)
+        {
+            return ( String.fromCharCode( '0'.charCodeAt(0) + digit ) );
+        }
+    
+        let board = document.getElementById( "board" );
+        
+        for ( let board_x=0; board_x<3; board_x++ )
+        {
+            for ( let board_y=0; board_y<3; board_y++ )
+            {
+                let sub_board       = document.createElement( 'div' );
+                
+                sub_board.className = 'sub-board';
+                sub_board.id        = [ convert(board_x), convert(board_y) ].join('')
+    
+                for ( let sub_board_x=0; sub_board_x<3; sub_board_x++ )
+                {
+                    for ( let sub_board_y=0; sub_board_y<3; sub_board_y++ )
+                    {
+                        
+                        let spot = document.createElement( 'div' );
+                        
+                        spot.className  = 'spot';
+                        spot.id         = [ convert(board_x), convert(board_y),
+                                            convert(sub_board_x), convert(sub_board_y)].join('');
+    
+                        sub_board.appendChild( spot ); 
+                            
+                    }
+                    board.appendChild( sub_board );
+                }
+            }
+        }
+    },
+
+    render_result   : function() {
+        let board   = document.getElementById( "board" );
+        let result  = document.getElementById( "result" );
+        let status  = document.getElementById( "status" );
+
+        board.classList.add( "anime_desapeir" );
+        status.classList.add( "anime_desapeir" );
+        result.classList.add( "anime_appeir" );
+    }
+}
+
 //------------------------------------------------ Move -----------------------------------------------//
 class Move
 {
@@ -135,8 +185,9 @@ class Match
         if ( status == "WIN" )
         {
             setTimeout(() => {
-                alert( __game.choice(data["player"]) + " Won" );
-            }, 1000);
+                __render.render_result()
+            }, 500);
+            __socket.close();
         }
     }
 }
@@ -160,6 +211,11 @@ class Game
                                      data["player-me"],
                                      new Player( data["player-me"], data["choice-me"] ),
                                      new Player( data["player-op"], data["choice-op"] ) );
+    }
+
+    end_game( )
+    {
+        __move_events.__stop();
     }
 
     get player()
@@ -232,6 +288,18 @@ let __move_events = {
             __move_spots[i].addEventListener(
                 "click", this.__move
             );
+    },
+
+    __stop          : function() 
+    {        let __move_spots = document.getElementsByClassName("spot");
+
+        for ( let i=0; i<__move_spots.length; i++ )
+        {
+            __move_spots[i].removeEventListener(
+                "click", this.__move
+            );
+            __move_spots[i].style.cursor = "none";
+        }
     }
 }
 
@@ -282,6 +350,9 @@ function    render_board()
 function    TicTacToe()
 {
     render_board();
+    // setTimeout(() => {
+    //     __render.render_result()
+    // }, 1000);
     // lunch_events();
     // Lunch controls events
 };
