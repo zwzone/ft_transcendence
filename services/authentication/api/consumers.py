@@ -5,8 +5,9 @@ from .models import Player
 playersOpenTabs = {}
 
 @database_sync_to_async
-def set_player_status(playerId, playerStatus):
-    Player.objects.filter(id=playerId).update(status=playerStatus)
+def set_player_status(player,  playerStatus):
+    player.status = playerStatus
+    player.save()
 
 
 class LoginConsumer(AsyncWebsocketConsumer):
@@ -14,9 +15,10 @@ class LoginConsumer(AsyncWebsocketConsumer):
         await self.accept()
         self.id = None
         if self.scope['status'] == 'Valid':
-            self.id = self.scope['payload']['id']
+            self.player = self.scope['player']
+            self.id = self.player.id
             if self.id not in playersOpenTabs:
-                await set_player_status(self.id, Player.Status.ONLINE.value)
+                await set_player_status(self.player, Player.Status.ONLINE.value)
                 playersOpenTabs[self.id] = 1
             else:
                 playersOpenTabs[self.id] += 1
@@ -26,7 +28,7 @@ class LoginConsumer(AsyncWebsocketConsumer):
         if self.id is None:
             return
         if playersOpenTabs[self.id] == 1:
-            await set_player_status(self.id, Player.Status.OFFLINE.value)
+            await set_player_status(self.player, Player.Status.OFFLINE.value)
             del playersOpenTabs[self.id]
         else:
             playersOpenTabs[self.id] -= 1
