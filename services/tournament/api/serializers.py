@@ -24,10 +24,12 @@ class PlayerMatchSerializer(serializers.ModelSerializer):
 
 class TournamentSerializer(serializers.ModelSerializer):
     matches = serializers.SerializerMethodField()
+    creator = serializers.SerializerMethodField()
+    players_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Tournament
-        fields = ('id', 'name', 'status', 'round', 'matches')
+        fields = ('id', 'name', 'status', 'round', 'matches', 'creator', 'players_count')
 
     def get_matches(self, tournament):
         matches = Match.objects.filter(tournament=tournament)
@@ -54,9 +56,9 @@ class TournamentSerializer(serializers.ModelSerializer):
         ).first()
         return tournament
 
-    def get_creator(self, tournament, player):
-        creator = PlayerTournament.objects.filter(tournament_id=tournament, player_id=player, creator=True).first()
-        return creator
+    def get_creator(self, tournament):
+        player = self.context.get("player")
+        return PlayerTournament.objects.filter(tournament_id=tournament, player_id=player, creator=True).exists()
 
 class MatchSerializer(serializers.ModelSerializer):
     players = serializers.SerializerMethodField()

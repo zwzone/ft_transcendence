@@ -1,9 +1,0 @@
-friends-list li .btn {
-  background-color: var(--color-primary-200);
-  color: var(--color-primary-400);
-}
-
-friends-list li .btn:hover {
-  background-color: var(--color-primary-400);
-  color: var(--color-primary-100);
-}

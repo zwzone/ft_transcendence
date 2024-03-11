@@ -17,9 +17,15 @@ def update_tournament(tournament_id):
     if all(match.state == Match.State.PLAYED.value for match in current_round_matches):
         if tournament.round == 3:
             tournament.status = Tournament.StatusChoices.FINISHED.value
+            winner = PlayerMatch.objects.get(match_id__in=current_round_matches, won=True)
+            winner.player_id.champions += 1
             tournament.save()
+            winner.player_id.save()
             return
         winning_players = list(PlayerMatch.objects.filter(match_id__in=current_round_matches, won=True))
+        if winning_players:
+            tournament.round += 1
+            tournament.save()
         while len(winning_players) >= 2:
             player1_match = winning_players.pop(0)
             player2_match = winning_players.pop(0)
@@ -38,8 +44,6 @@ def update_tournament(tournament_id):
                 match_id=tournament_match,
                 player_id=player2
             )
-        tournament.round += 1
-        tournament.save()
 
 
 class TournamentView(APIView):

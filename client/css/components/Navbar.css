@@ -1,0 +1,93 @@
+my-navbar {
+  font-family: "Koulen", sans-serif;
+  letter-spacing: 0.25rem;
+  position: relative;
+  height: fit-content;
+}
+
+.link {
+  background-color: var(--color-primary) !important;
+  color: var(--color-font-white) !important;
+}
+
+.link:hover,
+.link:active {
+  background-color: var(--color-primary) !important;
+  color: var(--color-font-white) !important;
+}
+
+li .logout {
+  background-color: orangered;
+  color: var(--color-font-white);
+}
+
+li .logout:hover,
+li .logout:active {
+  background-color: red;
+  color: var(--color-font-white);
+}
+
+.hamburger {
+  display: none;
+  cursor: pointer;
+  background-color: var(--color-primary);
+}
+
+.hamburger .line {
+  width: 30px;
+  height: 4px;
+  background-color: var(--color-font-white);
+  margin-block: 6px;
+}
+
+.hamburger:hover {
+  background-color: var(--color-primary);
+}
+
+@media only screen and (max-width: 992px) {
+  my-navbar.active {
+    background-color: var(--color-primary);
+  }
+
+  .hamburger {
+    display: block;
+  }
+
+  .nav-bar {
+    display: none !important;
+    width: 100vw;
+    height: fit-content;
+    padding-block: 1rem;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: var(--color-primary);
+    color: var(--color-font-white);
+    overflow: hidden;
+  }
+
+  .nav-bar ul {
+    flex-direction: column;
+  }
+
+  my-navbar.active .nav-bar {
+    display: flex !important;
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  my-navbar.d-flex {
+    padding-inline: 0.5rem !important;
+  }
+
+  my-navbar .logo {
+    font-size: 1rem !important;
+    padding-inline: 0 !important;
+  }
+
+  .hamburger .line {
+    width: 15px;
+    height: 2px;
+    margin-block: 3px;
+  }
+}

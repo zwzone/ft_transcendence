@@ -10,3 +10,6 @@ migrations/
 static/
 assets/
 .DS_Store
+develop/
+develop/*
+develop

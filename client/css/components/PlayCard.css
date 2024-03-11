@@ -1,0 +1,23 @@
+play-card {
+  max-width: 500px;
+  background-color: var(--color-primary);
+}
+
+play-card img {
+  width: 100%;
+}
+
+play-card h1 {
+  color: var(--color-font-white);
+}
+
+play-card a.btn {
+  background-color: var(--color-primary) !important;
+  color: var(--color-font-white) !important;
+}
+
+play-card a.btn:hover,
+play-card a.btn:active {
+  background-color: var(--color-primary) !important;
+  color: var(--color-font-white) !important;
+}

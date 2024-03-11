@@ -9,7 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Favicon -->
-  <link rel="shortcut icon" href="/public/pong_icon.png" type="image/x-icon">
+  <link rel="shortcut icon" href="/images/pong_icon.png" type="image/x-icon">
 
   <!-- Bootstrap -->
   <link rel="stylesheet" href="/bootstrap-5.3.2-dist/css/bootstrap.min.css">
@@ -38,9 +38,11 @@
     <div class="d-flex flex-wrap justify-content-between align-items-center p-5">
       <h1 class="game-header display-1 fw-bold m-0"></h1>
       <h1 class="game-mode fw-bold m-0"></h1>
-      <a class="btn btn-lg fw-bold" href="/home/">Back</a>
+      <button class="game-exit btn btn-lg fw-bold" href="/home/">Exit</button>
     </div>
     <main class="container-fluid my-5">
+      <div class="pong-players d-flex flex-wrap justify-content-around align-items-center">
+      </div>
       <div class="d-flex justify-content-center align-items-center">
         <canvas id="canvas-pong"></canvas>
       </div>
@@ -51,10 +53,10 @@
   <!-- HOME PAGE -->
   <template id="home-template">
     <my-navbar></my-navbar>
-    <main class="container-fluid d-flex flex-column gap-5 my-5">
-      <section class="d-flex flex-wrap justify-content-center align-items-center gap-5 w-100" id="playing">
-        <play-card game="PG"></play-card>
-        <play-card game="TTT"></play-card>
+    <main class="container-fluid d-flex flex-column justify-content-center gap-5 my-5">
+      <section class="d-flex flex-wrap justify-content-center align-items-center gap-5 w-100">
+        <play-card game="PG" wallpaper="/images/pong.jpg"></play-card>
+        <play-card game="TTT" wallpaper="/images/TicTacToe.jpeg"></play-card>
       </section>
     </main>
     <my-footer></my-footer>
@@ -62,9 +64,16 @@
 
   <!-- LOGIN PAGE -->
   <template id="login-template">
-    <div class="d-flex flex-column justify-content-center align-items-center gap-3 pt-5">
-      <img class="w-75" src="/public/pong.svg" alt="logo" referrerpolicy="no-referrer">
-      <h1 class="display-1 text-center fw-bold m-0">PING PONG</h1>
+    <div></div>
+    <div class="d-flex flex-wrap justify-content-center align-items-center gap-5 pt-5">
+      <div class="d-flex flex-column justify-content-center align-items-center gap-3">
+        <img class="w-75" src="/images/pong.svg" alt="logo" referrerpolicy="no-referrer">
+        <h1 class="display-1 text-center fw-bold m-0">PING PONG</h1>
+      </div>
+      <div class="d-flex flex-column justify-content-center align-items-center gap-3">
+        <img class="w-75" src="/images/tictactoe.svg" alt="logo" referrerpolicy="no-referrer">
+        <h1 class="display-1 text-center fw-bold m-0">TIC TAC TOE</h1>
+      </div>
     </div>
     <div class="d-flex flex-column justify-content-center align-items-center gap-3">
       <login-button color="success" link="https://localhost/authentication/intra/" text="Intra 42"></login-button>
@@ -73,11 +82,11 @@
     <my-footer></my-footer>
   </template>
 
-  <!-- 2FA PAGE -->
+  <!-- TWOFA PAGE -->
   <template id="twofa-template">
     <div></div>
-    <div class="d-flex flex-column justify-content-center align-items-center w-100 h-100">
-      <h1 class="fw-bold text-center text-black-50">TWO FACTOR AUTHENTICATION</h1>
+    <div class="d-flex flex-column justify-content-center align-items-center w-100 h-100 gap-5">
+      <h1 class="text-center fw-bold p-5 rounded-5">TWO FACTOR AUTHENTICATION</h1>
       <twofa-input></twofa-input>
     </div>
     <my-footer></my-footer>
@@ -97,39 +106,37 @@
   <template id="profile-template">
     <my-navbar></my-navbar>
     <main class="container-fluid d-flex flex-column justify-content-center gap-5 my-5">
-      <div class="player-data d-flex justify-content-around align-items-center flex-wrap gap-2 p-3 rounded-5">
+      <div class="player-data d-flex justify-content-around align-items-center flex-wrap gap-1 p-3 rounded-5">
         <div class="data-section d-flex flex-column justify-content-center align-items-center gap-2 p-2 rounded-5">
           <img class="avatar border border-1 border-white rounded-4" alt="avatar" referrerpolicy="no-referrer">
-          <h4 class="username align-self-stretch text-center m-0 p-2 rounded-top-5"></h4>
-          <h1 class="text-center m-0 p-3 rounded-bottom-5" id="full-name">
+          <h4 class="username align-self-stretch text-center m-0 p-2 rounded-5"></h4>
+          <h1 class="text-center fw-bold m-0 p-3 rounded-5" id="full-name">
             <span class="first-name"></span>
             <span class="last-name"></span>
           </h1>
         </div>
-        <div class="data-section d-flex flex-column gap-2 p-2 rounded-5">
-          <div class="d-flex justify-content-center align-items-center rounded-top-5">
-            <h2 class="m-0 p-3">Wins :</h2>
-            <h2 class="m-0 p-3">10</h2>
+        <div class="data-section d-flex flex-wrap justify-content-center gap-2 p-2 rounded-5">
+          <div class="d-flex flex-column justify-content-center rounded-5 p-2">
+            <h2 class="m-0 p-3 fw-bold">Champions</h2>
+            <h2 class="champions m-0 p-3 text-center fw-bold rounded-5"></h2>
           </div>
-          <div class="d-flex justify-content-center align-items-center rounded-bottom-5">
-            <h2 class="m-0 p-3">Losses :</h2>
-            <h2 class="m-0 p-3">10</h2>
+          <div class="d-flex flex-column justify-content-center rounded-5 p-2">
+            <h2 class="m-0 p-3 fw-bold">Wins</h2>
+            <h2 class="wins m-0 p-3 text-center fw-bold rounded-5"></h2>
+          </div>
+          <div class="d-flex flex-column justify-content-center rounded-5 p-2">
+            <h2 class="m-0 p-3 fw-bold">Losses</h2>
+            <h2 class="losses m-0 p-3 text-center fw-bold rounded-5"></h2>
           </div>
         </div>
       </div>
-      <div class="player-data-related d-flex flex-column justify-content-around gap-2 p-3 rounded-5">
+      <div class="player-data-related d-flex flex-column justify-content-around gap-5 p-3 rounded-5">
         <div class="match-history d-flex flex-column justify-content-center gap-2 p-3 rounded-5 flex-grow-1">
-          <h2 class="text-center m-0 px-3 py-1 rounded-5">Match History</h2>
-          <div class="match-cards d-flex flex-column justify-content-center gap-1">
-            <match-card></match-card>
-            <match-card></match-card>
-            <match-card></match-card>
-            <match-card></match-card>
-            <match-card></match-card>
-          </div>
+          <h2 class="text-center fw-bold m-0 px-3 py-1 rounded-5">Match History</h2>
+          <match-history></match-history>
         </div>
         <div class="friend-list d-flex flex-column justify-content-center gap-2 p-3 rounded-5 flex-grow-1">
-          <h2 class="text-center m-0 px-3 py-1 rounded-5">My Friends</h2>
+          <h2 class="text-center fw-bold m-0 px-3 py-1 rounded-5">My Friends</h2>
           <friends-list></friends-list>
         </div>
       </div>
@@ -140,43 +147,43 @@
   <!-- SETTING PAGE -->
   <template id="setting-template">
     <my-navbar></my-navbar>
-    <main class="container-fluid d-flex flex-column justify-content-center gap-5 my-5 p-5">
-      <h1 class="setting-header p-5 rounded-5 text-center display-1 fw-bold">
+    <main class="container-fluid d-flex flex-column justify-content-center gap-5 my-5">
+      <h1 class="setting-header py-5 rounded-5 text-center display-1 fw-bold">
         SETTINGS
       </h1>
-      <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-3 rounded-5">
-        <h2 class="text-center m-0 px-4 py-2">Change avatar</h2>
+      <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-2 rounded-5">
+        <h2 class="text-center fw-bold m-0 px-4 py-2">Change avatar</h2>
         <div class="setting-avatar d-flex justify-content-center align-items-center gap-1">
           <img class="avatar rounded-5 border border-1 border-white" alt="avatar" referrerpolicy="no-referrer">
           <input type="file" id="input-avatar" accept="image/jpeg, image/png, image/jpg">
           <label class="change-avatar d-flex justify-content-center align-items-center rounded-5 border border-1 border-white" for="input-avatar">
-            <img src="/public/image-edit.svg" alt="image edit" referrerpolicy="no-referrer">
+            <img src="/images/image-edit.svg" alt="image edit" referrerpolicy="no-referrer">
           </label>
         </div>
       </div>
-      <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-3 rounded-5">
-        <h2 class="text-center m-0 px-4 py-2">Change Username</h2>
-        <div class="setting-username d-flex justify-content-center gap-1">
-          <input type="text" class="input-username border rounded-4 px-3 py-3 fs-5">
-          <button class="button-username btn rounded-4">Submit</button>
+      <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-2 rounded-5">
+        <h2 class="text-center fw-bold m-0 px-3 py-2">Change Username</h2>
+        <div class="setting-username d-flex flex-wrap justify-content-center align-items-center gap-1">
+          <input type="text" class="input-username rounded-5 p-3 fs-5">
+          <button class="btn button-username rounded-5 p-3">Submit</button>
         </div>
       </div>
-      <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-3 rounded-5">
-        <h2 class="text-center m-0 px-4 py-2">Change First Name</h2>
-        <div class="setting-first-name d-flex justify-content-center gap-1">
-          <input type="text" class="input-first-name border rounded-4 px-3 py-3 fs-5">
-          <button class="button-first-name btn rounded-4">Submit</button>
+      <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-2 rounded-5">
+        <h2 class="text-center fw-bold m-0 px-3 py-2">Change First Name</h2>
+        <div class="setting-first-name d-flex flex-wrap justify-content-center align-items-center gap-1">
+          <input type="text" class="input-first-name rounded-5 p-3 fs-5">
+          <button class="btn button-first-name rounded-5 p-3">Submit</button>
         </div>
       </div>
-      <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-3 rounded-5">
-        <h2 class="text-center m-0 px-4 py-2">Change Last Name</h2>
-        <div class="setting-last-name d-flex justify-content-center gap-1">
-          <input type="text" class="input-last-name border rounded-4 px-3 py-3 fs-5">
-          <button class="button-last-name btn rounded-4">Submit</button>
+      <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-2 rounded-5">
+        <h2 class="text-center fw-bold m-0 px-3 py-2">Change Last Name</h2>
+        <div class="setting-last-name d-flex flex-wrap justify-content-center align-items-center gap-1">
+          <input type="text" class="input-last-name rounded-5 p-3 fs-5">
+          <button class="btn button-last-name rounded-5 p-3">Submit</button>
         </div>
       </div>
-      <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-3 rounded-5">
-        <h2 class="text-center m-0 px-4 py-2">Two Factor Authentication</h2>
+      <div class="setting-data d-flex flex-wrap justify-content-around align-items-center gap-2 p-2 rounded-5">
+        <h2 class="text-center fw-bold m-0 px-3 py-2">Two Factor Authentication</h2>
         <div class="setting-twofa p-2 rounded-5">
           <label class="switch">
             <input type="checkbox">
@@ -184,7 +191,7 @@
           </label>
           <div class="popup-twofa flex-column justify-content-center align-items-center">
             <div class="d-flex flex-column justify-content-center align-items-center rounded-5 gap-5 p-5">
-              <button class="popup-twofa-close btn-close align-self-end"></button>
+              <button class="popup-twofa-close btn-close btn-close-white align-self-end"></button>
               <div class="popup-twofa-qrcode d-flex justify-content-center align-items-center"></div>
               <div class="d-flex justify-content-center align-items-center">
                 <twofa-input></twofa-input>
@@ -202,17 +209,17 @@
     <my-navbar></my-navbar>
     <main class="container-fluid d-flex flex-column justify-content-around align-items-stretch gap-3 my-5">
       <section class="tournament-actions d-none flex-column justify-content-center align-items-center py-5 px-4 rounded-5 gap-5">
-        <div class="tournament-create d-flex flex-column justify-content-center align-items-center p-4 rounded-5 gap-4">
-          <h1 class="text-center m-0">CREATE A TOURNAMENT</h1>
+        <div class="tournament-create d-flex flex-column justify-content-center p-4 rounded-5 gap-4">
+          <h1 class="text-center fw-bold m-0">CREATE A TOURNAMENT</h1>
           <button class="btn btn-lg fw-bold">CREATE</button>
         </div>
         <div class="tournament-join d-flex flex-column justify-content-center align-items-center p-4 rounded-5 gap-4">
-          <h1 class="text-center m-0">JOIN A TOURNAMENT</h1>
+          <h1 class="text-center fw-bold m-0">JOIN A TOURNAMENT</h1>
           <div class="tournament-list d-flex flex-wrap justify-content-center align-items-center gap-1"></div>
         </div>
       </section>
       <section class="tournament-current d-none flex-column p-5 rounded-5">
-        <h1 class="text-center rounded-5 py-5 mb-5">CURRENT TOURNAMENT</h1>
+        <h1 class="text-center fw-bold rounded-5 py-5 mb-5">CURRENT TOURNAMENT</h1>
         <tournament-players></tournament-players>
         <tournament-matches></tournament-matches>
       </section>
@@ -222,12 +229,20 @@
 
   <!--------------------------- COMPONENTS --------------------------->
 
+  <!-- STARS -->
+  <template id="stars-overlay">
+    <div id="stars1"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>
+    <div id="stars4"></div>
+  </template>
+
   <!-- LOGIN BUTTON -->
   <template id="login-button">
     <a class="btn btn-lg border border-5 rounded-5 fw-bold fs-1 text-light"></a>
   </template>
 
-  <!-- 2FA BUTTON -->
+  <!-- TWOFA INPUT -->
   <template id="twofa-input">
     <input type="number">
     <button class="btn btn-lg p-2 rounded-4">SEND</button>
@@ -261,17 +276,27 @@
 
   <!-- FOOTER -->
   <template id="my-footer">
-    <footer class="text-center p-5 fs-4">2024 / At 1337 &copy; done by | zakaria wina | <span class="display-1">taha naceur</span> | mustapha idfath | houssam haddouch | youness chaaibi</footer>
+    <footer class="d-flex flex-wrap p-5">
+      <h5>&copy 2024 At 1337, Made with love by:</h5>
+      <ul class="d-flex flex-wrap ps-4 m-0 gap-4">
+        <li class="fs-6">youness chaaibi <a href="https://github.com/ychaaibi" target="_blank">ychaaibi</a></li>
+        <li class="fs-6">zakaria wina <a href="https://github.com/zwzone" target="_blank">zwzone</a></li>
+        <li class="fs-6">taha naceur <a href="https://github.com/tnaceur" target="_blank">tnaceur</a></li>
+        <li class="fs-6">mustapha idfath <a href="https://github.com/reogine" target="_blank">reogine</a></li>
+        <li class="fs-6">houssam haddouch <a href="https://github.com/GowthertG" target="_blank">GowthertG</a></li>
+      </ul>
+    </footer>
   </template>
 
   <!-- PLAY CARD -->
   <template id="play-card">
-    <h1 class="text-center fw-bold m-0 display-1"></h1>
-    <div class="d-flex flex-column justify-content-center align-items-center gap-1">
-      <a class="play-two btn btn-lg fw-bold">Play Online &#40;2 Players&#41;</a>
-      <a class="play-four btn btn-lg fw-bold">Play Online &#40;4 Players&#41;</a>
-      <a class="play-ai btn btn-lg fw-bold">Play With AI</a>
-      <a class="play-coop btn btn-lg fw-bold">Play CO-OP</a>
+    <img class="rounded-top-5" alt="wallpaper">
+    <h1 class="text-center fw-bold display-1 mx-1 my-0"></h1>
+    <div class="d-flex flex-column justify-content-center gap-1 mx-1">
+      <a class="play-two btn btn-lg fw-bold rounded-5">Play Online &#40;2 Players&#41;</a>
+      <a class="play-four btn btn-lg fw-bold rounded-5">Play Online &#40;4 Players&#41;</a>
+      <a class="play-ai btn btn-lg fw-bold rounded-5">Play With AI</a>
+      <a class="play-coop btn btn-lg fw-bold rounded-5">Play CO-OP</a>
     </div>
   </template>
 
@@ -280,16 +305,16 @@
     <nav class="friends-tabs">
       <ul class="d-flex justify-content-center align-items-center flex-wrap p-0 m-0 gap-1">
         <li>
-          <button class="btn friends-btn">Friends</button>
+          <button class="btn btn-lg fw-bold friends-btn active">Friends</button>
         </li>
         <li>
-          <button class="btn requests-btn">Requests</button>
+          <button class="btn btn-lg fw-bold requests-btn">Requests</button>
         </li>
         <li>
-          <button class="btn invites-btn">Invites</button>
+          <button class="btn btn-lg fw-bold invites-btn">Invites</button>
         </li>
         <li>
-          <button class="btn search-btn">Search</button>
+          <button class="btn btn-lg fw-bold search-btn">Search</button>
         </li>
       </ul>
     </nav>
@@ -299,14 +324,15 @@
   <!-- SEARCH LIST -->
   <template id="search-list">
     <div class="d-flex flex-wrap justify-content-center align-items-center p-0 m-0 gap-1">
-      <input class="search-input" type="text">
-      <button class="search-btn btn btn-lg fw-bold">SEARCH</button>
+      <input class="search-input px-2 py-1 rounded-3" type="text">
+      <button class="search-btn btn fw-bold rounded-5">SEARCH</button>
     </div>
-    <div class="search-results d-flex flex-wrap gap-1"></div>
+    <div class="search-results d-flex flex-wrap text-center gap-1"></div>
   </template>
 
   <!-- FRIEND CARD -->
   <template id="friend-card">
+    <div class="status"></div>
     <img class="avatar rounded-4 border border-1 border-white" alt="avatar" referrerpolicy="no-referrer">
     <h6 class="text-center m-0"></h6>
   </template>
@@ -314,11 +340,11 @@
   <!-- FRIEND CARD POPUP -->
   <template id="friend-card-popup">
     <div class="d-flex flex-column justify-content-center align-items-center rounded-5 gap-5 p-5">
-      <button class="popup-close btn-close align-self-end"></button>
+      <button class="popup-close btn-close btn-close-white align-self-end"></button>
       <h1 class="popup-header"></h1>
       <img class="avatar border border-1 border-white rounded-4" alt="avatar" referrerpolicy="no-referrer">
-      <h2>zwina</h2>
-      <h1>ZAKARIA WINA</h1>
+      <h2 class="username"></h2>
+      <h1><span class="first-name"></span> <span class="last-name"></span></h1>
       <div class="buttons">
         <button class="green-button btn btn-success btn-lg fw-bold"></button>
         <button class="red-button btn btn-danger btn-lg fw-bold"></button>
@@ -326,13 +352,22 @@
     </div>
   </template>
 
+  <!-- PLAYER CARD -->
+  <template id="player-card">
+    <div class="d-flex flex-column justify-content-center align-items-center m-0 p-2 gap-1 rounded-4">
+      <img class="avatar border border-1 border-white rounded-4" alt="avatar" referrerpolicy="no-referrer">
+      <h6 class="username text-center m-0 rounded-4 fw-bold">ana</h6>
+    </div>
+    <h3 class="score fw-bold text-center m-0 p-1 rounded-bottom-4">10</h3>
+    </div>
+  </template>
+
   <!-- MATCH CARD -->
   <template id="match-card">
-    <h6 class="text-center m-0">Wina</h6>
-    <h6 class="text-center m-0">10</h6>
-    <h6 class="text-center m-0">vs</h6>
-    <h6 class="text-center m-0">5</h6>
-    <h6 class="text-center m-0">Zakaria</h6>
+  </template>
+
+  <!-- MATCH HISTORY -->
+  <template id="match-history">
   </template>
 
   <!-- TOURNAMENT CARD -->
@@ -343,9 +378,11 @@
 
   <!-- TOURNAMENT PLAYERS -->
   <template id="tournament-players">
-    <section class="tournament-players-list d-flex flex-wrap gap-1"></section>
-    <button class="start btn">START</button>
-    <button class="leave btn">LEAVE</button>
+    <section class="tournament-players-list d-flex flex-wrap align-self-stretch gap-1"></section>
+    <div class="d-flex flex-wrap justify-content-center align-items-center gap-1">
+      <button class="start btn d-none">START</button>
+      <button class="leave btn">LEAVE</button>
+    </div>
   </template>
 
   <!-- TOURNAMENT MATCHES -->
@@ -368,24 +405,24 @@
   <!-- TOURNAMENT POPUP -->
   <template id="tournament-popup">
     <div class="d-flex flex-column justify-content-center align-items-center rounded-5 gap-5 p-5">
-      <button class="popup-close btn-close align-self-end"></button>
+      <button class="popup-close btn-close btn-close-white align-self-end"></button>
       <h1 class="popup-header fw-bold"></h1>
-      <div class="alias-name">
+      <div class="alias-name d-flex flex-column justify-content-center align-items-center">
         <h4>Your alias name</h4>
-        <input type="text" class="popup-input">
+        <input type="text" class="popup-input rounded-5 px-2" required>
       </div>
-      <div class="tournament-name">
+      <div class="tournament-name d-flex flex-column justify-content-center align-items-center">
         <h4>Name of tournament</h4>
-        <input type="text" class="popup-input">
+        <input type="text" class="popup-input rounded-5 px-2" required>
       </div>
-      <h2 class="popup-tournament-name"></h2>
-      <button class="popup-btn btn btn-primary"></button>
+      <h2 class="popup-tournament-name p-3 rounded-5"></h2>
+      <button class="popup-btn btn"></button>
     </div>
   </template>
 
   <!-- TOURNAMENT MATCH CARD -->
   <template id="tournament-match-card">
-    <div class="d-flex justify-content-center align-items-center flex-wrap">
+    <div class="d-flex justify-content-center align-items-center flex-wrap gap-3">
       <tournament-player-card class="player1"></tournament-player-card>
       <tournament-player-card class="player2"></tournament-player-card>
     </div>

@@ -1,0 +1,4 @@
+twofa-page h1 {
+  background-color: var(--color-primary);
+  color: var(--color-font-white);
+}

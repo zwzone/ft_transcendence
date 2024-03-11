@@ -26,7 +26,7 @@ class Player(AbstractBaseUser):
     wins = models.IntegerField(blank=False, null=False, default=0)
     losses = models.IntegerField(blank=False, null=False, default=0)
     two_factor = models.BooleanField(default=False)
-    status = models.CharField(max_length=2, choices=STATUS_CHOICES, default=Status.ONLINE.value)
+    status = models.CharField(max_length=2, choices=STATUS_CHOICES, default=Status.OFFLINE.value)
 
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
@@ -45,6 +45,7 @@ class Friendship(models.Model):
         (Status.PENDING.value, 'PENDING'),
     ]
 
+    id = models.AutoField(primary_key=True)
     sender = models.ForeignKey('Player', on_delete=models.CASCADE, related_name='sent_friend_requests')
     receiver = models.ForeignKey('Player', on_delete=models.CASCADE, related_name='received_friend_requests')
     status = models.CharField(max_length=2, choices=STATUS_CHOICES, default=Status.PENDING.value)
