@@ -3,28 +3,36 @@ import                                      json
 from    .src.Match                  import  Match
 import                                      random
 
-Matches = {}
+Matches         = {}
 
 waiting         = -1
 waiting_room    = 0
 mmatch          = None
 players         = set()
 
-match_id = 0
-
 class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
+
+#-------------------------------------Receive------------------------------------#
+
     async def   connect( self ):
-        self.__id               = self.scope["url_route"]["kwargs"]["player_id"]
+        self.__id               = self.scope["payload"]["id"]
         self.__room_id          = ""
 
         global waiting, waiting_room, mmatch, Matches
+
         await self.accept()
 
+        print( self.__id, flush=True)
+        print(self.__id in players, flush=True)
+
         if  self.__id in players:
-            #serve already in match
-            print("player is already in", flush=True)
-            pass
+            self.send( json.dumps({
+                "type"  : "ALREADY",
+            }))
+            self.close()
         
+
+        players.add( self.__id )
 
         if waiting == -1:
             waiting_room    += 1
@@ -40,10 +48,13 @@ class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
             return
         
         mmatch.add_player( self.__id )
+
         self.__room_id              = str(waiting_room)
         Matches[ self.__room_id ]   = mmatch
-        print( Matches, flush=True )
+        # Create match in database
+        
         mmatch                      = None
+        waiting                     = -1
 
         await self.channel_layer.group_add(
             self.__room_id,
@@ -56,10 +67,12 @@ class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
               }
         )
 
+#-------------------------------------Disconnect------------------------------------#
+
     async def   disconnect( self, code ):
         players.remove( self.__id )
 
-        Matches[ self.__room_id ].remove_player()
+        Matches[ self.__room_id ].remove_player( self.__id )
 
         await self.channel_layer.group_discard(
             self.__room_id,
@@ -78,6 +91,9 @@ class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
 
         #save db
         #remove from Matches
+
+#-------------------------------------Receive------------------------------------#
+
 
     async def receive( self, text_data=None ):
 
