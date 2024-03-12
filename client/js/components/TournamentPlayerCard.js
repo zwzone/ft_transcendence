@@ -18,11 +18,11 @@ export default class TournamentPlayerCard extends HTMLElement {
     );
 
     const avatar = this.querySelector(".avatar");
-    const tournament_name = this.querySelector(".tournament-name");
+    const tournament_name = this.querySelector(".alias-name");
     const score = this.querySelector(".score");
 
     const avatar_att = this.getAttribute("avatar");
-    const tournament_name_att = this.getAttribute("tournament-name");
+    const tournament_name_att = this.getAttribute("alias-name");
     const status = this.getAttribute("status");
 
     if (avatar_att) avatar.src = avatar_att;

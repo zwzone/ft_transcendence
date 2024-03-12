@@ -16,15 +16,15 @@ my-navbar {
   color: var(--color-font-white) !important;
 }
 
-li .logout {
-  background-color: orangered;
-  color: var(--color-font-white);
+li .logout.btn {
+  background-color: red !important;
+  color: var(--color-font-white) !important;
 }
 
-li .logout:hover,
-li .logout:active {
-  background-color: red;
-  color: var(--color-font-white);
+li .logout.btn:hover,
+li .logout.btn:active {
+  background-color: var(--color-font-white) !important;
+  color: red !important;
 }
 
 .hamburger {

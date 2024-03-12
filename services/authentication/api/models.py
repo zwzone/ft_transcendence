@@ -20,7 +20,7 @@ class Player(AbstractBaseUser):
     username = models.CharField(max_length=20, blank=False, null=False, unique=False)
     first_name = models.CharField(max_length=20, blank=False, null=False)
     last_name = models.CharField(max_length=20, blank=False, null=False)
-    tournament_name = models.CharField(max_length=20, blank=False, null=True)
+    alias_name = models.CharField(max_length=20, blank=False, null=True)
     avatar = models.URLField(blank=False, null=False)
     champions = models.IntegerField(blank=False, null=False, default=0)
     wins = models.IntegerField(blank=False, null=False, default=0)

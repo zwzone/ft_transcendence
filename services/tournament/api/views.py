@@ -97,7 +97,7 @@ class TournamentView(APIView):
             tournament = Tournament.objects.create(name=name)
             PlayerTournament.objects.create(player_id=player, tournament_id=tournament, creator=True)
             serializer = TournamentSerializer(tournament)
-            player.tournament_name = alias
+            player.alias_name = alias
             player.save()
             return Response({"status": 201, "current_tournament": serializer.get_players(tournament)}, status=201)
         try:
@@ -111,7 +111,7 @@ class TournamentView(APIView):
             if tournament.status == 'PN' and serializer.get_players_count(tournament) < COMPETITORS:
                 if serializer.is_player_in_tournament(player):
                     return Response({"status": 400, "message": "Already in a Tournament"})
-                player.tournament_name = alias
+                player.alias_name = alias
                 player.save()
                 PlayerTournament.objects.create(player_id=player, tournament_id=tournament)
                 return Response({"status": 200, "message": "Successfully joined tournament"})
