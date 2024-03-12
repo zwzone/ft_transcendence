@@ -4,6 +4,7 @@ import { wsFour } from "./pongFour.js";
 
 const routes = {
   "/game/": "game-page",
+  "/tictactoe/": "tictactoe-page",
   "/home/": "home-page",
   "/login/": "login-page",
   "/twofa/": "twofa-page",
@@ -33,6 +34,7 @@ const router = {
       } else if (message === "Twofa") {
         if (
           pathname == "/game/" ||
+          pathname == "/tictactoe/" ||
           pathname == "/home/" ||
           pathname == "/login/" ||
           pathname == "/profile/" ||
@@ -43,6 +45,7 @@ const router = {
       } else if (message === "Invalid") {
         if (
           pathname == "/game/" ||
+          pathname == "/tictactoe/" ||
           pathname == "/home/" ||
           pathname == "/twofa/" ||
           pathname == "/profile/" ||

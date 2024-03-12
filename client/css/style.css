@@ -24,6 +24,7 @@
 
 /* Pages */
 @import "./pages/GamePage.css";
+@import "./pages/Tictactoe.css";
 @import "./pages/HomePage.css";
 @import "./pages/LoginPage.css";
 @import "./pages/NotfoundPage.css";
