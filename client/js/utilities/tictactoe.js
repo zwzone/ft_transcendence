@@ -1,4 +1,4 @@
-__render  = {
+let __render  = {
     render_board    : function() {
 
         function convert(digit)
@@ -155,7 +155,7 @@ class Match
         let spot        = document.getElementById( move.move );
 
         spot.classList.add( __game.choice( move.player ) );
-        spot.innerHTML  = __game.choice( move.player ).toUpperCase();
+        spot.innerHTML  = "<span>" + __game.choice( move.player ).toUpperCase() + "</span>"
         spot.removeEventListener( "click", __move_events.__move );
 
         __game.switch_turn();
@@ -174,11 +174,11 @@ class Match
         {
             case "x":
                 sub_board.className = "sub-board filled";
-                sub_board.innerHTML = "<div class=\"spot-fill-x\">X</div>";
+                sub_board.innerHTML = "<div class=\"spot-fill-x\"><span>X</span></div>";
                 break ;
             case "o":
                 sub_board.className = "sub-board filled";
-                sub_board.innerHTML = "<div class=\"spot-fill-o\">O</div>";
+                sub_board.innerHTML = "<div class=\"spot-fill-o\"><span>O</span></div>";
                 break ;
         }
     
@@ -347,7 +347,7 @@ function    render_board()
     }
 }
 
-function    TicTacToe()
+export default function    TicTacToe()
 {
     render_board();
     // setTimeout(() => {
@@ -355,44 +355,40 @@ function    TicTacToe()
     // }, 1000);
     // lunch_events();
     // Lunch controls events
-};
 
-// Tic Tac Toe
-TicTacToe();
-
-let choices=document.getElementsByClassName("id");
-
-for ( let i=0; i<choices.length; i++ )
-{
-    choices[i].addEventListener( "click", (e)=>{
-        __socket            = new WebSocket( "ws://localhost:8000/ws/tictactoe/play/1/" + e.target.getAttribute("val"));
-
-        __socket.onopen     = (event)=> {
-            console.log("hello");
-        }
-        
-        __socket.onmessage  = (event)=> {
-            let data = JSON.parse(event.data);
-            
-            console.log( data );
-            
-            switch ( data["type"] )
-            {
-                case "start":
-                    __game.init_game( data );
-                    return ;
-                case "abort":
-                    alert("Game was aborted");
-                    // redirect home
-                    return ;
-                case "invalid":
-                    alert("Game is alreadyu")
-            }
-
-            __game.simulate_match( new Move( data["move"], data["player"] ) );
-        
-            __game.simulate_status( data );
-        }
-    })
+    let choices=document.getElementsByClassName("id");
     
-}
+    for ( let i=0; i<choices.length; i++ )
+    {
+        choices[i].addEventListener( "click", (e)=>{
+            __socket            = new WebSocket( "wss://localhost/ws/tictactoe/1/" + e.target.getAttribute("val") + "/");
+    
+            __socket.onopen     = (event)=> {
+                console.log("hello");
+            }
+            
+            __socket.onmessage  = (event)=> {
+                let data = JSON.parse(event.data);
+                
+                console.log( data );
+                
+                switch ( data["type"] )
+                {
+                    case "start":
+                        __game.init_game( data );
+                        return ;
+                    case "abort":
+                        alert("Game was aborted");
+                        // redirect home
+                        return ;
+                    case "invalid":
+                        alert("Game is alreadyu")
+                }
+    
+                __game.simulate_match( new Move( data["move"], data["player"] ) );
+            
+                __game.simulate_status( data );
+            }
+        })
+    }
+};

@@ -27,24 +27,27 @@ export default class PlayCard extends HTMLElement {
     const wallpaper = this.getAttribute("wallpaper");
 
     this.querySelector("img").src = wallpaper;
+    let gameRoute;
     if (game === "PG") {
+      gameRoute = "/game/";
       head.textContent = "PING PONG";
       play_ai_elem.style.display = "none";
     } else if (game === "TTT") {
+      gameRoute = "/tictactoe/";
       head.textContent = "TIC TAC TOE";
       play_four_elem.style.display = "none";
     }
     play_two_elem.addEventListener("click", () => {
-      router.go("/game/", `?game=${game}&mode=two`, "add");
+      router.go(gameRoute, `?game=${game}&mode=two`, "add");
     });
     play_four_elem.addEventListener("click", () => {
-      router.go("/game/", `?game=${game}&mode=four`, "add");
+      router.go(gameRoute, `?game=${game}&mode=four`, "add");
     });
     play_ai_elem.addEventListener("click", () => {
-      router.go("/game/", `?game=${game}&mode=ai`, "add");
+      router.go(gameRoute, `?game=${game}&mode=ai`, "add");
     });
     play_coop_elem.addEventListener("click", () => {
-      router.go("/game/", `?game=${game}&mode=coop`, "add");
+      router.go(gameRoute, `?game=${game}&mode=coop`, "add");
     });
   }
 }

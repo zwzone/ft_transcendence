@@ -24,6 +24,7 @@ import TournamentPlayerCard from "./js/components/TournamentPlayerCard.js";
 
 // Pages
 import GamePage from "./js/pages/GamePage.js";
+import Tictactoe from "./js/pages/TictactoePage.js";
 import HomePage from "./js/pages/HomePage.js";
 import LoginPage from "./js/pages/LoginPage.js";
 import TwofaPage from "./js/pages/TwofaPage.js";

@@ -7,24 +7,17 @@
     box-sizing: border-box;
     text-align: center;
 
+}
+
+tictactoe-page
+{
     font-family: "Gluten", cursive;
     font-optical-sizing: auto;
     font-weight: 500;
     font-style: normal;
     font-size: 2vw;
-}
 
-body
-{
-    /* height:100%; */
-    width:100%;
-    /* border: 3px solid blue; */
     height: 100vh;
-}
-
-#ttt-game-page
-{
-    height: 100%;
     width: 100%;
     /* border: 7px solid green; */
     display: flex;
@@ -330,7 +323,7 @@ body
     background-color: rgba(248,236,144, 0.045);
     /* background-color: rgba(248,236,144, 0.1); */
     /* border: 1px solid rgba(248,236,144, 0.25);  */
-    padding: 0.15em 0.15em;
+    /* padding: 0.15em 0.15em; */
     /* padding: 1px 1px; */
     border-radius: 0.2em;
     /* margin: auto; */
@@ -342,9 +335,14 @@ body
     border-right: 1px solid rgba(248,236,144, 0.1);
     display: flex;
     justify-content: center;
+    align-items: center;
+    /* text-align: top; */
     font-size: 1.5em;
+    padding-top:10px;
+    margin: auto;
     cursor: pointer;
     /* justify-content: center; */
+    /* font-family: sans-serif; */
     
     /* box-shadow: 1px 1px 2px 1px rgba(248,236,144, 0.2); */
     /* transform: rotate3d(-1,0,0,3deg); */
@@ -649,6 +647,11 @@ body
     font-size: 13vw;
     padding: 5px 5px;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 30%;
+
     /* border: 1px solid green; */
     color: rgba(248,236,144, 1);
     text-shadow: rgba(248,236,144, 0.5) 1px 1px 50px;
@@ -664,6 +667,10 @@ body
     font-size: 6em;
     padding: 5px 5px;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 50px;
     /* border: 1px solid green; */
     color: rgb(44,172,255);
     text-shadow: rgba(44,172,255, 0.5) 1px 1px 50px;
