@@ -7,9 +7,18 @@
 }
 
 :root {
-  --color-primary: #f8ec9030;
-  --color-primary-solid: #2e2c1d;
-  --color-primary-light: #f8ec90;
+  --color-yellow: #f8ec9030;
+  --color-yellow-solid: #2e2c1d;
+  --color-yellow-light: #f8ec90;
+
+  --color-blue: #2cacff30;
+  --color-blue-solid: #2e2c1d;
+  --color-blue-light: #2cacff;
+
+  --color-primary: var(--color-yellow);
+  --color-primary-solid: var(--color-yellow-solid);
+  --color-primary-light: var(--color-yellow-light);
+
   --color-font-white: #fffbeb;
   --color-font-grey: #495579;
   --color-font-black: #1a1a1a;

@@ -9,7 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Favicon -->
-  <link rel="shortcut icon" href="/images/pong_icon.png" type="image/x-icon">
+  <link rel="shortcut icon" href="/images/pong_favicon.png" type="image/x-icon">
 
   <!-- Bootstrap -->
   <link rel="stylesheet" href="/bootstrap-5.3.2-dist/css/bootstrap.min.css">
@@ -172,8 +172,8 @@
     <my-navbar></my-navbar>
     <main class="container-fluid d-flex flex-column justify-content-center gap-5 my-5">
       <section class="d-flex flex-wrap justify-content-center align-items-center gap-5 w-100">
-        <play-card game="PG" wallpaper="/images/pong.jpg"></play-card>
-        <play-card game="TTT" wallpaper="/images/TicTacToe.jpeg"></play-card>
+        <play-card game="PG" wallpaper="/images/pong_glass.svg"></play-card>
+        <play-card game="TTT" wallpaper="/images/tictactoe_glass.svg"></play-card>
       </section>
     </main>
     <my-footer></my-footer>
@@ -376,6 +376,9 @@
     <nav class="nav-bar d-flex justify-content-center align-items-center">
       <ul class="d-flex justify-content-center align-items-center p-0 m-0 gap-1">
         <li>
+          <button class="colorizer btn d-block rounded-5 fs-5 px-4 py-0" href="/tournaments/">c</button>
+        </li>
+        <li>
           <a class="link btn rounded-5 fs-5 px-4 py-0" href="/tournaments/">Tournament</a>
         </li>
         <li>
@@ -407,7 +410,7 @@
 
   <!-- PLAY CARD -->
   <template id="play-card">
-    <img class="rounded-top-5" alt="wallpaper">
+    <img class="rounded-top-5 p-4" alt="wallpaper">
     <h1 class="text-center fw-bold display-1 mx-1 my-0"></h1>
     <div class="d-flex flex-column justify-content-center gap-1 mx-1">
       <a class="play-two btn btn-lg fw-bold rounded-5">Play Online &#40;2 Players&#41;</a>
