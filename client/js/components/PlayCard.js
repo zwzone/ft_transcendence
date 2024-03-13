@@ -36,6 +36,7 @@ export default class PlayCard extends HTMLElement {
       gameRoute = "/tictactoe/";
       head.textContent = "TIC TAC TOE";
       play_four_elem.style.display = "none";
+      play_coop_elem.style.display = "none";
     }
     play_two_elem.addEventListener("click", () => {
       router.go(gameRoute, `?game=${game}&mode=two`, "add");

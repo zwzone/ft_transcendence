@@ -38,6 +38,23 @@ Object.defineProperty(window, "ft_transcendence_host", {
   writable: false,
 });
 
+const color = localStorage.getItem("colorizer");
+
+if (color) console.log("HELOO");
+else console.log("NOOO");
+
+if (!color || color === "#f8ec9030") {
+  localStorage.setItem("colorizer", "#f8ec9030");
+  document.documentElement.style.setProperty("--color-primary", "#f8ec9030");
+  document.documentElement.style.setProperty("--color-primary-solid", "#f8ec90");
+  document.documentElement.style.setProperty("--color-primary-light", "#f8ec90");
+} else if (color === "#2cacff30") {
+  localStorage.setItem("colorizer", "#2cacff30");
+  document.documentElement.style.setProperty("--color-primary", "#2cacff30");
+  document.documentElement.style.setProperty("--color-primary-solid", "#2cacff");
+  document.documentElement.style.setProperty("--color-primary-light", "#2cacff");
+}
+
 window.addEventListener("DOMContentLoaded", () => {
   router.init();
 });

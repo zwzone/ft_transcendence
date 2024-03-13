@@ -33,10 +33,12 @@ export default class Navbar extends HTMLElement {
     colorizer.addEventListener("click", (event) => {
       const color_primary = document.documentElement.style.getPropertyValue("--color-primary");
       if (!color_primary || color_primary === "#f8ec9030") {
+        localStorage.setItem("colorizer", "#2cacff30");
         document.documentElement.style.setProperty("--color-primary", "#2cacff30");
         document.documentElement.style.setProperty("--color-primary-solid", "#2e2c1d");
         document.documentElement.style.setProperty("--color-primary-light", "#2cacff");
       } else if (color_primary === "#2cacff30") {
+        localStorage.setItem("colorizer", "#f8ec9030");
         document.documentElement.style.setProperty("--color-primary", "#f8ec9030");
         document.documentElement.style.setProperty("--color-primary-solid", "#f8ec90");
         document.documentElement.style.setProperty("--color-primary-light", "#f8ec90");
