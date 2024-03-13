@@ -35,13 +35,24 @@ class Match():
         
         response    = {}
         
-        if self.__board.valid_move():
-            response[ "type" ]  = "INVALID"
+
+        if not self.__board.valid_move( move ):
+            response[ "type" ]  = "invalid"
             return response
         
         response            = self.__players[ player_id ].simulate( move )
 
-        if response[ "status" ] != "PLAYING":
+        self.__board.do_move_sub( move, player_id )
+
+        if "sub-win" in response:
+            self.__board.do_move( move, player_id )
+
+        if response[ "status" ] == "WIN":
+            response[ "winner" ] = player_id
+            return response
+        
+        if  response[ "status" ] != "PLAYING" \
+         and response[ "status"] != "SUB-WIN":
             return response
 
         game_end_check = self.__board.game_end_check()
@@ -55,6 +66,8 @@ class Match():
             return response
         
         response[ "winner" ] = game_end_check[ "winner" ]
+        
+        return response
         
         
                         

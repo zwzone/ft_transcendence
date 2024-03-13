@@ -163,32 +163,46 @@ class Match
 
     simulate_status( data )
     {
+        console.log( data );
         let status = data["status"];
-
+        
+        console.log( status );
         if ( status == "PLAYING" )
-            return ;
+            return ( status );
      
-        let sub_board   = document.getElementById( data[ "sub-win" ] );
+        if ( data[ "sub-win" ] != "" )
+        {
+            let sub_board   = document.getElementById( data[ "sub-win" ] );
 
-        switch ( __game.choice( data[ "player" ] ) )
+            switch ( __game.choice( data[ "player" ] ) )
+            {
+                case "x":
+                    sub_board.className = "sub-board filled";
+                    sub_board.innerHTML = "<div class=\"spot-fill-x\"><span>X</span></div>";
+                    break ;
+                case "o":
+                    sub_board.className = "sub-board filled";
+                    sub_board.innerHTML = "<div class=\"spot-fill-o\"><span>O</span></div>";
+                    break ;
+            }
+        }
+        
+        switch ( status )
         {
-            case "x":
-                sub_board.className = "sub-board filled";
-                sub_board.innerHTML = "<div class=\"spot-fill-x\"><span>X</span></div>";
+            case "WIN":
+                setTimeout(() => {
+                    __render.render_result()
+                }, 500);
                 break ;
-            case "o":
-                sub_board.className = "sub-board filled";
-                sub_board.innerHTML = "<div class=\"spot-fill-o\"><span>O</span></div>";
+
+            case "DRAW":
+                setTimeout(() => {
+                    __render.render_result()
+                }, 500);
                 break ;
         }
-    
-        if ( status == "WIN" )
-        {
-            setTimeout(() => {
-                __render.render_result()
-            }, 500);
-            __socket.close();
-        }
+        
+        return ( status );
     }
 }
 
@@ -250,7 +264,7 @@ class Game
 
     simulate_status( data )
     {
-        this.#__room.simulate_status( data );
+        return ( this.#__room.simulate_status( data ) );
     }
 
     destructor() {
@@ -350,45 +364,48 @@ function    render_board()
 export default function    TicTacToe()
 {
     render_board();
-    // setTimeout(() => {
-    //     __render.render_result()
-    // }, 1000);
-    // lunch_events();
-    // Lunch controls events
 
-    let choices=document.getElementsByClassName("id");
+    __socket            = new WebSocket( "wss://localhost/ws/tictactoe/" );
     
-    for ( let i=0; i<choices.length; i++ )
-    {
-        choices[i].addEventListener( "click", (e)=>{
-            __socket            = new WebSocket( "wss://localhost/ws/tictactoe/1/" + e.target.getAttribute("val") + "/");
-    
-            __socket.onopen     = (event)=> {
-                console.log("hello");
-            }
-            
-            __socket.onmessage  = (event)=> {
-                let data = JSON.parse(event.data);
-                
-                console.log( data );
-                
-                switch ( data["type"] )
-                {
-                    case "start":
-                        __game.init_game( data );
-                        return ;
-                    case "abort":
-                        alert("Game was aborted");
-                        // redirect home
-                        return ;
-                    case "invalid":
-                        alert("Game is alreadyu")
-                }
-    
-                __game.simulate_match( new Move( data["move"], data["player"] ) );
-            
-                __game.simulate_status( data );
-            }
-        })
+    __socket.onopen     = (event)=> {
+        console.log("hello");
     }
+            
+    __socket.onmessage  = (event)=> {
+        let data = JSON.parse(event.data);
+        
+        console.log( data );
+        
+        switch ( data["type"] )
+        {
+            case "start":
+                __game.init_game( data );
+                return ;
+            case "abort":
+                alert("Game was aborted");
+                __socket.close();
+                __game.end_game();
+                return ;
+            case "already":
+                alert("Game is already");
+                __socket.close(3001);
+                __game.end_game();
+                return ;
+        }
+    
+        __game.simulate_match ( new Move( data["move"], data["player"] ) );
+        
+        // console.log( __game.simulate_status( data ) );
+        switch ( __game.simulate_status( data ) )
+        {
+            case "PLAYING":
+                return ;
+            case "SUB-WIN":
+                return ;
+
+        }
+        __socket.close();
+        __game.end_game();
+    }
+
 };

@@ -701,35 +701,6 @@ tictactoe-page
     }
 }
 
-.id
-{
-    color: red;
-    background-color:white;
-    border-radius: 5px;
-    width: 40px;
-    height: 40px;
-    z-index: 10;
-    position: absolute;
-    bottom: 0;
-    text-align: center;
-
-    /* top: 20px;; */
-}
-
-.id:nth-child(2){
-    /* bottom: 20; */
-
-}
-#id-2{
-    right:20px;
-
-}
-
-/* .player-img.result
-{
-    font-size: 0.5em;
-} */
-
 #win-star img
 {
     width: 35px;

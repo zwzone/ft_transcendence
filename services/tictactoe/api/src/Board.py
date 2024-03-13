@@ -16,10 +16,10 @@ class StateBoard():
         self.__players.append( player_id )
 
     def valid_move( self, move ):
-        return not self.__all_board[move.row]           \
-                                   [move.column]        \
-                                   [move.sub_board_row] \
-                                   [move.sub_column_row]
+        return not self.__all_board[move.sub_board_row]     \
+                                   [move.sub_board_column]  \
+                                   [move.row]               \
+                                   [move.column]            \
 
     def game_end_check( self ):
         check   = {}
@@ -46,11 +46,13 @@ class StateBoard():
             check[ "winner" ] = self.__players[1]
             check[ "status" ] = "WIN"
         
+        return check
+        
     def do_move_sub( self, move, player_id ):
-        self.__all_board[move.row][move.column][move.sub_board_row][move.sub_column_row] = player_id
+        self.__all_board[move.sub_board_row][move.sub_board_column][move.row][move.column] = player_id
     
     def do_move( self, move, player_id ):
-        self.__sub_board[move.row][move.column] = player_id
+        self.__sub_board[move.sub_board_row][move.sub_board_column] = player_id
     
 
 class Board():
@@ -185,11 +187,8 @@ class Board():
 
 
     def simulate( self, move ):
-        print("Enter here", flush=True)
         self.response = {}
         self.__play( move )
-        # pass
-        print( self.response, flush=True )
         return self.response
 
 # 0000 0001 0002     0100 0101 0102     0200 0201 0202
