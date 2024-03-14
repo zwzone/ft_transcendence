@@ -40,9 +40,6 @@ Object.defineProperty(window, "ft_transcendence_host", {
 
 const color = localStorage.getItem("colorizer");
 
-if (color) console.log("HELOO");
-else console.log("NOOO");
-
 if (!color || color === "#f8ec9030") {
   localStorage.setItem("colorizer", "#f8ec9030");
   document.documentElement.style.setProperty("--color-primary", "#f8ec9030");

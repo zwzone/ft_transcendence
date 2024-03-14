@@ -1,5 +1,4 @@
 from django.core.cache import cache
-from rest_framework.response import Response
 import re
 import jwt
 from django.db import close_old_connections
@@ -8,17 +7,6 @@ from .settings import SECRET_KEY
 from .models import Player
 from channels.db import database_sync_to_async
 
-
-class JWTRevocationMiddleware:
-    def __init__(self, get_response):
-        self.get_response = get_response
-
-    def __call__(self, request):
-        jwt_token = request.COOKIES.get("jwt_token")
-        if jwt_token and cache.get(jwt_token) is not None:
-            return Response({"statusCode": 401, "error": "Token is revoked"})
-        response = self.get_response(request)
-        return response
 
 @database_sync_to_async
 def get_player_by_id(id):
