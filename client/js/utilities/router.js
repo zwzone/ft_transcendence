@@ -1,6 +1,7 @@
 import fetching from "./fetching.js";
 import { wsTwo } from "./pongTwo.js";
 import { wsFour } from "./pongFour.js";
+import { __socket as wsTicTacToe } from "./tictactoe.js";
 
 const routes = {
   "/game/": "game-page",
@@ -16,6 +17,8 @@ const routes = {
 const router = {
   init: () => {
     window.addEventListener("popstate", (event) => {
+      console.log("back");
+      if (wsTicTacToe) wsTicTacToe.close(1000);
       if (wsTwo) wsTwo.close(1000);
       if (wsFour) wsFour.close(1000);
       router.go(event.state.route, event.state.query, "navigation");

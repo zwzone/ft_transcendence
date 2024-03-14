@@ -3,6 +3,7 @@ from    .Move   import  Move
 
 class StateBoard():
     def __init__( self ):
+        self.__players           = []
         self.__all_board         = [ [ [ [ False for _ in range( 3 ) ]
                                             for _ in range( 3 ) ]
                                             for _ in range( 3 ) ]
@@ -11,17 +12,47 @@ class StateBoard():
         self.__sub_board         = [ [ False for _ in range( 3 ) ]
                                              for _ in range( 3 ) ]
         
-    def valid_move( self, move ):
-        return not self.__all_board[move.row]           \
-                                   [move.column]        \
-                                   [move.sub_board_row] \
-                                   [move.sub_column_row]
+    def add_player( self, player_id ):
+        self.__players.append( player_id )
 
-    def do_move_sub( self, move ):
-        self.__all_board[move.row][move.column][move.sub_board_row][move.sub_column_row] = True
+    def valid_move( self, move ):
+        return not self.__all_board[move.sub_board_row]     \
+                                   [move.sub_board_column]  \
+                                   [move.row]               \
+                                   [move.column]            \
+
+    def game_end_check( self ):
+        check   = {}
+        count   = { self.__players[0]:0, self.__players[1]:0 }
+
+        for s_i in range(3):
+            for s_j in range(3):
+                if self.__sub_board[s_i][s_j]:
+                    count[self.__sub_board[s_i][s_j]] += 1
+                    continue
+
+                for m_i in range(3):
+                    for m_j in range(3):
+                        if not self.__all_board[s_i][s_j][m_i][m_j]:
+                            check[ "status" ] = "PLAYING"
+                            return check
+                        
+        if count[ self.__players[0] ] == count[ self.__players[1] ]:
+            check[ "status" ] = "DRAW"
+        elif count[ self.__players[0] ] < count[ self.__players[1] ]:
+            check[ "winner" ] = self.__players[0]
+            check[ "status" ] = "WIN"
+        else:
+            check[ "winner" ] = self.__players[1]
+            check[ "status" ] = "WIN"
+        
+        return check
+        
+    def do_move_sub( self, move, player_id ):
+        self.__all_board[move.sub_board_row][move.sub_board_column][move.row][move.column] = player_id
     
-    def do_move( self, move ):
-        self.__sub_board[move.row][move.column] = True
+    def do_move( self, move, player_id ):
+        self.__sub_board[move.sub_board_row][move.sub_board_column] = player_id
     
 
 class Board():
@@ -129,18 +160,22 @@ class Board():
             self.response[ "sub-win" ]  = f"{move.sub_board_row}{move.sub_board_column}"
                         
     def __stat( self, move ):
-        if  self.__board_stats[   "row"   ]             \
-                         [ move.sub_board_row ] == 3    \
-            or  \
-            self.__board_stats[  "column" ]                 \
-                         [ move.sub_board_column ] == 3     \
-            or  \
-            self.__board_stats[ "diagonal" ]     \
-                         [ 0 ] == 3             \
-            or  \
-            self.__board_stats[ "diagonal" ]  \
-                         [ 2 ] == 3:
+        if  self.__board_stats[   "row"   ]                 \
+                              [ move.sub_board_row ] == 3   \
+                or  \
+                self.__board_stats[  "column" ]                     \
+                                  [ move.sub_board_column ] == 3    \
+                or  \
+                self.__board_stats[ "diagonal" ]    \
+                                  [ 0 ] == 3        \
+                or  \
+                self.__board_stats[ "diagonal" ]  \
+                                  [ 2 ] == 3:
             self.response["status"] = "WIN"
+
+        
+
+
             
     def __play( self, move ):
         self.__move_sub_board( move )
@@ -152,11 +187,8 @@ class Board():
 
 
     def simulate( self, move ):
-        print("Enter here", flush=True)
         self.response = {}
         self.__play( move )
-        # pass
-        print( self.response, flush=True )
         return self.response
 
 # 0000 0001 0002     0100 0101 0102     0200 0201 0202
