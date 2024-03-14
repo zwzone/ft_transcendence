@@ -473,7 +473,9 @@ export default function    TicTacToe()
             case "already":
                 __socket.close(3001);
                 __game.end_game();
-                alert("Game is already");
+                setTimeout(() => {
+                    alert("Game is already");
+                }, 500);
                 return ;
         }
     
