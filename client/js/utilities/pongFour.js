@@ -1,6 +1,7 @@
 import { Ball, Paddle, keys } from "./pongTwo.js";
 
 export let wsFour;
+let FourPressKey = true;
 
 function setImage(pong_players_elem, avatar, username) {
   let player_elem = document.createElement("div");
@@ -105,14 +106,11 @@ export function runPongFourGame(canvas, ctx) {
   keys[68] = "d";
   keys[37] = "left";
   keys[39] = "right";
-  window.addEventListener("keydown", function (e) {
-    if (e.keyCode in keys && wsFour.readyState !== WebSocket.CLOSED) wsFour.send(keys[e.keyCode]);
-  });
-  window.addEventListener("keydown", function (e) {
-    if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(e.code) > -1) {
-      e.preventDefault();
-    }
-  });
+  if (FourPressKey)
+    window.addEventListener("keydown", function (e) {
+      if (e.keyCode in keys && wsFour.readyState !== WebSocket.CLOSED) wsFour.send(keys[e.keyCode]);
+    });
+  FourPressKey = false;
 }
 
 function gameLoop(canvas, ctx, ball, paddle1, paddle2, paddle3, paddle4, pos) {

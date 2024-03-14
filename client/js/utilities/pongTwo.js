@@ -1,4 +1,5 @@
 export let wsTwo;
+let TwoPressKey = true;
 
 function setPlayerData(data) {
   const avatar_left = data["padd_left"]["avatar"];
@@ -98,14 +99,11 @@ export function runPongTwoGame(canvas, ctx, match_id) {
       gameLoop(canvas, ctx, ball, paddle1, paddle2, pos);
     };
   };
-  window.addEventListener("keydown", function (e) {
-    if (e.keyCode in keys && wsTwo.readyState != WebSocket.CLOSED) wsTwo.send(keys[e.keyCode]);
-  });
-  window.addEventListener("keydown", function (e) {
-    if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(e.code) > -1) {
-      e.preventDefault();
-    }
-  });
+  if (TwoPressKey)
+    window.addEventListener("keydown", function (e) {
+      if (e.keyCode in keys && wsTwo.readyState != WebSocket.CLOSED) wsTwo.send(keys[e.keyCode]);
+    });
+  TwoPressKey = false;
 }
 
 export const keys = {

@@ -38,6 +38,11 @@ Object.defineProperty(window, "ft_transcendence_host", {
   writable: false,
 });
 
+window.addEventListener("keydown", function (e) {
+  if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(e.code) > -1)
+    e.preventDefault();
+});
+
 const color = localStorage.getItem("colorizer");
 
 if (color === "blue") {
