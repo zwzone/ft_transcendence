@@ -54,21 +54,27 @@
   <template id="tictactoe-template">
     <div id="result">
         <div class="result-players">
-            <div class="player-img lose">
-                <img src="public/nier.png" id="left-result">
-                <div class="player-name-result" id="player-name-left-result">
-                    ychaaibi
-                </div>
+          <div class="player-img">
+            <div class="win-star" id="left-win-star">
+              <img src="/images/pngegg.png">
             </div>
-            <div class="vs">Vs</div>
-            <div class="player-img lose">
-                <img src="public/bowwowforeach15_min.png" id="right-result">
-                <div class="player-name-result" id="player-name-right-result">
-                    tnaceur
-                </div>
+            <img src="images/nier.png" id="left-result">
+            <div class="player-name-result" id="player-name-left-result">
+              ychaaibi
             </div>
+          </div>
+          <div class="vs">Vs</div>
+          <div class="player-img">
+            <div class="win-star" id="right-win-star">
+              <img src="/images/pngegg.png">
+            </div>
+            <img src="images/bowwowforeach15_min.png" id="right-result">
+            <div class="player-name-result" id="player-name-right-result">
+                tnaceur
+            </div>
+          </div>
         </div>
-        <div class="exit"> EXIT </div>
+        <button class="exit"> EXIT </button>
     </div>
     <div id="board">
     </div>

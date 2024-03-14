@@ -227,6 +227,7 @@ class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
             "type"      : "abort",
 
             "status"    : "ABORT",
+            "winner"    : self.__id,
         }))
 
         # Write win on db

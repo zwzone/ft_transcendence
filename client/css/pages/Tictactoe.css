@@ -701,7 +701,7 @@ tictactoe-page
     }
 }
 
-#win-star img
+.win-star img
 {
     width: 35px;
     height: 35px;
@@ -709,10 +709,26 @@ tictactoe-page
     background: transparent;
     background-color: transparent;
     opacity: 1;
+    /* display: inline; */
 }
 
 .win
 {
     position: relative;
     top:-45px;
+}
+
+#left-win-star
+{
+    display: none;
+}
+
+#right-win-star
+{
+    display: none;
+}
+
+#left, #right
+{
+    display: none;
 }
