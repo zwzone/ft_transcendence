@@ -1,31 +1,48 @@
 import                      asyncio
 from    .Player  import     Player
 from    .Move    import     Move
-from    .Board   import     StateBoard
+from .Board   import     StateBoard
+
+from asgiref.sync import sync_to_async
+from channels.db import database_sync_to_async
+from    api.models  import Match as M_Match
 
 PENDING     = 0
 DRAW        = 1
 WIN         = 3
 
 class Match():
-    def __init__( self, id ):
+    def __init__( self, id, obj ):
+        self.xor_players      = 0
         self.__id               = 0
         self.__room_name        = "" #using player
-        self.__players          = {} # { id1:player[0], id2:player[2] }
+        self.players            = {} # { id1:player[0], id2:player[2] }
         self.__turn             = 0 # id
-        self.__status_end       = "" #WIN DRAW
+        self.__status           = "" #WIN DRAW
         self.__board            = StateBoard()
+        self.obj                = obj
+        self.winner             = None
 
     @property
     def id( self ):
         return self.__id
 
+    def get_keys( self ):
+        keys = []
+
+        for key in self.players.keys():
+            keys.append( key )
+        return keys
+
     def add_player( self, id ):
-        self.__players[ id ] = Player( id )
+        self.players[ id ] = Player( id )
+    
         self.__board.add_player( id )
+        self.xor_players ^= id
 
     def remove_player( self, id ):
-        self.__players.pop( id )
+        self.players.pop( id )
+        self.xor_players ^= id
 
     def simulate( self, move_s, player_id ):
         move        = Move( int( move_s[2] ),
@@ -40,7 +57,7 @@ class Match():
             response[ "type" ]  = "invalid"
             return response
         
-        response            = self.__players[ player_id ].simulate( move )
+        response    = self.players[ player_id ].simulate( move )
 
         self.__board.do_move_sub( move, player_id )
 
@@ -68,6 +85,6 @@ class Match():
         response[ "winner" ] = game_end_check[ "winner" ]
         
         return response
-        
+    
         
                         

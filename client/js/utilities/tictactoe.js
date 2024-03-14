@@ -42,6 +42,36 @@ let __render  = {
         let result  = document.getElementById( "result" );
         let status  = document.getElementById( "status" );
 
+
+        let left_result = document.getElementById("left-result");
+        let right_result = document.getElementById("right-result");
+
+        let left_result_name = document.getElementById("player-name-left-result");
+        let right_result_name = document.getElementById("player-name-right-result");
+        console.log(__game.player_me );
+        console.log(__game.player_op );
+
+
+        if ( __game.player_me.choice == 'x')
+        {
+            left_result.setAttribute( "src", __game.player_me.avatar );
+            left_result_name.innerHTML = __game.player_me.username;
+
+            right_result.setAttribute( "src", __game.player_op.avatar );
+            right_result_name.innerHTML = __game.player_op.username;
+
+        }
+        else
+        {
+            left_result.setAttribute( "src", __game.player_op.avatar );
+            left_result_name.innerHTML = __game.player_op.username;
+
+            right_result.setAttribute( "src", __game.player_me.avatar );
+            right_result_name.innerHTML = __game.player_me.username;
+        }
+        
+        console.log( "avatar ");
+        console.log(left_result, right_result);
         board.classList.add( "anime_desapeir" );
         status.classList.add( "anime_desapeir" );
         result.classList.add( "anime_appeir" );
@@ -75,11 +105,15 @@ class Player
 {
     #__id;
     #__choice;
+    avatar;
+    username;
 
-    constructor( id, choice ) {
+    constructor( id, choice, username, avatar ) {
 
         this.#__id       = id;
         this.#__choice   = choice;
+        this.avatar      = avatar
+        this.username    = username;
     }
 
     get id()
@@ -98,6 +132,8 @@ class Match
 {
     #__id;
     #__player;
+    player_me;
+    player_op;
     #__players;
     #__moves = []; // [Move(), Move()]]
     #__turn_move; // "me", "op"
@@ -112,6 +148,11 @@ class Match
                                     [ player_me.id, player_me ],
                                     [ player_op.id, player_op ]
                                 ]);
+                                
+                                this.player_me          = player_me;
+                                this.player_op          = player_op;
+        console.log( this.player_me );
+
         this.#__turn_move       = 1;
 
         // console.log( player_me.id );
@@ -165,8 +206,7 @@ class Match
     {
         console.log( data );
         let status = data["status"];
-        
-        console.log( status );
+    
         if ( status == "PLAYING" )
             return ( status );
      
@@ -212,6 +252,8 @@ class Game
 {
     #__socket;
     #__room;
+    player_me;
+    player_op;
 
     constructor( ) {
 
@@ -223,8 +265,45 @@ class Game
 
         this.#__room    = new Match( data["match-id"],
                                      data["player-me"],
-                                     new Player( data["player-me"], data["choice-me"] ),
-                                     new Player( data["player-op"], data["choice-op"] ) );
+                                     new Player( data["player-me"], data["choice-me"], data["player-me-name"], data["player-me-avatar"] ),
+                                     new Player( data["player-op"], data["choice-op"], data["player-op-name"], data["player-op-avatar"] )) ;
+    
+        console.log( data["player-me-avatar"] );
+        console.log( data["player-op-avatar"] );
+        this.player_me  = this.#__room.player_me;
+        this.player_op  = this.#__room.player_op;
+
+        // console.log( this.#__room.player_me );
+        console.log( this.player_me );
+        console.log( this.player_op );
+
+        let left_avatar = document.getElementById( "left" );
+        let left_name   = document.getElementById( "player-left-name");
+
+        let right_avatar = document.getElementById( "right" );
+        let right_name   = document.getElementById( "player-right-name");
+
+
+        console.log(left_avatar);
+        console.log(right_avatar);
+        if ( data["choice-me"] == 'x')
+        {
+            left_avatar.setAttribute( "src", data["player-me-avatar"] );
+            left_name.innerHTML = data["player-me-name"];
+
+            right_avatar.setAttribute( "src", data["player-op-avatar"] );
+            right_name.innerHTML = data["player-op-name"];
+        }
+        else
+        {
+            left_avatar.setAttribute( "src", data["player-op-avatar"] );
+            left_name.innerHTML = data["player-op-name"];
+
+
+            right_avatar.setAttribute( "src", data["player-me-avatar"] );
+            right_name.innerHTML = data["player-me-name"];
+
+        }
     }
 
     end_game( )

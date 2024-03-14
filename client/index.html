@@ -54,19 +54,16 @@
   <template id="tictactoe-template">
     <div id="result">
         <div class="result-players">
-            <div class="player-img win">
-                <div class="win-star" id="win-star">
-                    <img src="public/pngegg.png">
-                </div>
-                <img src="public/nier.png">
-                <div class="player-name-result">
+            <div class="player-img lose">
+                <img src="public/nier.png" id="left-result">
+                <div class="player-name-result" id="player-name-left-result">
                     ychaaibi
                 </div>
             </div>
             <div class="vs">Vs</div>
             <div class="player-img lose">
-                <img src="public/bowwowforeach15_min.png">
-                <div class="player-name-result">
+                <img src="public/bowwowforeach15_min.png" id="right-result">
+                <div class="player-name-result" id="player-name-right-result">
                     tnaceur
                 </div>
             </div>
@@ -78,15 +75,15 @@
     <div id="status">
         <div class="player yel">
             <div class="info">
-                <div class="player-name">
-                    Tnaceur
+                <div class="player-name" id="player-left-name">
+                    Matching...
                 </div>
                 <div class="game-info output">
                     <h1 class="title">
                         Output
                     </h1>
                     <div class="description">
-                        1 2 0 1
+                        - - - -
                     </div>
                 </div>
                 <div class="game-info debug">
@@ -94,8 +91,7 @@
                         Debug
                     </h1>
                     <div class="description">
-                        >> Test the montey carlosearhch<br>
-                        >> do the best move
+                        >> ----------------------------
                     </div>
                 </div>
                 <div class="game-info info">
@@ -103,44 +99,38 @@
                         Game Info
                     </h1>
                     <div class="description">
-                        >> You didn't provide one line !!
+                        >> ----------------------------
                     </div>
                 </div> 
             </div>
             <div class="player-img">
-                <img src="public/bowwowforeach15_min.png">
-                <div class="countdown">
-                    07:46
-                </div>
+                <img src="public/bowwowforeach15_min.png" id="left">
             </div>
-            <div class="choice desactive">
+            <div class="choice" id="choice-x">
                 <div class="char">
                     X
                 </div>
             </div>
         </div>
         <div class="player ble">
-            <div class="choice">
+            <div class="choice" id="choice-o">
                 <div class="char">
                     O
                 </div>
             </div>
             <div class="player-img">
-                <img src="public/nier.png">
-                <div class="countdown">
-                    05:09
-                </div>
+                <img src="public/nier.png" id="right">
             </div>
             <div class="info">
-                <div class="player-name">
-                    Ychaaibi
+                <div class="player-name" id="player-right-name">
+                    Matching...
                 </div>
                 <div class="game-info output">
                     <h1 class="title">
                         Output
                     </h1>
                     <div class="description">
-                        1 2 0 1
+                        - - - -
                     </div>
                 </div>
                 <div class="game-info debug">
@@ -148,8 +138,7 @@
                         Debug
                     </h1>
                     <div class="description">
-                        >> Test the montey carlosearhch<br>
-                        >> do the best move
+                       >> ----------------------------
                     </div>
                 </div>
                 <div class="game-info info">
@@ -157,7 +146,7 @@
                         Game Info
                     </h1>
                     <div class="description">
-                        >> You didn't provide one line !!
+                       >> ----------------------------
                     </div>
                 </div> 
             </div>
