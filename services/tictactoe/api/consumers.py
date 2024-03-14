@@ -30,7 +30,6 @@ def get_player( player_id ):
 @database_sync_to_async
 def db_save(match):
     obj = match.obj
-    print( "obj ", obj, flush=True )
     if obj.state == obj.State.PLAYED.value:
         return
     
@@ -62,7 +61,6 @@ class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
 #-------------------------------------Receive------------------------------------#
 
     async def   connect( self ):
-        # print("connect")
         self.__id               = self.scope["payload"]["id"]
         self.__room_id          = ""
 
@@ -120,7 +118,7 @@ class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
     async def   disconnect( self, code=None ):
         global waiting
 
-        print( code, flush=True)
+
         if code == 3001 or self.__room_id not in Matches:
             if self.__id == waiting:
                 waiting = -1
@@ -160,7 +158,6 @@ class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
 
         response = await self.__simulate( text_data["move"], int(text_data["player"]) )
 
-        print( response,flush=True )
         await self.channel_layer.group_send(
             self.__room_id,
             {
@@ -178,8 +175,6 @@ class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
 
     async def start( self, data ):
         keys = Matches[ self.__room_id ].get_keys()
-
-        print( keys, flush=True )
 
         await self.send( json.dumps( {
             "type"              : "start",
@@ -200,8 +195,6 @@ class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
         # create table on db
 
     async def move( self, data ):
-        # data["stas"] = "DRAW"
-
         if data["status"] == "WIN":
             Matches[ self.__room_id ].winner = int( data["winner"] )
             await db_save( Matches[ self.__room_id ] )
