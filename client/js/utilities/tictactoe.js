@@ -42,6 +42,52 @@ let __render  = {
         let result  = document.getElementById( "result" );
         let status  = document.getElementById( "status" );
 
+        let left_result = document.getElementById("left-result");
+        let right_result = document.getElementById("right-result");
+
+        let left_result_name = document.getElementById("player-name-left-result");
+        let right_result_name = document.getElementById("player-name-right-result");
+
+        let left_result_star = document.getElementById("left-win-star");
+        let right_result_star = document.getElementById("right-win-star");
+
+        if ( __game.player_me.choice == 'x')
+        {
+            left_result.setAttribute( "src", __game.player_me.avatar );
+            left_result_name.innerHTML = __game.player_me.username;
+            if ( __game.player_me.is_winner )
+            {
+                left_result_star.style.display = "block";
+                left_result_star.parentNode.classList.add("win");
+            }
+
+            right_result.setAttribute( "src", __game.player_op.avatar );
+            right_result_name.innerHTML = __game.player_op.username;
+            if ( __game.player_op.is_winner )
+            {
+                right_result_star.style.display = "block";
+                right_result_star.parentNode.classList.add("win");
+            }
+        }
+        else
+        {
+            left_result.setAttribute( "src", __game.player_op.avatar );
+            left_result_name.innerHTML = __game.player_op.username;
+            if ( __game.player_op.is_winner )
+            {
+                left_result_star.style.display = "block";
+                left_result_star.parentNode.classList.add("win");
+            }
+
+            right_result.setAttribute( "src", __game.player_me.avatar );
+            right_result_name.innerHTML = __game.player_me.username;
+            if ( __game.player_me.is_winner )
+            {
+                right_result_star.style.display = "block";
+                right_result_star.parentNode.classList.add("win");
+            }
+        }
+        
         board.classList.add( "anime_desapeir" );
         status.classList.add( "anime_desapeir" );
         result.classList.add( "anime_appeir" );
@@ -75,11 +121,16 @@ class Player
 {
     #__id;
     #__choice;
+    avatar;
+    username;
+    is_winner;
 
-    constructor( id, choice ) {
+    constructor( id, choice, username, avatar ) {
 
         this.#__id       = id;
         this.#__choice   = choice;
+        this.avatar      = avatar
+        this.username    = username;
     }
 
     get id()
@@ -98,6 +149,8 @@ class Match
 {
     #__id;
     #__player;
+    player_me;
+    player_op;
     #__players;
     #__moves = []; // [Move(), Move()]]
     #__turn_move; // "me", "op"
@@ -112,10 +165,12 @@ class Match
                                     [ player_me.id, player_me ],
                                     [ player_op.id, player_op ]
                                 ]);
+                                
+                                this.player_me          = player_me;
+                                this.player_op          = player_op;
+
         this.#__turn_move       = 1;
 
-        // console.log( player_me.id );
-        // console.log( this.#__players.get(player_me.id ) );
     }
 
     get player( )
@@ -125,7 +180,6 @@ class Match
 
     choice( player )
     {
-        // console.log( this.#__players.get( player ) );
         return this.#__players.get( player ).choice;
     }
 
@@ -136,7 +190,6 @@ class Match
 
     turn( )
     {
-        // console.log( this.)
         return ( this.#__turn_move == this.#__player );
     }
 
@@ -145,9 +198,6 @@ class Match
         const keys = this.#__players.keys();
 
         this.#__turn_move = keys.next().value ^ keys.next().value ^ this.#__turn_move;
-        console.log("-----------------");
-        console.log(this.#__turn_move);
-        console.log("-----------------");
     }
 
     simulate_match( move )
@@ -164,31 +214,48 @@ class Match
     simulate_status( data )
     {
         let status = data["status"];
-
-        if ( status == "PLAYING" )
-            return ;
-     
-        let sub_board   = document.getElementById( data[ "sub-win" ] );
-
-        switch ( __game.choice( data[ "player" ] ) )
-        {
-            case "x":
-                sub_board.className = "sub-board filled";
-                sub_board.innerHTML = "<div class=\"spot-fill-x\"><span>X</span></div>";
-                break ;
-            case "o":
-                sub_board.className = "sub-board filled";
-                sub_board.innerHTML = "<div class=\"spot-fill-o\"><span>O</span></div>";
-                break ;
-        }
     
-        if ( status == "WIN" )
+        if ( status == "PLAYING" )
+            return ( status );
+     
+        if ( data[ "sub-win" ] != "" )
         {
-            setTimeout(() => {
-                __render.render_result()
-            }, 500);
-            __socket.close();
+            let sub_board   = document.getElementById( data[ "sub-win" ] );
+
+            switch ( __game.choice( data[ "player" ] ) )
+            {
+                case "x":
+                    sub_board.className = "sub-board filled";
+                    sub_board.innerHTML = "<div class=\"spot-fill-x\"><span>X</span></div>";
+                    break ;
+                case "o":
+                    sub_board.className = "sub-board filled";
+                    sub_board.innerHTML = "<div class=\"spot-fill-o\"><span>O</span></div>";
+                    break ;
+            }
         }
+
+        switch ( status )
+        {
+            case "WIN":
+                if ( this.player_me.id == data["winner"] )
+                    this.player_me.is_winner = true;
+                else
+                    this.player_op.is_winner = true;
+
+                setTimeout(() => {
+                    __render.render_result()
+                }, 500);
+                break ;
+
+            case "DRAW":
+                setTimeout(() => {
+                    __render.render_result()
+                }, 500);
+                break ;
+        }
+        
+        return ( status );
     }
 }
 
@@ -198,6 +265,8 @@ class Game
 {
     #__socket;
     #__room;
+    player_me;
+    player_op;
 
     constructor( ) {
 
@@ -209,8 +278,40 @@ class Game
 
         this.#__room    = new Match( data["match-id"],
                                      data["player-me"],
-                                     new Player( data["player-me"], data["choice-me"] ),
-                                     new Player( data["player-op"], data["choice-op"] ) );
+                                     new Player( data["player-me"], data["choice-me"], data["player-me-name"], data["player-me-avatar"] ),
+                                     new Player( data["player-op"], data["choice-op"], data["player-op-name"], data["player-op-avatar"] )) ;
+
+        this.player_me  = this.#__room.player_me;
+        this.player_op  = this.#__room.player_op;
+
+        let left_avatar = document.getElementById( "left" );
+        let left_name   = document.getElementById( "player-left-name");
+
+        let right_avatar = document.getElementById( "right" );
+        let right_name   = document.getElementById( "player-right-name");
+
+        left_avatar.style.display = "block";
+        right_avatar.style.display = "block";
+
+        if ( data["choice-me"] == 'x')
+        {
+            left_avatar.setAttribute( "src", data["player-me-avatar"] );
+            left_name.innerHTML = data["player-me-name"];
+
+            right_avatar.setAttribute( "src", data["player-op-avatar"] );
+            right_name.innerHTML = data["player-op-name"];
+        }
+        else
+        {
+            left_avatar.setAttribute( "src", data["player-op-avatar"] );
+            left_name.innerHTML = data["player-op-name"];
+
+
+            right_avatar.setAttribute( "src", data["player-me-avatar"] );
+            right_name.innerHTML = data["player-me-name"];
+        }
+
+
     }
 
     end_game( )
@@ -250,7 +351,7 @@ class Game
 
     simulate_status( data )
     {
-        this.#__room.simulate_status( data );
+        return ( this.#__room.simulate_status( data ) );
     }
 
     destructor() {
@@ -262,16 +363,15 @@ class Game
 
 let __game      = new Game( "test-room" );
 
-let __socket    = undefined;
+export let __socket    = undefined;
 
 /////////////////////////////////////////////////////////////////////////////////
 
 let __move_events = {
     __move          : function(e) {
-        console.log( __game.player );
+
         if ( !__game.turn( __game ) )
         {
-            console.log("should wait for your turn");
             return ;
         }
 
@@ -350,45 +450,47 @@ function    render_board()
 export default function    TicTacToe()
 {
     render_board();
-    // setTimeout(() => {
-    //     __render.render_result()
-    // }, 1000);
-    // lunch_events();
-    // Lunch controls events
 
-    let choices=document.getElementsByClassName("id");
+    __socket            = new WebSocket( `wss://${window.ft_transcendence_host}/ws/tictactoe/` );
     
-    for ( let i=0; i<choices.length; i++ )
-    {
-        choices[i].addEventListener( "click", (e)=>{
-            __socket            = new WebSocket( "wss://localhost/ws/tictactoe/1/" + e.target.getAttribute("val") + "/");
-    
-            __socket.onopen     = (event)=> {
-                console.log("hello");
-            }
-            
-            __socket.onmessage  = (event)=> {
-                let data = JSON.parse(event.data);
-                
-                console.log( data );
-                
-                switch ( data["type"] )
-                {
-                    case "start":
-                        __game.init_game( data );
-                        return ;
-                    case "abort":
-                        alert("Game was aborted");
-                        // redirect home
-                        return ;
-                    case "invalid":
-                        alert("Game is alreadyu")
-                }
-    
-                __game.simulate_match( new Move( data["move"], data["player"] ) );
-            
-                __game.simulate_status( data );
-            }
-        })
+    __socket.onopen     = (event)=> {
     }
+            
+    __socket.onmessage  = (event)=> {
+        let data = JSON.parse(event.data);
+        
+        switch ( data["type"] )
+        {
+            case "start":
+                __game.init_game( data );
+                return ;
+            case "abort":
+                __socket.close();
+                __game.end_game();
+                __game.player_me.is_winner = true;
+                __render.render_result();
+                return ;
+            case "already":
+                __socket.close(3001);
+                __game.end_game();
+                setTimeout(() => {
+                    alert("Game is already");
+                }, 500);
+                return ;
+        }
+    
+        __game.simulate_match ( new Move( data["move"], data["player"] ) );
+        
+        switch ( __game.simulate_status( data ) )
+        {
+            case "PLAYING":
+                return ;
+            case "SUB-WIN":
+                return ;
+
+        }
+        __socket.close();
+        __game.end_game();
+    }
+
 };
