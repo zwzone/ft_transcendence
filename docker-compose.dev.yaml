@@ -152,7 +152,7 @@ services:
         ports:
         - 8080:80
         networks:
-        - ft_transcendence
+            - ft_transcendence
         restart: on-failure
 
 networks:

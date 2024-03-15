@@ -39,10 +39,12 @@ class Match():
     
         self.__board.add_player( id )
         self.xor_players ^= id
+        return True
 
     def remove_player( self, id ):
         self.players.pop( id )
         self.xor_players ^= id
+        return True
 
     def simulate( self, move_s, player_id ):
         move        = Move( int( move_s[2] ),

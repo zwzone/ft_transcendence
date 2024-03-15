@@ -157,7 +157,7 @@ class Match
     #__state; // PENDING, END
     #__win; // id
 
-    constructor ( id, player, player_me, player_op ) {
+    constructor ( id, player, player_me, player_op, turn ) {
 
         this.#__id              = id;
         this.#__player          = player;
@@ -169,7 +169,7 @@ class Match
                                 this.player_me          = player_me;
                                 this.player_op          = player_op;
 
-        this.#__turn_move       = 1;
+        this.#__turn_move       = turn;
 
     }
 
@@ -279,8 +279,10 @@ class Game
         this.#__room    = new Match( data["match-id"],
                                      data["player-me"],
                                      new Player( data["player-me"], data["choice-me"], data["player-me-name"], data["player-me-avatar"] ),
-                                     new Player( data["player-op"], data["choice-op"], data["player-op-name"], data["player-op-avatar"] )) ;
+                                     new Player( data["player-op"], data["choice-op"], data["player-op-name"], data["player-op-avatar"] ),
+                                     parseInt(data["turn"])) ;
 
+        console.log( parseInt(data["turn"]) )
         this.player_me  = this.#__room.player_me;
         this.player_op  = this.#__room.player_op;
 
@@ -372,6 +374,7 @@ let __move_events = {
 
         if ( !__game.turn( __game ) )
         {
+            console.log("not your turn");
             return ;
         }
 
@@ -471,11 +474,14 @@ export default function    TicTacToe()
                 __render.render_result();
                 return ;
             case "already":
-                __socket.close(3001);
+                __socket.close(4001);
                 __game.end_game();
                 setTimeout(() => {
                     alert("Game is already");
                 }, 500);
+                return ;
+            case "not-turn":
+                alert("Not your turn");
                 return ;
         }
     
