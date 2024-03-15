@@ -58,11 +58,11 @@ class TournamentView(APIView):
                 tournament = serializer.is_player_in_tournament(player)
                 serializer = TournamentSerializer(tournament, context={"player": player})
                 if tournament.status == Tournament.StatusChoices.PENDING.value:
-                    return Response({"status": 200, "current_tournament": serializer.data, "players": serializer.get_players(tournament)})
+                    return Response({"statusCode": 200, "current_tournament": serializer.data, "players": serializer.get_players(tournament)})
                 update_tournament(tournament.id)
-                return Response({"status": 200, "current_tournament": serializer.data})
+                return Response({"statusCode": 200, "current_tournament": serializer.data})
             except Tournament.DoesNotExist:
-                return Response({"status": 404, "message": "Tournament not found"})
+                return Response({"statusCode": 404, "message": "Tournament not found"})
         tournaments = Tournament.objects.filter(status='PN')
         player_finished_tournament = PlayerTournament.objects.filter(player_id=player).order_by('-id').first()
         response_data = {}
@@ -71,10 +71,10 @@ class TournamentView(APIView):
             serializer_finished = TournamentSerializer(finished_tournament)
             response_data["current_tournament"] = serializer_finished.data
         if not tournaments:
-            response_data.update({"status": 404, "message": "No Tournaments are available"})
+            response_data.update({"statusCode": 404, "message": "No Tournaments are available"})
             return Response(response_data)
         serializer_all = TournamentSerializer(tournaments, many=True)
-        response_data.update({"status": 200, "tournaments": serializer_all.data})
+        response_data.update({"statusCode": 200, "tournaments": serializer_all.data})
         return Response(response_data)
 
     @method_decorator(jwt_cookie_required)
@@ -87,53 +87,53 @@ class TournamentView(APIView):
         try:
             player = Player.objects.get(id=player_id)
         except Player.DoesNotExist:
-            return Response({"status": 400, "message": "Player does not exist"})
+            return Response({"statusCode": 400, "message": "Player does not exist"})
         if "create" in action:
             if name is None or len(name) == 0 or alias is None or len(alias) == 0:
-                return Response({"status": 400, "message": "Invalid Tournament name"})
+                return Response({"statusCode": 400, "message": "Invalid Tournament name"})
             serializer = TournamentSerializer()
             if serializer.is_player_in_tournament(player):
-                return Response({"status": 400, "message": "Already in a Tournament"})
+                return Response({"statusCode": 400, "message": "Already in a Tournament"})
             tournament = Tournament.objects.create(name=name)
             PlayerTournament.objects.create(player_id=player, tournament_id=tournament, creator=True)
             serializer = TournamentSerializer(tournament)
             player.alias_name = alias
             player.save()
-            return Response({"status": 201, "current_tournament": serializer.get_players(tournament)}, status=201)
+            return Response({"statusCode": 200, "current_tournament": serializer.get_players(tournament)}, status=201)
         try:
             tournament = Tournament.objects.get(id=tournament_id)
             serializer = TournamentSerializer(tournament)
         except Tournament.DoesNotExist:
-            return Response({"status": 404, "message": "Not found"})
+            return Response({"statusCode": 404, "message": "Not found"})
         if "join" in action:
             if tournament_id is None or len(tournament_id) == 0 or alias is None or len(alias) == 0:
-                return Response({"status": 400, "message": "Missing Tournament id"})
+                return Response({"statusCode": 400, "message": "Missing Tournament id"})
             if tournament.status == 'PN' and serializer.get_players_count(tournament) < COMPETITORS:
                 if serializer.is_player_in_tournament(player):
-                    return Response({"status": 400, "message": "Already in a Tournament"})
+                    return Response({"statusCode": 400, "message": "Already in a Tournament"})
                 player.alias_name = alias
                 player.save()
                 PlayerTournament.objects.create(player_id=player, tournament_id=tournament)
-                return Response({"status": 200, "message": "Successfully joined tournament"})
-            return Response({"status": 400, "message": "Tournament is full"})
+                return Response({"statusCode": 200, "message": "Successfully joined tournament"})
+            return Response({"statusCode": 400, "message": "Tournament is full"})
         elif "leave" in action:
             if tournament.status != Tournament.StatusChoices.PENDING.value:
-                return Response({"status": 400, "message": "Tournament status is not pending"})
+                return Response({"statusCode": 400, "message": "Tournament status is not pending"})
             try:
                 player_tournament = PlayerTournament.objects.get(player_id=player, tournament_id=tournament)
             except PlayerTournament.DoesNotExist:
-                return Response({"status": 400, "message": "Player is not in the Tournament"})
+                return Response({"statusCode": 400, "message": "Player is not in the Tournament"})
             if player_tournament.creator:
                 tournament.delete()
-                return Response({"status": 200, "message": "Tournament deleted along with player"})
+                return Response({"statusCode": 200, "message": "Tournament deleted along with player"})
             else:
                 player_tournament.delete()
-                return Response({"status": 200, "message": "Player removed from Tournament"})
+                return Response({"statusCode": 200, "message": "Player removed from Tournament"})
         elif "start" in action:
             if not PlayerTournament.objects.filter(player_id=player, tournament_id=tournament, creator=True).exists():
-                return Response({"status": 400, "message": "Tournament cannot be started"})
+                return Response({"statusCode": 400, "message": "Tournament cannot be started"})
             if serializer.get_players_count(tournament) != COMPETITORS:
-                return Response({"status": 400, "message": "Tournament not full yet"})
+                return Response({"statusCode": 400, "message": "Tournament not full yet"})
             if tournament.status == Tournament.StatusChoices.PENDING.value:
                 players_tournaments = PlayerTournament.objects.filter(tournament_id=tournament)
                 players_cycle = cycle(players_tournaments)
@@ -155,7 +155,7 @@ class TournamentView(APIView):
                     )
                 tournament.status = Tournament.StatusChoices.PROGRESS.value
                 tournament.save()
-                return Response({"status": 200, "message": "Tournament started",
+                return Response({"statusCode": 200, "message": "Tournament started",
                                  "tournament_id": tournament_id})
-            return Response({"status": 400, "message": "Tournament is not pending"})
-        return Response({"status": 400, "message": "Wrong Action"})
+            return Response({"statusCode": 400, "message": "Tournament is not pending"})
+        return Response({"statusCode": 400, "message": "Wrong Action"})
