@@ -7,7 +7,7 @@ playersOpenTabs = {}
 @database_sync_to_async
 def set_player_status(player,  playerStatus):
     player.status = playerStatus
-    player.save()
+    player.save(update_fields=["status"])
 
 
 class LoginConsumer(AsyncWebsocketConsumer):

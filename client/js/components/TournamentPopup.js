@@ -50,7 +50,9 @@ export default class TournamentPopup extends HTMLElement {
             "Content-Type": "application/json",
           },
         ).then((data) => {
-          window.location.reload();
+          console.log("status code", data.statusCode);
+          if (data.statusCode === 200) window.location.reload();
+          else alert(data.message);
         });
       });
     } else if (popup_type === "JOIN") {
@@ -71,7 +73,9 @@ export default class TournamentPopup extends HTMLElement {
             "Content-Type": "application/json",
           },
         ).then((data) => {
-          window.location.reload();
+          console.log("status code", data.statusCode);
+          if (data.statusCode === 200) window.location.reload();
+          else alert(data.message);
         });
       });
     }

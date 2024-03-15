@@ -58,7 +58,7 @@ export default class TournamentPage extends HTMLElement {
           tournament_players.classList.add("d-flex");
           for (const player of data.players) {
             const player_elem = document.createElement("tournament-player-card");
-            player_elem.setAttribute("tournament-name", player.tournament_name);
+            player_elem.setAttribute("alias-name", player.alias_name);
             player_elem.setAttribute("avatar", player.avatar);
             player_elem.setAttribute("status", "PN");
             tournament_players_list.append(player_elem);

@@ -24,10 +24,27 @@ export default class Navbar extends HTMLElement {
     };
 
     const logo = this.querySelector(".logo");
+    const colorizer = this.querySelector(".colorizer.btn");
     const links = this.querySelectorAll(".link.btn");
     const hamburger = this.querySelector(".hamburger");
 
     logo.addEventListener("click", handleLink);
+
+    colorizer.addEventListener("click", (event) => {
+      const color_primary = localStorage.getItem("colorizer");
+      if (color_primary === "blue") {
+        localStorage.setItem("colorizer", "yellow");
+        document.documentElement.style.setProperty("--color-primary", "#f8ec9030");
+        document.documentElement.style.setProperty("--color-primary-solid", "#2e2c1d");
+        document.documentElement.style.setProperty("--color-primary-light", "#f8ec90");
+      } else {
+        localStorage.setItem("colorizer", "blue");
+        document.documentElement.style.setProperty("--color-primary", "#2cacff30");
+        document.documentElement.style.setProperty("--color-primary-solid", "#0f3c5a");
+        document.documentElement.style.setProperty("--color-primary-light", "#2cacff");
+      }
+    });
+
     links.forEach((link) => {
       link.addEventListener("click", handleLink);
     });

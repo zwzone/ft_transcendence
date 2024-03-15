@@ -5,6 +5,29 @@ my-navbar {
   height: fit-content;
 }
 
+@keyframes colorizing {
+  0% {
+    background-color: var(--color-yellow);
+  }
+  50% {
+    background-color: var(--color-blue);
+  }
+  100% {
+    background-color: var(--color-yellow);
+  }
+}
+
+.colorizer {
+  color: var(--color-font-white) !important;
+  animation: colorizing 5s infinite ease-in-out;
+  -webkit-animation: colorizing 5s infinite ease-in-out;
+}
+
+.colorizer :hover,
+.colorizer :active {
+  color: var(--color-font-white) !important;
+}
+
 .link {
   background-color: var(--color-primary) !important;
   color: var(--color-font-white) !important;
@@ -16,15 +39,15 @@ my-navbar {
   color: var(--color-font-white) !important;
 }
 
-li .logout {
-  background-color: orangered;
-  color: var(--color-font-white);
+li .logout.btn {
+  background-color: red !important;
+  color: var(--color-font-white) !important;
 }
 
-li .logout:hover,
-li .logout:active {
-  background-color: red;
-  color: var(--color-font-white);
+li .logout.btn:hover,
+li .logout.btn:active {
+  background-color: var(--color-font-white) !important;
+  color: red !important;
 }
 
 .hamburger {
@@ -44,7 +67,7 @@ li .logout:active {
   background-color: var(--color-primary);
 }
 
-@media only screen and (max-width: 992px) {
+@media only screen and (max-width: 1111px) {
   my-navbar.active {
     background-color: var(--color-primary);
   }
