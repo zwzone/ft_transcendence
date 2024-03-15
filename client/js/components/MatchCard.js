@@ -18,6 +18,13 @@ export default class MatchCard extends HTMLElement {
     );
 
     const match = JSON.parse(this.getAttribute("match"));
+
+    if (match.game === "PO")
+      this.style.backgroundImage = `url('../../images/pong_super_glass.svg')`;
+    else if (match.game === "TC")
+      this.style.backgroundImage = `url('../../images/tictactoe_super_glass.svg')`;
+    this.style.backgroundSize = "cover";
+
     for (const player of match.players) {
       const player_card_elem = document.createElement("player-card");
       player_card_elem.setAttribute("avatar", player.avatar);

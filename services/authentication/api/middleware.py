@@ -34,6 +34,7 @@ class TokenMiddleware:
             payload = jwt.decode(token_key, SECRET_KEY, algorithms=['HS256'])
             if (payload['twofa']):
                 scope['status'] = "Twofa"
+                return
             scope['player'] = await get_player_by_id(payload['id'])
             scope['status'] = "Valid"
         except Player.DoesNotExist:
