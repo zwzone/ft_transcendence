@@ -42,7 +42,6 @@ class Match():
         return True
 
     def remove_player( self, id ):
-        print("removing ", id, flush=True)
         self.players.pop( id )
         self.xor_players ^= id
         return True

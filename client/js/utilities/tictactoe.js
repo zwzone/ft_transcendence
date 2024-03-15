@@ -477,6 +477,9 @@ export default function    TicTacToe()
                     alert("Game is already");
                 }, 500);
                 return ;
+            case "wait-turn":
+                alert("wait your turn !!");
+                return ;
         }
     
         __game.simulate_match ( new Move( data["move"], data["player"] ) );

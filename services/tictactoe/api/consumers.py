@@ -66,9 +66,6 @@ class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
 
         global waiting, waiting_room, mmatch, Matches
 
-        print( "before ", players, flush=True )
-
-
         await self.accept()
 
         if  self.__id in players:
@@ -76,19 +73,16 @@ class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
                 "type"  : "already",
                 "id"    : self.__id,
             }))
-            await self.close(4001)
             return
         
 
         players.add( self.__id )
 
-        print( "after ", players, flush=True )
         if waiting == -1:
-            waiting_room    += 1
-            self.__room_id  = str(waiting_room)
             waiting         = self.__id
             mmatch_obj      = await create_match_db()
             mmatch          = Match( self.__room_id, mmatch_obj )
+            self.__room_id  = str(mmatch_obj.id)
 
             await self.channel_layer.group_add(
                 self.__room_id,
@@ -102,7 +96,7 @@ class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
         mmatch.add_player( self.__id )
         mmatch.players[ self.__id ].obj = await get_player( self.__id )
 
-        self.__room_id              = str(waiting_room)
+        self.__room_id              = str(mmatch.obj.id)
         Matches[ self.__room_id ]   = mmatch
         mmatch                      = None
         waiting                     = -1
@@ -123,31 +117,20 @@ class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
     async def   disconnect( self, code=None ):
         global waiting
 
-        print( code, flush=True)
-        if code == 4001:
+        if code == 4001 or code == 1006:
             await self.close()
             return
-
-        print( "matches ", self.__room_id, flush=True )
-        print( "matches ", self.__room_id not in Matches, flush=True )
 
         if self.__room_id not in Matches:
             waiting = -1
             if self.__id in players:
-                print("removing ", flush=True)
                 players.remove( self.__id )
-                print( players, flush=True)
-                print( "removeend", flush=True)
-                
             await self.close()
             return 
 
-        print( players, flush=True )
         if self.__id in players:
-            print("removing ", flush=True)
             players.remove( self.__id )
-            print( players, flush=True)
-            print( "removeend", flush=True)
+
 
         await self.channel_layer.group_discard(
             self.__room_id,
@@ -177,6 +160,15 @@ class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
         text_data = json.loads(text_data)
 
         response = await self.__simulate( text_data["move"], int(text_data["player"]) )
+        if Matches[ self.__room_id ].turn != int(text_data["player"]):
+            await self.channel_layer.group_send(
+                self.__room_id, {
+                    "type"      : "wait-turn",
+                }
+            )
+            return
+
+        Matches[ self.__room_id ].turn = Matches[ self.__room_id ].turn ^ Matches[ self.__room_id ].xor_players
 
         await self.channel_layer.group_send(
             self.__room_id,
@@ -195,7 +187,9 @@ class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
 
     async def start( self, data ):
         keys = Matches[ self.__room_id ].get_keys()
+        turn = keys[random.randint(0, 1)]
 
+        Matches[ self.__room_id ].turn = turn
         await self.send( json.dumps( {
             "type"              : "start",
 
@@ -204,7 +198,7 @@ class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
             "player-op"         : self.__id ^ Matches[ self.__room_id ].xor_players,
             "choice-me"         : "x" if self.__id == keys[0] else "o",
             "choice-op"         : "o" if self.__id == keys[0] else "x",
-            "turn"              : keys[random.randint(0, 1)],
+            "turn"              : turn,
             "player-me-avatar"  : Matches[ self.__room_id ].players[ self.__id ].obj.avatar,
             "player-op-avatar"  : Matches[ self.__room_id ].players[ self.__id ^ Matches[ self.__room_id ].xor_players ].obj.avatar,
             "player-me-name"    : Matches[ self.__room_id ].players[ self.__id ].obj.username,
