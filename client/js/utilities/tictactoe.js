@@ -471,7 +471,7 @@ export default function    TicTacToe()
                 __render.render_result();
                 return ;
             case "already":
-                __socket.close(3001);
+                __socket.close(4001);
                 __game.end_game();
                 setTimeout(() => {
                     alert("Game is already");

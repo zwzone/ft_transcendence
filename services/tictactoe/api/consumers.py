@@ -66,18 +66,23 @@ class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
 
         global waiting, waiting_room, mmatch, Matches
 
+        print( "before ", players, flush=True )
+
+
         await self.accept()
 
         if  self.__id in players:
             await self.send( json.dumps({
                 "type"  : "already",
+                "id"    : self.__id,
             }))
-            await self.close(3001)
+            await self.close(4001)
             return
         
 
         players.add( self.__id )
 
+        print( "after ", players, flush=True )
         if waiting == -1:
             waiting_room    += 1
             self.__room_id  = str(waiting_room)
@@ -118,16 +123,31 @@ class   TicTacToeGameConsumer( AsyncWebsocketConsumer ):
     async def   disconnect( self, code=None ):
         global waiting
 
+        print( code, flush=True)
+        if code == 4001:
+            await self.close()
+            return
 
-        if code == 3001 or self.__room_id not in Matches:
-            if self.__id == waiting:
-                waiting = -1
+        print( "matches ", self.__room_id, flush=True )
+        print( "matches ", self.__room_id not in Matches, flush=True )
+
+        if self.__room_id not in Matches:
+            waiting = -1
+            if self.__id in players:
+                print("removing ", flush=True)
                 players.remove( self.__id )
+                print( players, flush=True)
+                print( "removeend", flush=True)
                 
             await self.close()
             return 
 
-        players.remove( self.__id )
+        print( players, flush=True )
+        if self.__id in players:
+            print("removing ", flush=True)
+            players.remove( self.__id )
+            print( players, flush=True)
+            print( "removeend", flush=True)
 
         await self.channel_layer.group_discard(
             self.__room_id,

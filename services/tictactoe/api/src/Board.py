@@ -40,10 +40,10 @@ class StateBoard():
         if count[ self.__players[0] ] == count[ self.__players[1] ]:
             check[ "status" ] = "DRAW"
         elif count[ self.__players[0] ] < count[ self.__players[1] ]:
-            check[ "winner" ] = self.__players[0]
+            check[ "winner" ] = self.__players[1]
             check[ "status" ] = "WIN"
         else:
-            check[ "winner" ] = self.__players[1]
+            check[ "winner" ] = self.__players[0]
             check[ "status" ] = "WIN"
         
         return check
