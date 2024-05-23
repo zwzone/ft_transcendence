@@ -6,7 +6,7 @@ services:
         image: ft-transcendence:deploy
         container_name: ft-transcendence
         environment:
-            - STAGE=Deployment
+            - STAGE=Development
         volumes:
             - ./client:/var/www/ft_transcendence/:ro
             - ./client/conf/:/etc/nginx/sites-enabled/:ro
@@ -23,7 +23,7 @@ services:
         image: authentication:deploy
         container_name: authentication
         environment:
-            - STAGE=Deployment
+            - STAGE=Development
         env_file:
             - .env
         volumes:
@@ -42,7 +42,7 @@ services:
         image: player:deploy
         container_name:  player
         environment:
-            - STAGE=Deployment
+            - STAGE=Development
         env_file:
             - .env
         volumes:
@@ -61,7 +61,7 @@ services:
         image: matchmaking:deploy
         container_name:  matchmaking
         environment:
-            - STAGE=Deployment
+            - STAGE=Development
         env_file:
             - .env
         volumes:
@@ -80,7 +80,7 @@ services:
         image: pong:deploy
         container_name:  pong
         environment:
-            - STAGE=Deployment
+            - STAGE=Development
         env_file:
             - .env
         volumes:
@@ -99,7 +99,7 @@ services:
         image: tictactoe:deploy
         container_name:  tictactoe
         environment:
-            - STAGE=Deployment
+            - STAGE=Development
         env_file:
             - .env
         volumes:
@@ -118,7 +118,7 @@ services:
         image: tournament:develop
         container_name: tournament
         environment:
-            - STAGE=Deployment
+            - STAGE=Development
         env_file:
             - .env
         volumes:
