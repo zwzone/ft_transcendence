@@ -15,7 +15,7 @@ services:
         networks:
             - ft_transcendence
         restart: on-failure
-    
+
     authentication:
         build:
             context: ./services/authentication/
@@ -91,7 +91,7 @@ services:
             postgres:
                 condition: service_healthy
         restart: on-failure
-    
+
     tictactoe:
         build:
             context: ./services/tictactoe/

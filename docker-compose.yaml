@@ -6,7 +6,10 @@ services:
         image: ft-transcendence:deploy
         container_name: ft-transcendence
         environment:
-            - STAGE=Deployment
+            - STAGE=Development
+        volumes:
+            - ./client:/var/www/ft_transcendence/:ro
+            - ./client/conf/:/etc/nginx/sites-enabled/:ro
         ports:
             - 443:443
         networks:
@@ -20,11 +23,16 @@ services:
         image: authentication:deploy
         container_name: authentication
         environment:
-            - STAGE=Deployment
+            - STAGE=Development
         env_file:
             - .env
+        volumes:
+            - ./services/authentication/:/microservice/authentication/:rw
         networks:
             - ft_transcendence
+        depends_on:
+            postgres:
+                condition: service_healthy
         restart: on-failure
 
     player:
@@ -34,11 +42,16 @@ services:
         image: player:deploy
         container_name:  player
         environment:
-            - STAGE=Deployment
+            - STAGE=Development
         env_file:
-            - .env 
+            - .env
+        volumes:
+            - ./services/player/:/microservice/player/:rw
         networks:
             - ft_transcendence
+        depends_on:
+            postgres:
+                condition: service_healthy
         restart: on-failure
 
     matchmaking:
@@ -48,11 +61,16 @@ services:
         image: matchmaking:deploy
         container_name:  matchmaking
         environment:
-            - STAGE=Deployment
+            - STAGE=Development
         env_file:
-            - .env 
+            - .env
+        volumes:
+            - ./services/matchmaking/:/microservice/matchmaking/:rw
         networks:
             - ft_transcendence
+        depends_on:
+            postgres:
+                condition: service_healthy
         restart: on-failure
 
     pong:
@@ -62,11 +80,16 @@ services:
         image: pong:deploy
         container_name:  pong
         environment:
-            - STAGE=Deployment
+            - STAGE=Development
         env_file:
-            - .env 
+            - .env
+        volumes:
+            - ./services/pong/:/microservice/pong/:rw
         networks:
             - ft_transcendence
+        depends_on:
+            postgres:
+                condition: service_healthy
         restart: on-failure
 
     tictactoe:
@@ -76,11 +99,30 @@ services:
         image: tictactoe:deploy
         container_name:  tictactoe
         environment:
-            - STAGE=Deployment
+            - STAGE=Development
         env_file:
             - .env
-        ports:
-            - 8000:8000
+        volumes:
+            - ./services/tictactoe/:/microservice/tictactoe/:rw
+        networks:
+            - ft_transcendence
+        depends_on:
+            postgres:
+                condition: service_healthy
+        restart: on-failure
+
+    tournament:
+        build:
+            context: ./services/tournament/
+            dockerfile: Dockerfile
+        image: tournament:develop
+        container_name: tournament
+        environment:
+            - STAGE=Development
+        env_file:
+            - .env
+        volumes:
+            - ./services/tournament/:/microservice/tournament/:rw
         networks:
             - ft_transcendence
         depends_on:
@@ -93,6 +135,22 @@ services:
         container_name: postgres
         env_file:
             - .env
+        networks:
+            - ft_transcendence
+        restart: on-failure
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+
+    pgadmin:
+        image: dpage/pgadmin4
+        container_name: pgadmin4
+        env_file:
+            - .env
+        ports:
+        - 8080:80
         networks:
             - ft_transcendence
         restart: on-failure
